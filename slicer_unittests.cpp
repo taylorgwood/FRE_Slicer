@@ -46,7 +46,7 @@ TEST(PathConstructor,givenTwoPoints_getPath)
 TEST(LayerExtrusionWidth,givenDefaultParameters_getExtrusionWidth)
 {
     Layer layer;
-    double calculatedExtrusionWidth = layer.get_real_extrusion_width();
+    double calculatedExtrusionWidth = layer.get_modified_extrusion_width();
     double expectedExtrusionWidth = layer.get_extrusion_width();
     EXPECT_DOUBLE_EQ(calculatedExtrusionWidth,expectedExtrusionWidth);
 }
@@ -55,7 +55,7 @@ TEST(LayerExtrusionWidth,givenChangedParameters_getCorrectExtrusionWidth)
 {
     Layer layer;
     layer.set_infill_percentage(50);
-    double calculatedExtrusionWidth = layer.get_real_extrusion_width();
+    double calculatedExtrusionWidth = layer.get_modified_extrusion_width();
     double expectedExtrusionWidth = layer.get_extrusion_width()*2;
     EXPECT_DOUBLE_EQ(calculatedExtrusionWidth,expectedExtrusionWidth);
 }
@@ -92,4 +92,21 @@ TEST(ShapeFormation,givenShapeHeihgt_getAdjustedNumberOfLayers)
     double expectedLayerHeight{0.5};
     EXPECT_EQ(adjustedNumberOfLayers,expectedNumberOfLayers);
     EXPECT_DOUBLE_EQ(shape.get_layer_height(),expectedLayerHeight);
+}
+
+TEST(PathNumber,givenLayerWidthAndPathWidth_getNumberOfPaths)
+{
+    Layer layer;
+    int calculatedNumberOfPaths = layer.get_number_of_paths();
+    int expectedNumberOfPaths{38};
+    EXPECT_EQ(calculatedNumberOfPaths,expectedNumberOfPaths);
+}
+
+TEST(PathNumber,givenLayerWidthAndPathWidth_getAdjustedNumberOfPaths)
+{
+    Layer layer;
+    layer.adjust_extrusion_width();
+    double adjustedExtrusionWidth{layer.get_extrusion_width()};
+    double expectedExtrusionWidth{0.26315789473};
+    EXPECT_NEAR(adjustedExtrusionWidth,expectedExtrusionWidth,0.00001);
 }

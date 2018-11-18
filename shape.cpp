@@ -10,16 +10,12 @@ Shape::Shape()
 
 int Shape::get_number_of_layers()
 {
-    int numberOfLayers{0};
     double exactNumberOfLayers = mHeight/mLayerHeight;
     int flooredNumberOfLayers = int(floor(mHeight/mLayerHeight));
+    int numberOfLayers{flooredNumberOfLayers};
     if ((exactNumberOfLayers-flooredNumberOfLayers)>=0.5)
     {
         numberOfLayers = flooredNumberOfLayers+1;
-    }
-    else
-    {
-        numberOfLayers = flooredNumberOfLayers;
     }
     return numberOfLayers;
 }

@@ -51,17 +51,17 @@ void Layer::set_extrusion_multiplier(const double extrusionMultiplier)
     mExtrusionMultiplier = extrusionMultiplier;
 }
 
-double Layer::get_real_extrusion_width() const
+double Layer::get_modified_extrusion_width() const
 {
     double infillRatio = mInfillPercentage/100;
-    double realExtrusionWidth = mExtrusionWidth/infillRatio;
-    return realExtrusionWidth;
+    double modifiedExtrusionWidth = mExtrusionWidth/infillRatio;
+    return modifiedExtrusionWidth;
 }
 
 double Layer::get_diameter_of_print() const
 {
     double volume = get_volume();
-    double realExtrusionWidth = get_real_extrusion_width();
+    double realExtrusionWidth = get_modified_extrusion_width();
     double diameterOfPrint = sqrt(volume*4*realExtrusionWidth/(mArea*pi));
     return diameterOfPrint;
 }
@@ -81,4 +81,27 @@ double Layer::get_area() const
 void Layer::set_area(const double area)
 {
     mArea = area;
+}
+
+int Layer::get_number_of_paths()
+{
+    double exactNumberOfPaths = mWidth/get_modified_extrusion_width();
+    int flooredNumberOfPaths = int(floor(mWidth/get_modified_extrusion_width()));
+    int numberOfPaths{flooredNumberOfPaths};
+    if ((exactNumberOfPaths-flooredNumberOfPaths)>=0.5)
+    {
+        numberOfPaths = flooredNumberOfPaths+1;
+    }
+    if (numberOfPaths==1)
+    {
+        numberOfPaths = 2;
+    }
+    return numberOfPaths;
+}
+
+void Layer::adjust_extrusion_width()
+{
+    int numberOfPaths = get_number_of_paths();
+    double realExtrusionWidth = mWidth/numberOfPaths;
+    set_extrusion_width(realExtrusionWidth);
 }
