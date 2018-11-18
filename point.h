@@ -9,10 +9,16 @@ public:
     Point();
     Point(double x, double y, double z);
     Point(double x, double y, double z, double material);
-    double get_x();
-    double get_y();
-    double get_z();
-    double get_material();
+    Point  operator+(const Point secondPoint);
+    double get_x() const;
+    double get_y() const;
+    double get_z() const;
+    double get_material() const;
+    void   set_x(double const x);
+    void   set_y(double const y);
+    void   set_z(double const z);
+    void   set_material(double const material);
+
 
 protected:
 

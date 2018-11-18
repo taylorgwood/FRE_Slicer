@@ -20,4 +20,17 @@ TEST(PointConstructor,givenNoValues_getZeroXYZ)
     EXPECT_DOUBLE_EQ(z_value,0);
 }
 
+TEST(PointAddition,givenValues_getCorrectPoint)
+{
+    Point firstPoint(1,2,3,1);
+    Point secondPoint(4,5,6,2);
+    Point addedPoint = firstPoint + secondPoint;
+    Point expectedPoint(5,7,9,1.5);
+    EXPECT_POINT_EQ(addedPoint,expectedPoint);
+}
+
+TEST(a,b_c)
+{
+
+}
 
