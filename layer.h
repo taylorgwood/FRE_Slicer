@@ -8,12 +8,20 @@ public:
     ~Layer();
     Layer();
     double get_height() const;
-    void   set_height(double const height);
-
+    void   set_height(const double height);
+    double get_extrusion_width() const;
+    void   set_extrusion_width(const double extrusionWidth);
+    double get_infill_percentage() const;
+    void   set_infill_percentage(const double infillPercentage);
+    double get_extrusion_multiplier() const;
+    void   set_extrusion_multiplier(const double extrusionMultiplier);
 protected:
 
 private:
     double mHeight{0.26};
+    double mExtrusionWidth{0.26};
+    double mInfillPercentage{1};
+    double mExtrusionMultiplier{1};
 
 };
 
