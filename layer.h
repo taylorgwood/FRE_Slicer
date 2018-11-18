@@ -15,15 +15,21 @@ public:
     void   set_infill_percentage(const double infillPercentage);
     double get_extrusion_multiplier() const;
     void   set_extrusion_multiplier(const double extrusionMultiplier);
-    double get_real_extrusion_width();
+    double get_real_extrusion_width() const;
+    double get_diameter_of_print() const;
+    double get_volume() const;
+    double get_area() const;
+    void   set_area(const double area);
 
 protected:
 
 private:
+    double const pi{3.14159265359};
     double mHeight{0.26};
     double mExtrusionWidth{0.26};
     double mInfillPercentage{100};
     double mExtrusionMultiplier{1};
+    double mArea{100};
 
 };
 

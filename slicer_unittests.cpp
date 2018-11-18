@@ -58,3 +58,13 @@ TEST(LayerExtrusionWidth,givenChangedParameters_getCorrectExtrusionWidth)
     double expectedExtrusionWidth = layer.get_extrusion_width()*2;
     EXPECT_DOUBLE_EQ(calculatedExtrusionWidth,expectedExtrusionWidth);
 }
+
+TEST(LayerVolume,givenLayerAreaAndHeight_getVolume)
+{
+    Layer layer;
+    layer.set_area(100);
+    layer.set_height(0.26);
+    double expectedVolume{26};
+    double calculatedVolume = layer.get_volume();
+    EXPECT_DOUBLE_EQ(expectedVolume,calculatedVolume);
+}

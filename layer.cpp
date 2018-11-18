@@ -1,4 +1,5 @@
 #include "layer.h"
+#include <cmath>
 
 Layer::~Layer()
 {
@@ -50,10 +51,34 @@ void Layer::set_extrusion_multiplier(const double extrusionMultiplier)
     mExtrusionMultiplier = extrusionMultiplier;
 }
 
-double Layer::get_real_extrusion_width()
+double Layer::get_real_extrusion_width() const
 {
     double infillRatio = mInfillPercentage/100;
     double realExtrusionWidth = mExtrusionWidth/infillRatio;
     return realExtrusionWidth;
 }
 
+double Layer::get_diameter_of_print() const
+{
+    double volume = get_volume();
+    double realExtrusionWidth = get_real_extrusion_width();
+    double diameterOfPrint = sqrt(volume*4*realExtrusionWidth/(mArea*pi));
+    return diameterOfPrint;
+}
+
+double Layer::get_volume() const
+{
+    double infillRatio = mInfillPercentage/100;
+    double volume = mArea*mHeight*infillRatio*mExtrusionMultiplier;
+    return volume;
+}
+
+double Layer::get_area() const
+{
+    return mArea;
+}
+
+void Layer::set_area(const double area)
+{
+    mArea = area;
+}
