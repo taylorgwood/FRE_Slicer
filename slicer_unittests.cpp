@@ -1,6 +1,7 @@
 #include <iostream>
 #include "gtest/gtest.h"
 #include "point.h"
+#include "path.h"
 
 void EXPECT_POINT_EQ(Point firstPoint, Point secondPoint)
 {
@@ -29,8 +30,14 @@ TEST(PointAddition,givenValues_getCorrectPoint)
     EXPECT_POINT_EQ(addedPoint,expectedPoint);
 }
 
-TEST(a,b_c)
+TEST(PathConstructor,givenTwoPoints_getPath)
 {
-
+    Point start(1,2,3);
+    Point end(2,4,6);
+    double diameter{1};
+    Path path(start,end,diameter);
+    EXPECT_POINT_EQ(start,path.get_start());
+    EXPECT_POINT_EQ(end,path.get_end());
+    EXPECT_DOUBLE_EQ(diameter,path.get_diameter());
 }
 
