@@ -49,3 +49,11 @@ void Layer::set_extrusion_multiplier(const double extrusionMultiplier)
 {
     mExtrusionMultiplier = extrusionMultiplier;
 }
+
+double Layer::get_real_extrusion_width()
+{
+    double infillRatio = mInfillPercentage/100;
+    double realExtrusionWidth = mExtrusionWidth/infillRatio;
+    return realExtrusionWidth;
+}
+

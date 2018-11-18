@@ -15,12 +15,14 @@ public:
     void   set_infill_percentage(const double infillPercentage);
     double get_extrusion_multiplier() const;
     void   set_extrusion_multiplier(const double extrusionMultiplier);
+    double get_real_extrusion_width();
+
 protected:
 
 private:
     double mHeight{0.26};
     double mExtrusionWidth{0.26};
-    double mInfillPercentage{1};
+    double mInfillPercentage{100};
     double mExtrusionMultiplier{1};
 
 };

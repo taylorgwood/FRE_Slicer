@@ -42,8 +42,19 @@ TEST(PathConstructor,givenTwoPoints_getPath)
     EXPECT_DOUBLE_EQ(diameter,path.get_diameter());
 }
 
-TEST(LayerConstructor,givenPaths_getLayer)
+TEST(LayerExtrusionWidth,givenDefaultParameters_getExtrusionWidth)
 {
     Layer layer;
-    EXPECT_TRUE(1);
+    double calculatedExtrusionWidth = layer.get_real_extrusion_width();
+    double expectedExtrusionWidth = layer.get_extrusion_width();
+    EXPECT_DOUBLE_EQ(calculatedExtrusionWidth,expectedExtrusionWidth);
+}
+
+TEST(LayerExtrusionWidth,givenChangedParameters_getCorrectExtrusionWidth)
+{
+    Layer layer;
+    layer.set_infill_percentage(50);
+    double calculatedExtrusionWidth = layer.get_real_extrusion_width();
+    double expectedExtrusionWidth = layer.get_extrusion_width()*2;
+    EXPECT_DOUBLE_EQ(calculatedExtrusionWidth,expectedExtrusionWidth);
 }
