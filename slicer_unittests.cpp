@@ -2,6 +2,7 @@
 #include "gtest/gtest.h"
 #include "point.h"
 #include "path.h"
+#include "layer.h"
 
 void EXPECT_POINT_EQ(Point firstPoint, Point secondPoint)
 {
@@ -41,3 +42,8 @@ TEST(PathConstructor,givenTwoPoints_getPath)
     EXPECT_DOUBLE_EQ(diameter,path.get_diameter());
 }
 
+TEST(LayerConstructor,givenPaths_getLayer)
+{
+    Layer layer;
+    EXPECT_TRUE(1);
+}
