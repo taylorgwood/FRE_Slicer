@@ -7,7 +7,7 @@ Path::~Path()
 
 Path::Path():mPointList{new std::vector<Point*>}
 {
-
+    create_points();
 }
 
 Path::Path(Point startPoint, Point endPoint)
@@ -82,4 +82,27 @@ double Path::get_resolution() const
 double Path::get_length() const
 {
     return mLength;
+}
+
+void Path::adjust_point_spacing()
+{
+    int numberOfPoints = get_number_of_points();
+    double realResolution = mLength/numberOfPoints;
+    set_resolution(realResolution);
+}
+
+void Path::create_points()
+{
+    int numberOfPoints = get_number_of_points();
+    adjust_point_spacing();
+    for (int i{0}; i<numberOfPoints; i++)
+    {
+        Point* newPoint = new Point();
+        mPointList->push_back(newPoint);
+    }
+}
+
+std::vector<Point*> Path::get_point_list()
+{
+    return *mPointList;
 }

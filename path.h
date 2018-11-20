@@ -20,6 +20,9 @@ public:
     void   set_resolution(double const resolution);
     double get_resolution() const;
     double get_length() const;
+    void   adjust_point_spacing();
+    void   create_points();
+    std::vector<Point*> get_point_list();
 
 protected:
 

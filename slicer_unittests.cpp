@@ -162,4 +162,17 @@ TEST(PathList,givenShape_getCorrectNumberOfPointsInFirstPath)
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
 }
 
-// make points
+TEST(PathList,givenShape_getCorrectNumberOfPointsInFirstPathList)
+{
+    Shape shape;
+    shape.set_height(10);
+    shape.set_layer_height(0.26);
+    std::vector<Layer*> layerList = shape.get_layer_list();
+    Layer* firstLayer = layerList[1];
+    std::vector<Path*> pathList = firstLayer->get_path_list();
+    Path* firstPath = pathList[1];
+    std::vector<Point*> pointList = firstPath->get_point_list();
+    size_t numberOfPoints = pointList.size();
+    int expectedNumberOfPoints{10};
+    EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
+}
