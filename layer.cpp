@@ -6,7 +6,7 @@ Layer::~Layer()
 
 }
 
-Layer::Layer()
+Layer::Layer():mPathList{new std::vector<Path*>}
 {
 
 }

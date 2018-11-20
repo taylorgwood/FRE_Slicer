@@ -2,10 +2,14 @@
 
 Shape::~Shape()
 {
+    //    layerArray = nullptr;
 }
 
-Shape::Shape()
+Shape::Shape():mLayerList{new std::vector<Layer*>}
 {
+    create_layers();
+    //    create_layer_array();
+    //    fill_layer_array();
 }
 
 int Shape::get_number_of_layers()
@@ -46,3 +50,47 @@ double Shape::get_height() const
 {
     return mHeight;
 }
+
+void Shape::create_layers()
+{
+    int numberOfLayers = get_number_of_layers();
+    adjust_layer_height();
+    for (int i{0}; i<numberOfLayers; i++)
+    {
+        Layer* newLayer = new Layer();
+        mLayerList->push_back(newLayer);
+    }
+}
+
+std::vector<Layer*> Shape::get_layer_list()
+{
+    return *mLayerList;
+}
+
+//std::vector<Layer> Shape::create_layer_array()
+//{
+//    int numberOfLayers = get_number_of_layers();
+//    std::vector<Layer> layerArray = new Layer[numberOfLayers];
+//    return layerArray;
+//}
+
+//double*** PrintShape::create_empty_point_array()
+//{
+//    int numberOfPointsPerXLayer = get_number_of_cylinders_per_X_layer()*2;
+//    int numberOfPointsPerYLayer = get_number_of_cylinders_per_Y_layer()*2;
+//    int numberOfPointsPerXYLayer = numberOfPointsPerXLayer+numberOfPointsPerYLayer;
+//    int numberOfXYLayers = get_number_of_XYlayers();
+//    int numberOfOrthogonalDirections{3};
+
+//    double ***pointArray{nullptr};
+//    pointArray = new double**[numberOfPointsPerXYLayer];
+//    for (int r{0}; r < numberOfPointsPerXYLayer; r++)
+//    {
+//        pointArray[r] = new double*[numberOfXYLayers];
+//        for (int c{0}; c<numberOfXYLayers; c++)
+//        {
+//            pointArray[r][c] = new double[numberOfOrthogonalDirections];
+//        }
+//    }
+//    return pointArray;
+//}

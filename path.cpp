@@ -5,7 +5,7 @@ Path::~Path()
 
 }
 
-Path::Path()
+Path::Path():mPointList{new std::vector<Point*>}
 {
 
 }

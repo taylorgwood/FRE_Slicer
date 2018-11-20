@@ -1,6 +1,7 @@
 #ifndef SHAPE_H
 #define SHAPE_H
 #include <cmath>
+#include "layer.h"
 
 class Shape
 {
@@ -13,13 +14,20 @@ public:
     double get_layer_height() const;
     void set_height(const double height);
     double get_height() const;
-
+    void create_layers();
+    std::vector<Layer*> get_layer_list();
+//    std::vector<Layer> create_layer_array();
 protected:
 
 private:
+
+
+
     double mHeight{10};
     double mLayerHeight{0.26};
 //    double mInfillAngle{90};
+    bool mAutoAdjustLayers{true};
+    std::vector<Layer*> *mLayerList;
 
 
 };

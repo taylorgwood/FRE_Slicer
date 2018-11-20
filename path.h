@@ -1,6 +1,7 @@
 #ifndef PATH_H
 #define PATH_H
 #include "point.h"
+#include <vector>
 
 class Path
 {
@@ -23,7 +24,7 @@ private:
     Point mStart;
     Point mEnd;
     double mDiameter;
-
+    std::vector<Point*> *mPointList{nullptr};
 };
 
 #endif // PATH_H

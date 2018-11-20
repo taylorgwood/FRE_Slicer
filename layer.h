@@ -33,6 +33,7 @@ private:
     double mExtrusionMultiplier{1};
     double mArea{100};
     double mWidth{10};
+    std::vector<Path*> *mPathList{nullptr};
 
 };
 
