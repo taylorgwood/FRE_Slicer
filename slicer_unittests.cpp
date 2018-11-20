@@ -111,7 +111,7 @@ TEST(PathNumber,givenLayerWidthAndPathWidth_getAdjustedNumberOfPaths)
     EXPECT_NEAR(adjustedExtrusionWidth,expectedExtrusionWidth,0.00001);
 }
 
-TEST(LayerArray,givenShape_getCorrectlySizedLayerArray)
+TEST(LayerList,givenShape_getCorrectlySizedLayerList)
 {
     Shape shape;
     shape.set_height(10);
@@ -120,6 +120,21 @@ TEST(LayerArray,givenShape_getCorrectlySizedLayerArray)
     std::vector<Layer*> layerList = shape.get_layer_list();
     size_t numberOfLayersInList = layerList.size();
     EXPECT_EQ(numberOfLayers,numberOfLayersInList);
-    //    std::vector<Layer*> layerList = shape.get_layer_list()
-//    int numberOfLayersInList = shape.mLayerList->size();
+}
+
+TEST(LayerList,givenShape_getCorrectNumberOfPathsInFirstLayer)
+{
+    Shape shape;
+    shape.set_height(10);
+    shape.set_layer_height(0.26);
+    std::vector<Layer*> layerList = shape.get_layer_list();
+    Layer* firstLayer = layerList[1];
+    int numberOfPaths = firstLayer->get_number_of_paths();
+    int expectedNumberOfPaths{38};
+    EXPECT_EQ(numberOfPaths,expectedNumberOfPaths);
+}
+
+TEST(PathList,givenShape_getCorrectlySizedPathList)
+{
+
 }
