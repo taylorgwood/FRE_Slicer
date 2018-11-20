@@ -22,6 +22,8 @@ public:
     void   set_area(const double area);
     int    get_number_of_paths();
     void   adjust_extrusion_width();
+    std::vector<Path*> get_path_list();
+    void   create_paths();
 
 protected:
 

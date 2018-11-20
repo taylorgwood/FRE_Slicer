@@ -8,7 +8,7 @@ Layer::~Layer()
 
 Layer::Layer():mPathList{new std::vector<Path*>}
 {
-
+    create_paths();
 }
 
 double Layer::get_height() const
@@ -104,4 +104,20 @@ void Layer::adjust_extrusion_width()
     int numberOfPaths = get_number_of_paths();
     double realExtrusionWidth = mWidth/numberOfPaths;
     set_extrusion_width(realExtrusionWidth);
+}
+
+std::vector<Path*> Layer::get_path_list()
+{
+    return *mPathList;
+}
+
+void Layer::create_paths()
+{
+    int numberOfPaths = get_number_of_paths();
+    adjust_extrusion_width();
+    for (int i{0}; i<numberOfPaths; i++)
+    {
+        Path* newPath = new Path();
+        mPathList->push_back(newPath);
+    }
 }

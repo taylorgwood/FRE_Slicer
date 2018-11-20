@@ -136,5 +136,13 @@ TEST(LayerList,givenShape_getCorrectNumberOfPathsInFirstLayer)
 
 TEST(PathList,givenShape_getCorrectlySizedPathList)
 {
-
+    Shape shape;
+    shape.set_height(10);
+    shape.set_layer_height(0.26);
+    std::vector<Layer*> layerList = shape.get_layer_list();
+    Layer* firstLayer = layerList[1];
+    std::vector<Path*> pathList = firstLayer->get_path_list();
+    size_t numberOfPathsInList = pathList.size();
+    int expectedNumberOfPaths{38};
+    EXPECT_EQ(numberOfPathsInList,expectedNumberOfPaths);
 }
