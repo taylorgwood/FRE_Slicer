@@ -28,24 +28,24 @@ Point Path::get_start() const
     return mStart;
 }
 
-Point Path::get_end() const
-{
-    return mEnd;
-}
-
-double Path::get_diameter() const
-{
-    return mDiameter;
-}
-
 void Path::set_start(Point const startPoint)
 {
     mStart = startPoint;
 }
 
+Point Path::get_end() const
+{
+    return mEnd;
+}
+
 void Path::set_end(Point const endPoint)
 {
     mEnd = endPoint;
+}
+
+double Path::get_diameter() const
+{
+    return mDiameter;
 }
 
 void Path::set_diameter(double const diameter)
@@ -77,4 +77,9 @@ void Path::set_resolution(double const resolution)
 double Path::get_resolution() const
 {
     return mResolution;
+}
+
+double Path::get_length() const
+{
+    return mLength;
 }

@@ -63,7 +63,8 @@ TEST(LayerExtrusionWidth,givenChangedParameters_getCorrectExtrusionWidth)
 TEST(LayerVolume,givenLayerAreaAndHeight_getVolume)
 {
     Layer layer;
-    layer.set_area(100);
+    layer.set_width(10);
+    layer.set_length(10);
     layer.set_height(0.26);
     double expectedVolume{26};
     double calculatedVolume = layer.get_volume();
@@ -161,4 +162,4 @@ TEST(PathList,givenShape_getCorrectNumberOfPointsInFirstPath)
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
 }
 
-
+// make points

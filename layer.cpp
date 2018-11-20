@@ -62,25 +62,22 @@ double Layer::get_diameter_of_print() const
 {
     double volume = get_volume();
     double realExtrusionWidth = get_modified_extrusion_width();
-    double diameterOfPrint = sqrt(volume*4*realExtrusionWidth/(mArea*pi));
+    double area = mLength*mWidth;
+    double diameterOfPrint = sqrt(volume*4*realExtrusionWidth/(area*pi));
     return diameterOfPrint;
 }
 
 double Layer::get_volume() const
 {
     double infillRatio = mInfillPercentage/100;
-    double volume = mArea*mHeight*infillRatio*mExtrusionMultiplier;
+    double area = mLength*mWidth;
+    double volume = area*mHeight*infillRatio*mExtrusionMultiplier;
     return volume;
 }
 
 double Layer::get_area() const
 {
-    return mArea;
-}
-
-void Layer::set_area(const double area)
-{
-    mArea = area;
+    return mWidth*mLength;
 }
 
 int Layer::get_number_of_paths()
@@ -120,4 +117,24 @@ void Layer::create_paths()
         Path* newPath = new Path();
         mPathList->push_back(newPath);
     }
+}
+
+double Layer::get_length() const
+{
+    return mLength;
+}
+
+void Layer::set_length(double const length)
+{
+    mLength = length;
+}
+
+double Layer::get_width() const
+{
+    return mWidth;
+}
+
+void Layer::set_width(double const width)
+{
+    mWidth = width;
 }

@@ -18,7 +18,6 @@ public:
     void   set_z(double const z);
     void   set_material(double const material);
 
-
 protected:
 
 private:

@@ -72,4 +72,3 @@ void Point::set_material(double const material)
 {
     mMaterial = material;
 }
-

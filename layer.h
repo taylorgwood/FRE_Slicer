@@ -24,6 +24,10 @@ public:
     void   adjust_extrusion_width();
     std::vector<Path*> get_path_list();
     void   create_paths();
+    double get_length() const;
+    void   set_length(double const length);
+    double get_width() const;
+    void   set_width(double const width);
 
 protected:
 
@@ -33,7 +37,7 @@ private:
     double mExtrusionWidth{0.26};
     double mInfillPercentage{100};
     double mExtrusionMultiplier{1};
-    double mArea{100};
+    double mLength{10};
     double mWidth{10};
     std::vector<Path*> *mPathList{nullptr};
 
