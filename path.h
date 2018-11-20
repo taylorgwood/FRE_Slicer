@@ -17,6 +17,8 @@ public:
     void   set_end(Point const endPoint);
     void   set_diameter(double const diameter);
     int    get_number_of_points() const;
+    void   set_resolution(double const resolution);
+    double get_resolution() const;
 
 
 protected:

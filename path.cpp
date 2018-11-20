@@ -68,3 +68,13 @@ int Path::get_number_of_points() const
     }
     return numberOfPoints;
 }
+
+void Path::set_resolution(double const resolution)
+{
+    mResolution = resolution;
+}
+
+double Path::get_resolution() const
+{
+    return mResolution;
+}

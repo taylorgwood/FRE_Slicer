@@ -159,5 +159,6 @@ TEST(PathList,givenShape_getCorrectNumberOfPointsInFirstPath)
     int numberOfPoints = firstPath->get_number_of_points();
     int expectedNumberOfPoints{10};
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
-
 }
+
+
