@@ -16,6 +16,7 @@ public:
     void   set_start(Point const startPoint);
     void   set_end(Point const endPoint);
     void   set_diameter(double const diameter);
+    int    get_number_of_points() const;
 
 
 protected:
@@ -25,6 +26,8 @@ private:
     Point mEnd;
     double mDiameter;
     std::vector<Point*> *mPointList{nullptr};
+    double mLength{10};
+    double mResolution{1.0};
 };
 
 #endif // PATH_H

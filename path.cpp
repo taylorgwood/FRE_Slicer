@@ -52,3 +52,19 @@ void Path::set_diameter(double const diameter)
 {
     mDiameter = diameter;
 }
+
+int Path::get_number_of_points() const
+{
+    double exactNumberOfPoints = mLength/mResolution;
+    int flooredNumberOfPoints = int(floor(mLength/mResolution));
+    int numberOfPoints{flooredNumberOfPoints};
+    if ((exactNumberOfPoints-flooredNumberOfPoints)>=0.5)
+    {
+        numberOfPoints = flooredNumberOfPoints+1;
+    }
+    if (numberOfPoints==1)
+    {
+        numberOfPoints = 2;
+    }
+    return numberOfPoints;
+}
