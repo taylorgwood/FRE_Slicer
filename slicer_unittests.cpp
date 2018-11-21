@@ -12,6 +12,15 @@ void EXPECT_POINT_EQ(Point firstPoint, Point secondPoint)
     EXPECT_DOUBLE_EQ(firstPoint.get_z(),secondPoint.get_z());
 }
 
+void EXPECT_POINT_LIST_EQ(std::vector<Point> firstVector, std::vector<Point> secondVector)
+{
+    size_t numberOfPoints = firstVector.size();
+    for (int i{0}; i<numberOfPoints; i++)
+    {
+        EXPECT_POINT_EQ(firstVector[i],secondVector[i]);
+    }
+}
+
 TEST(PointConstructor,givenNoValues_getZeroXYZ)
 {
     Point point;
@@ -181,7 +190,7 @@ TEST(LayerList,whenAskedForPointsInLayer_getCorrectNumberOfPointsInLayer)
 {
     Shape shape;
     int firstLayer{1};
-    std::vector<Point*> pointList = shape.get_points_in_layer(firstLayer);
+    std::vector<Point> pointList = shape.get_points_in_layer(firstLayer);
     size_t numberOfPointsInLayer = pointList.size();
     int expectedNumberOfPointsInLayer{380};
     EXPECT_EQ(numberOfPointsInLayer,expectedNumberOfPointsInLayer);
@@ -190,15 +199,40 @@ TEST(LayerList,whenAskedForPointsInLayer_getCorrectNumberOfPointsInLayer)
 TEST(ShapeList,whenAskedForPointsInShape_getCorrectNumberOfPointsInShape)
 {
     Shape shape;
-    std::vector<Point*> pointList = shape.get_points();
+    std::vector<Point> pointList = shape.get_points();
     size_t numberOfPoints = pointList.size();
     int expectedNumberOfPoints{14440};
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
 }
 
-//TEST(PointList,whenAskedForPointsInLayer_getCorrectPointsInLayer)
-//{
-//    Shape shape;
-//    shape.get_points_in_layer(1);
+TEST(PrintOut,whenGivenPoint_printPointToConsole)
+{
+    Point point{1,2,3};
+    point.print();
+}
 
-//}
+TEST(PrintOut,whenGivenPointList_printPointsToConsole)
+{
+    Point firstPoint{1,2,3};
+    Point secondPoint{4,5,6};
+    Point thirdPoint{7,8,9};
+    std::vector<Point> pointList = {firstPoint,secondPoint,thirdPoint};
+    firstPoint.print_list(pointList);
+}
+
+TEST(PointList,whenAskedForPointsInLayer_getCorrectPointsInLayer)
+{
+//    Shape shape;
+//    int firstLayer{1};
+//    std::vector<Point> pointList = shape.get_points_in_layer(firstLayer);
+//    std::vector<Point> firstTenPoints;
+//    for (int i{0}; i<10; i++)
+//    {
+//        Point point = pointList[i];
+//        firstTenPoints.push_back(point);
+//    }
+//    Point zero{0,0,0};
+//    std::vector<Point> expectedPointList = {zero,zero,zero,zero,zero,zero,zero,zero,zero,zero};
+//    std::cout << pointList << std::endl;
+//    EXPECT_POINT_LIST_EQ(pointList,expectedPointList);
+}

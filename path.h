@@ -1,7 +1,6 @@
 #ifndef PATH_H
 #define PATH_H
 #include "point.h"
-#include <vector>
 
 class Path
 {

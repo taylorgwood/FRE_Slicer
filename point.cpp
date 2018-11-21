@@ -72,3 +72,20 @@ void Point::set_material(double const material)
 {
     mMaterial = material;
 }
+
+void Point::print()
+{
+    std::cout << "{" << get_x() << ", " << get_y() << ", " << get_z() << "}" << std::endl;
+}
+
+void Point::print_list(std::vector<Point> pointList)
+{
+    std::cout << "[" << std::endl;
+    size_t numberOfPoints = pointList.size();
+    for (int i{0}; i<numberOfPoints; i++)
+    {
+        Point point = pointList[i];
+        point.print();
+    }
+    std::cout << "]" << std::endl;
+}

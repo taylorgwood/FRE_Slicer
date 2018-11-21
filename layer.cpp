@@ -139,9 +139,9 @@ void Layer::set_width(double const width)
     mWidth = width;
 }
 
-std::vector<Point*> Layer::get_points()
+std::vector<Point> Layer::get_points()
 {
-    std::vector<Point*> pointList;
+    std::vector<Point> pointList;
     size_t numberOfPaths = mPathList->size();
     for (int i{0}; i<numberOfPaths; i++)
     {
@@ -150,8 +150,8 @@ std::vector<Point*> Layer::get_points()
         std::vector<Point*> points = path->get_point_list();
         for (int j{0}; j<numberOfPoints; j++)
         {
-            Point *point = points[j];
-            pointList.push_back(point);
+            Point* point = points[j];
+            pointList.push_back(*point);
         }
     }
     return pointList;

@@ -16,8 +16,8 @@ public:
     double get_height() const;
     void create_layers();
     std::vector<Layer*> get_layer_list();
-    std::vector<Point*> get_points_in_layer(int layerNumber);
-    std::vector<Point*> get_points();
+    std::vector<Point> get_points_in_layer(int layerNumber);
+    std::vector<Point> get_points();
 protected:
 
 private:

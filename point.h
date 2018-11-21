@@ -1,5 +1,7 @@
 #ifndef POINT_H
 #define POINT_H
+#include <iostream>
+#include <vector>
 
 class Point
 {
@@ -17,6 +19,8 @@ public:
     void   set_y(double const y);
     void   set_z(double const z);
     void   set_material(double const material);
+    void   print();
+    void   print_list(std::vector<Point> pointList);
 
 protected:
 
