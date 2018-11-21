@@ -189,11 +189,11 @@ TEST(LayerList,whenAskedForPointsInLayer_getCorrectNumberOfPointsInLayer)
 
 TEST(ShapeList,whenAskedForPointsInShape_getCorrectNumberOfPointsInShape)
 {
-//    Shape shape;
-//    std::vector<Point*> pointList = shape.get_points;
-//    size_t numberOfPoints = pointList.size();
-//    int expectedNumberOfPoints{3};
-//    EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
+    Shape shape;
+    std::vector<Point*> pointList = shape.get_points();
+    size_t numberOfPoints = pointList.size();
+    int expectedNumberOfPoints{14440};
+    EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
 }
 
 //TEST(PointList,whenAskedForPointsInLayer_getCorrectPointsInLayer)
