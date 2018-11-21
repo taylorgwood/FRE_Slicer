@@ -28,6 +28,7 @@ public:
     void   set_length(double const length);
     double get_width() const;
     void   set_width(double const width);
+    std::vector<Point*> get_points();
 
 protected:
 

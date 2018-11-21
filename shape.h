@@ -16,7 +16,7 @@ public:
     double get_height() const;
     void create_layers();
     std::vector<Layer*> get_layer_list();
-//    std::vector<Layer> create_layer_array();
+    std::vector<Point*> get_points_in_layer(int const layerNumber);
 protected:
 
 private:
@@ -25,7 +25,7 @@ private:
 
     double mHeight{10};
     double mLayerHeight{0.26};
-//    double mInfillAngle{90};
+    //    double mInfillAngle{90};
     bool mAutoAdjustLayers{true};
     std::vector<Layer*> *mLayerList;
 
