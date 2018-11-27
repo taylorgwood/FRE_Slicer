@@ -156,8 +156,9 @@ std::vector<Point> Layer::get_points()
     for (int i{0}; i<numberOfPaths; i++)
     {
         Path* path = get_path_list()[i];
-        size_t numberOfPoints = path->get_number_of_points();
+//        int numberOfPoints = path->get_number_of_points();
         std::vector<Point*> points = path->get_point_list();
+        size_t numberOfPoints = points.size();
         for (int j{0}; j<numberOfPoints; j++)
         {
             Point* point = points[j];

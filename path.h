@@ -22,10 +22,7 @@ public:
     void   adjust_point_spacing();
     void   create_points();
     std::vector<Point*> get_point_list();
-    double get_z() const;
-    double get_x(int pointNumber) const;
-    double get_y(int pointNumber) const;
-    double get_material(int pointNumber) const;
+    double get_material(int pointNumber, Point pointInfo) const;
     Point* create_new_point(int pointNumber, int numberOfPointsInPath) const;
 
 protected:

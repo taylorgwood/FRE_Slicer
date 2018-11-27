@@ -57,17 +57,9 @@ void Path::set_diameter(double const diameter)
 
 int Path::get_number_of_points() const
 {
-    double exactNumberOfPoints = mLength/mResolution;
-    int flooredNumberOfPoints = int(floor(mLength/mResolution));
-    int numberOfPoints{flooredNumberOfPoints};
-    if ((exactNumberOfPoints-flooredNumberOfPoints)>=0.5)
-    {
-        numberOfPoints = flooredNumberOfPoints+1;
-    }
-    if (numberOfPoints==1)
-    {
-        numberOfPoints = 2;
-    }
+    double exactNumberOfSegments = mLength/mResolution;
+    int flooredNumberOfSegments = int(floor(exactNumberOfSegments));
+    int numberOfPoints{flooredNumberOfSegments+1};
     return numberOfPoints;
 }
 
@@ -88,15 +80,16 @@ double Path::get_length() const
 
 void Path::adjust_point_spacing()
 {
-    int numberOfPoints = get_number_of_points();
-    double realResolution = mLength/numberOfPoints;
+    double exactNumberOfSegments = mLength/mResolution;
+    int flooredNumberOfSegments = int(floor(exactNumberOfSegments));
+    double realResolution = mLength/flooredNumberOfSegments;
     set_resolution(realResolution);
 }
 
 void Path::create_points()
 {
-    int numberOfPoints = get_number_of_points();
     adjust_point_spacing();
+    int numberOfPoints = get_number_of_points();
     for (int i{0}; i<numberOfPoints; i++)
     {
         Point* newPoint = create_new_point(i,numberOfPoints);
@@ -113,38 +106,26 @@ Point* Path::create_new_point(int pointNumber, int numberOfPointsInPath) const
 {
     Point pathVector = mEnd-mStart;
     double pathLength = pathVector.get_magnitude();
-    double stepLength = pathLength/numberOfPointsInPath;
+    double stepLength = pathLength/(numberOfPointsInPath-1);
     Point stepDirection = pathVector.normalize();
     Point step = stepDirection*stepLength;
     Point pointInfo = (mStart + step*pointNumber); // set material here
-
+    double material = get_material(pointNumber,pointInfo);
+    pointInfo.set_material(material);
     Point* newPoint = new Point(pointInfo);
     return newPoint;
 }
 
-double Path::get_z() const
-{
-    return 0;
-}
-
-double Path::get_x(int pointNumber) const
-{
-    double xLocation{0};
-    Point direction = mEnd+mStart;
-    Point directionNormalized = direction.normalize();
-
-    return xLocation;
-}
-
-double Path::get_y(int pointNumber) const
-{
-    double yLocation{0};
-
-    return yLocation;
-}
-
-double Path::get_material(int pointNumber) const
+double Path::get_material(int pointNumber, Point pointInfo) const
 {
     double material{0};
+    if (pointInfo.get_x() < 5)
+    {
+        material = 0.25;
+    }
+    else
+    {
+        material = 0.75;
+    }
     return material;
 }
