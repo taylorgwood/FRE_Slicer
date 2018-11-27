@@ -55,9 +55,13 @@ void Shape::create_layers()
 {
     int numberOfLayers = get_number_of_layers();
     adjust_layer_height();
+    double layerLocation{0};
     for (int i{0}; i<numberOfLayers; i++)
     {
-        Layer* newLayer = new Layer();
+        int layer{i};
+        double layerHeight = get_layer_height();
+        layerLocation += layerHeight;
+        Layer* newLayer = new Layer(layer,layerLocation);
         mLayerList->push_back(newLayer);
     }
 }
@@ -92,4 +96,20 @@ std::vector<Point> Shape::get_points()
         }
     }
     return pointList;
+}
+
+std::vector<double> Shape::get_layer_locations()
+{
+    std::vector<double> layerLocationVector;
+    double layerLocation{0};
+    std::vector<Layer*> layerList = get_layer_list();
+    size_t numberOfLayers = get_number_of_layers();
+    for (int i{0}; i<numberOfLayers; i++)
+    {
+        Layer *layer = layerList[i];
+        double layerHeight = layer->get_height();
+        layerLocation += layerHeight;
+        layerLocationVector.push_back(layerLocation);
+    }
+    return layerLocationVector;
 }

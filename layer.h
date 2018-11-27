@@ -7,6 +7,7 @@ class Layer
 public:
     ~Layer();
     Layer();
+    Layer::Layer(int layerNumber, double layerLocation);
     double get_height() const;
     void   set_height(const double height);
     double get_extrusion_width() const;
@@ -29,6 +30,10 @@ public:
     double get_width() const;
     void   set_width(double const width);
     std::vector<Point> get_points();
+    int    get_number() const;
+    void   set_number(int const number);
+    double get_location() const;
+    void   set_location(double const location);
 
 protected:
 
@@ -41,6 +46,8 @@ private:
     double mLength{10};
     double mWidth{10};
     std::vector<Path*> *mPathList{nullptr};
+    int    mNumber{0};
+    double mLocation{0};
 
 };
 

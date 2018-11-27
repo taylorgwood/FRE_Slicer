@@ -18,6 +18,8 @@ public:
     std::vector<Layer*> get_layer_list();
     std::vector<Point> get_points_in_layer(int layerNumber);
     std::vector<Point> get_points();
+    std::vector<double> get_layer_locations();
+
 protected:
 
 private:

@@ -21,6 +21,15 @@ void EXPECT_POINT_LIST_EQ(std::vector<Point> firstVector, std::vector<Point> sec
     }
 }
 
+void EXPECT_VECTOR_EQ(std::vector<double> firstVector, std::vector<double> secondVector)
+{
+    size_t vectorSize = firstVector.size();
+    for (int i{0}; i<vectorSize; i++)
+    {
+        EXPECT_EQ(firstVector[i],secondVector[i]);
+    }
+}
+
 TEST(PointConstructor,givenNoValues_getZeroXYZ)
 {
     Point point;
@@ -220,8 +229,51 @@ TEST(PrintOut,whenGivenPointList_printPointsToConsole)
     firstPoint.print_list(pointList);
 }
 
-TEST(PointList,whenAskedForPointsInLayer_getCorrectPointsInLayer)
+TEST(LayerLocations,whenAskedForLayerLocations_getLayerLocations)
 {
+    Shape shape;
+    int firstLayer{1};
+    std::vector<double> layerLocationVector = shape.get_layer_locations();
+    size_t vectorLength = layerLocationVector.size();
+    double layerHeight{0.26};
+    double height{0};
+    std::vector<double> expectedLayerHeights;
+    for (int i{0}; i<vectorLength; i++)
+    {
+        height += layerHeight;
+        expectedLayerHeights.push_back(height);
+    }
+    EXPECT_VECTOR_EQ(layerLocationVector,expectedLayerHeights);
+}
+
+TEST(a,b_c)
+{
+    Shape shape;
+    std::vector<Layer*> layerList = shape.get_layer_list();
+    std::vector<double> layerLocationVector; // = shape.get_layer_locations();
+    size_t vectorLength = layerLocationVector.size();
+    double layerHeight{0.26};
+    double expectedLocation{0};
+    std::vector<double> expectedLayerHeights;
+    for (int i{0}; i<vectorLength; i++)
+    {
+        expectedLocation += layerHeight;
+        expectedLayerHeights.push_back(expectedLocation);
+        Layer* layer = layerList[i];
+        double location = layer->get_location();
+        layerLocationVector.push_back(location);
+    }
+    EXPECT_VECTOR_EQ(layerLocationVector,expectedLayerHeights);
+}
+
+//TEST(PathLocations,whenAskedForPathLocations_getPathLocations)
+//{
+//    Shape shape;
+//    int firstLayer{1};
+//}
+
+//TEST(PointList,whenAskedForPointsInLayer_getCorrectPointsInLayer)
+//{
 //    Shape shape;
 //    int firstLayer{1};
 //    std::vector<Point> pointList = shape.get_points_in_layer(firstLayer);
@@ -233,6 +285,6 @@ TEST(PointList,whenAskedForPointsInLayer_getCorrectPointsInLayer)
 //    }
 //    Point zero{0,0,0};
 //    std::vector<Point> expectedPointList = {zero,zero,zero,zero,zero,zero,zero,zero,zero,zero};
-//    std::cout << pointList << std::endl;
-//    EXPECT_POINT_LIST_EQ(pointList,expectedPointList);
-}
+//    zero.print_list(expectedPointList);
+//    EXPECT_POINT_LIST_EQ(firstTenPoints,expectedPointList);
+//}

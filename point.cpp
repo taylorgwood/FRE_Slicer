@@ -6,13 +6,16 @@ Point::~Point()
 
 Point::Point()
 {
+    // set X, Y
+    // set Z by checking which layer we are on, and calculating the layer height based on that.
+    // set material
 }
 
 Point::Point(double x, double y, double z)
 {
-    mX = x;
-    mY = y;
-    mZ = z;
+    set_x(x);
+    set_y(y);
+    set_z(z);
 }
 
 Point::Point(double x, double y, double z, double material)

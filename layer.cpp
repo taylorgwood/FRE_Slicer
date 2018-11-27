@@ -11,6 +11,13 @@ Layer::Layer():mPathList{new std::vector<Path*>}
     create_paths();
 }
 
+Layer::Layer(int layerNumber, double layerLocation):mPathList{new std::vector<Path*>}
+{
+    create_paths();
+    set_number(layerNumber);
+    set_location(layerLocation);
+}
+
 double Layer::get_height() const
 {
     return mHeight;
@@ -155,4 +162,24 @@ std::vector<Point> Layer::get_points()
         }
     }
     return pointList;
+}
+
+int Layer::get_number() const
+{
+    return mNumber;
+}
+
+void Layer::set_number(int const number)
+{
+    mNumber = number;
+}
+
+double Layer::get_location() const
+{
+    return mLocation;
+}
+
+void Layer::set_location(double const location)
+{
+    mLocation = location;
 }
