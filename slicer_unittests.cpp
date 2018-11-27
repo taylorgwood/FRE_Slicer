@@ -12,6 +12,14 @@ void EXPECT_POINT_EQ(Point firstPoint, Point secondPoint)
     EXPECT_DOUBLE_EQ(firstPoint.get_z(),secondPoint.get_z());
 }
 
+void EXPECT_POINT_EQ(Point* firstPoint, Point* secondPoint)
+{
+    EXPECT_DOUBLE_EQ(firstPoint->get_x(),secondPoint->get_x());
+    EXPECT_DOUBLE_EQ(firstPoint->get_y(),secondPoint->get_y());
+    EXPECT_DOUBLE_EQ(firstPoint->get_z(),secondPoint->get_z());
+}
+
+
 void EXPECT_POINT_LIST_EQ(std::vector<Point> firstVector, std::vector<Point> secondVector)
 {
     size_t numberOfPoints = firstVector.size();
@@ -20,6 +28,16 @@ void EXPECT_POINT_LIST_EQ(std::vector<Point> firstVector, std::vector<Point> sec
         EXPECT_POINT_EQ(firstVector[i],secondVector[i]);
     }
 }
+
+void EXPECT_POINT_LIST_EQ(std::vector<Point*> firstVector, std::vector<Point*> secondVector)
+{
+    size_t numberOfPoints = firstVector.size();
+    for (int i{0}; i<numberOfPoints; i++)
+    {
+        EXPECT_POINT_EQ(firstVector[i],secondVector[i]);
+    }
+}
+
 
 void EXPECT_VECTOR_EQ(std::vector<double> firstVector, std::vector<double> secondVector)
 {
@@ -217,7 +235,7 @@ TEST(ShapeList,whenAskedForPointsInShape_getCorrectNumberOfPointsInShape)
 TEST(PrintOut,whenGivenPoint_printPointToConsole)
 {
     Point point{1,2,3};
-//    point.print();
+    //    point.print();
 }
 
 TEST(PrintOut,whenGivenPointList_printPointsToConsole)
@@ -226,7 +244,7 @@ TEST(PrintOut,whenGivenPointList_printPointsToConsole)
     Point secondPoint{4,5,6};
     Point thirdPoint{7,8,9};
     std::vector<Point> pointList = {firstPoint,secondPoint,thirdPoint};
-//    firstPoint.print_list(pointList);
+    //    firstPoint.print_list(pointList);
 }
 
 TEST(LayerLocations,whenAskedForLayerLocations_getLayerLocations)
@@ -292,7 +310,7 @@ TEST(PointLocations,whenConstructingShape_pointLocationsConstructed)
     Path* firstPath = pathList[1];
     std::vector<Point*> pointList = firstPath->get_point_list();
     Point point;
-//    point.print_list(pointList);
+    //    point.print_list(pointList);
 }
 
 TEST(PointMath,whenAskedForNormalizedPoint_getNormalizedPoint)
@@ -312,28 +330,5 @@ TEST(PointLocations,whenConstructingShape_pointLocationsCorrect)
     Path* thirdPath = pathList[2];
     std::vector<Point*> pointList = thirdPath->get_point_list();
     Point point;
-    point.print_list(pointList);
+//    point.print_list(pointList);
 }
-
-//TEST(PathLocations,whenAskedForPathLocations_getPathLocations)
-//{
-//    Shape shape;
-//    int firstLayer{0};
-//}
-
-//TEST(PointList,whenAskedForPointsInLayer_getCorrectPointsInLayer)
-//{
-//    Shape shape;
-//    int firstLayer{0};
-//    std::vector<Point> pointList = shape.get_points_in_layer(firstLayer);
-//    std::vector<Point> firstTenPoints;
-//    for (int i{0}; i<10; i++)
-//    {
-//        Point point = pointList[i];
-//        firstTenPoints.push_back(point);
-//    }
-//    Point zero{0,0,0};
-//    std::vector<Point> expectedPointList = {zero,zero,zero,zero,zero,zero,zero,zero,zero,zero};
-//    zero.print_list(expectedPointList);
-//    EXPECT_POINT_LIST_EQ(firstTenPoints,expectedPointList);
-//}
