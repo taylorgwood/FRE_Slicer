@@ -7,7 +7,6 @@ Point::~Point()
 Point::Point()
 {
     // set X, Y
-    // set Z by checking which layer we are on, and calculating the layer height based on that.
     // set material
 }
 
@@ -26,7 +25,7 @@ Point::Point(double x, double y, double z, double material)
     set_material(material);
 }
 
-Point Point::operator+(const Point secondPoint)
+Point Point::operator+(const Point secondPoint) const
 {
     double summedX = get_x() + secondPoint.get_x();
     double summedY = get_y() + secondPoint.get_y();
@@ -34,6 +33,26 @@ Point Point::operator+(const Point secondPoint)
     double summedM = (get_material() + secondPoint.get_material())/2;
     Point summedPoint{summedX, summedY, summedZ, summedM};
     return summedPoint;
+}
+
+Point Point::operator-(const Point secondPoint) const
+{
+    double subtractedX = get_x() - secondPoint.get_x();
+    double subtractedY = get_y() - secondPoint.get_y();
+    double subtractedZ = get_z() - secondPoint.get_z();
+    double subtractedM = (get_material() + secondPoint.get_material())/2;
+    Point subtractedPoint{subtractedX, subtractedY, subtractedZ, subtractedM};
+    return subtractedPoint;
+}
+
+Point Point::operator*(const double scalar) const
+{
+    double scaledX = get_x()*scalar;
+    double scaledY = get_y()*scalar;
+    double scaledZ = get_z()*scalar;
+    double scaledM = get_material();
+    Point scaledPoint{scaledX, scaledY, scaledZ, scaledM};
+    return scaledPoint;
 }
 
 double Point::get_x() const
@@ -91,4 +110,24 @@ void Point::print_list(std::vector<Point*> pointList)
         point->print();
     }
     std::cout << "]" << std::endl;
+}
+
+Point Point::normalize()
+{
+    double x = get_x();
+    double y = get_y();
+    double z = get_z();
+    double magnitude = get_magnitude();
+    Point normalizedPoint(x/magnitude,y/magnitude,z/magnitude,1);
+    return normalizedPoint;
+}
+
+double Point::get_magnitude()
+{
+    double x = get_x();
+    double y = get_y();
+    double z = get_z();
+    double material = get_material();
+    double magnitude = sqrt(x*x + y*y + z*z);
+    return magnitude;
 }

@@ -34,6 +34,8 @@ public:
     void   set_number(int const number);
     double get_location() const;
     void   set_location(double const location);
+    Point  get_path_start(int pathNumber);
+    Point  get_path_end(int pathNumber);
 
 protected:
 

@@ -121,13 +121,11 @@ void Layer::create_paths()
     adjust_extrusion_width();
     for (int i{0}; i<numberOfPaths; i++)
     {
-        Point start{0,0,0};
-        Point end{1,1,1};
+        Point start = get_path_start(i);
+        Point end   = get_path_end(i);
         double diameter = get_diameter_of_print();
-        double location = get_location();
-        Path* newPath = new Path();
-        Path* newPath2 = new Path(start,end,diameter,location);
-        mPathList->push_back(newPath2);
+        Path* newPath = new Path(start,end,diameter);
+        mPathList->push_back(newPath);
     }
 }
 
@@ -187,4 +185,44 @@ double Layer::get_location() const
 void Layer::set_location(double const location)
 {
     mLocation = location;
+}
+
+Point Layer::get_path_start(int pathNumber)
+{
+    double xLocation{0};
+    double yLocation{0};
+    double zLocation = get_location();
+    int numberOfPaths = get_number_of_paths();
+    int layerNumber = get_number();
+    if (layerNumber%2 == 0)
+    {
+        yLocation = mWidth/numberOfPaths*pathNumber;
+    }
+    else
+    {
+        xLocation = mLength/numberOfPaths*pathNumber;
+    }
+
+    Point start{xLocation,yLocation,zLocation};
+    return start;
+}
+
+Point Layer::get_path_end(int pathNumber)
+{
+    double xLocation{mLength};
+    double yLocation{mWidth};
+    double zLocation = get_location();
+    int numberOfPaths = get_number_of_paths();
+    int layerNumber = get_number();
+    if (layerNumber%2 == 0)
+    {
+        yLocation = mWidth/numberOfPaths*pathNumber;
+    }
+    else
+    {
+        xLocation = mLength/numberOfPaths*pathNumber;
+    }
+
+    Point end{xLocation,yLocation,zLocation};
+    return end;
 }

@@ -25,15 +25,6 @@ Path::Path(Point start, Point end, double diameter):mPointList{new std::vector<P
     create_points();
 }
 
-Path::Path(Point start, Point end, double diameter, double layerLocation):mPointList{new std::vector<Point*>}
-{
-    set_start(start);
-    set_end(end);
-    set_diameter(diameter);
-    set_z(layerLocation);
-    create_points();
-}
-
 Point Path::get_start() const
 {
     return mStart;
@@ -108,13 +99,8 @@ void Path::create_points()
     adjust_point_spacing();
     for (int i{0}; i<numberOfPoints; i++)
     {
-        Point* newPoint = new Point();
-        double xLocation{1};
-        double yLocation{2};
-        double zLocation = mZ;
-        double material{3};
-        Point* newPoint2 = new Point(xLocation,yLocation,zLocation,material);
-        mPointList->push_back(newPoint2);
+        Point* newPoint = create_new_point(i,numberOfPoints);
+        mPointList->push_back(newPoint);
     }
 }
 
@@ -123,12 +109,42 @@ std::vector<Point*> Path::get_point_list()
     return *mPointList;
 }
 
-void Path::set_z(double const layerLocation)
+Point* Path::create_new_point(int pointNumber, int numberOfPointsInPath) const
 {
-    mZ = layerLocation;
+    Point pathVector = mEnd-mStart;
+    double pathLength = pathVector.get_magnitude();
+    double stepLength = pathLength/numberOfPointsInPath;
+    Point stepDirection = pathVector.normalize();
+    Point step = stepDirection*stepLength;
+    Point pointInfo = (mStart + step*pointNumber); // set material here
+
+    Point* newPoint = new Point(pointInfo);
+    return newPoint;
 }
 
 double Path::get_z() const
 {
-    return mZ;
+    return 0;
+}
+
+double Path::get_x(int pointNumber) const
+{
+    double xLocation{0};
+    Point direction = mEnd+mStart;
+    Point directionNormalized = direction.normalize();
+
+    return xLocation;
+}
+
+double Path::get_y(int pointNumber) const
+{
+    double yLocation{0};
+
+    return yLocation;
+}
+
+double Path::get_material(int pointNumber) const
+{
+    double material{0};
+    return material;
 }

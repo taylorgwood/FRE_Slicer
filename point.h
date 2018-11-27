@@ -10,7 +10,9 @@ public:
     Point();
     Point(double x, double y, double z);
     Point(double x, double y, double z, double material);
-    Point  operator+(const Point secondPoint);
+    Point  operator+(const Point secondPoint) const;
+    Point  operator-(const Point secondPoint) const;
+    Point  operator*(const double scalar) const;
     double get_x() const;
     double get_y() const;
     double get_z() const;
@@ -21,6 +23,8 @@ public:
     void   set_material(double const material);
     void   print();
     void   print_list(std::vector<Point*> pointList);
+    Point  normalize();
+    double get_magnitude();
 
 protected:
 

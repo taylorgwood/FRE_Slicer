@@ -292,6 +292,26 @@ TEST(PointLocations,whenConstructingShape_pointLocationsConstructed)
     Path* firstPath = pathList[1];
     std::vector<Point*> pointList = firstPath->get_point_list();
     Point point;
+//    point.print_list(pointList);
+}
+
+TEST(PointMath,whenAskedForNormalizedPoint_getNormalizedPoint)
+{
+    Point point{1,2,3,0.5};
+    Point normalizedPoint = point.normalize();
+    Point expectedPoint{1/sqrt(14),2/sqrt(14),3/sqrt(14),0.5};
+    EXPECT_POINT_EQ(normalizedPoint,expectedPoint);
+}
+
+TEST(PointLocations,whenConstructingShape_pointLocationsCorrect)
+{
+    Shape shape;
+    std::vector<Layer*> layerList = shape.get_layer_list();
+    Layer* firstLayer = layerList[0];
+    std::vector<Path*> pathList = firstLayer->get_path_list();
+    Path* firstPath = pathList[2];
+    std::vector<Point*> pointList = firstPath->get_point_list();
+    Point point;
     point.print_list(pointList);
 }
 

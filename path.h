@@ -9,7 +9,6 @@ public:
     Path();
     Path(Point start, Point end);
     Path(Point start, Point end, double diameter);
-    Path(Point start, Point end, double diameter, double layerLocation);
     Point  get_start() const;
     void   set_start(Point const startPoint);
     Point  get_end() const;
@@ -24,19 +23,20 @@ public:
     void   create_points();
     std::vector<Point*> get_point_list();
     double get_z() const;
-    void   set_z(double const layerLocation);
-
+    double get_x(int pointNumber) const;
+    double get_y(int pointNumber) const;
+    double get_material(int pointNumber) const;
+    Point* create_new_point(int pointNumber, int numberOfPointsInPath) const;
 
 protected:
 
 private:
-    Point mStart;
-    Point mEnd;
-    double mDiameter;
+    Point  mStart{0,0,0};
+    Point  mEnd{0,0,0};
+    double mDiameter{0.26};
     std::vector<Point*> *mPointList{nullptr};
     double mLength{10};
     double mResolution{1.0};
-    double mZ{0};
 };
 
 #endif // PATH_H
