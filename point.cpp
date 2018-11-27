@@ -78,17 +78,17 @@ void Point::set_material(double const material)
 
 void Point::print()
 {
-    std::cout << "{" << get_x() << ", " << get_y() << ", " << get_z() << "}" << std::endl;
+    std::cout << "{" << get_x() << ", " << get_y() << ", " << get_z() << ", " << get_material() << "}" << std::endl;
 }
 
-void Point::print_list(std::vector<Point> pointList)
+void Point::print_list(std::vector<Point*> pointList)
 {
     std::cout << "[" << std::endl;
     size_t numberOfPoints = pointList.size();
     for (int i{0}; i<numberOfPoints; i++)
     {
-        Point point = pointList[i];
-        point.print();
+        Point* point = pointList[i];
+        point->print();
     }
     std::cout << "]" << std::endl;
 }

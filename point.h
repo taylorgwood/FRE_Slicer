@@ -20,7 +20,7 @@ public:
     void   set_z(double const z);
     void   set_material(double const material);
     void   print();
-    void   print_list(std::vector<Point> pointList);
+    void   print_list(std::vector<Point*> pointList);
 
 protected:
 

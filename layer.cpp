@@ -121,11 +121,13 @@ void Layer::create_paths()
     adjust_extrusion_width();
     for (int i{0}; i<numberOfPaths; i++)
     {
-        Point startPoint{0,0,0};
-        Point endPoint{1,1,1};
+        Point start{0,0,0};
+        Point end{1,1,1};
         double diameter = get_diameter_of_print();
-        Path* newPath = new Path(); //startPoint,endPoint,diameter,mLocation);
-        mPathList->push_back(newPath);
+        double location = get_location();
+        Path* newPath = new Path();
+        Path* newPath2 = new Path(start,end,diameter,location);
+        mPathList->push_back(newPath2);
     }
 }
 

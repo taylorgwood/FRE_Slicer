@@ -14,6 +14,7 @@ Path::Path(Point start, Point end):mPointList{new std::vector<Point*>}
 {
     set_start(start);
     set_end(end);
+    create_points();
 }
 
 Path::Path(Point start, Point end, double diameter):mPointList{new std::vector<Point*>}
@@ -21,6 +22,7 @@ Path::Path(Point start, Point end, double diameter):mPointList{new std::vector<P
     set_start(start);
     set_end(end);
     set_diameter(diameter);
+    create_points();
 }
 
 Path::Path(Point start, Point end, double diameter, double layerLocation):mPointList{new std::vector<Point*>}
@@ -29,6 +31,7 @@ Path::Path(Point start, Point end, double diameter, double layerLocation):mPoint
     set_end(end);
     set_diameter(diameter);
     set_z(layerLocation);
+    create_points();
 }
 
 Point Path::get_start() const
@@ -106,7 +109,12 @@ void Path::create_points()
     for (int i{0}; i<numberOfPoints; i++)
     {
         Point* newPoint = new Point();
-        mPointList->push_back(newPoint);
+        double xLocation{1};
+        double yLocation{2};
+        double zLocation = mZ;
+        double material{3};
+        Point* newPoint2 = new Point(xLocation,yLocation,zLocation,material);
+        mPointList->push_back(newPoint2);
     }
 }
 

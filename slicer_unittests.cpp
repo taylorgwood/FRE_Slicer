@@ -147,7 +147,7 @@ TEST(LayerList,givenShape_getCorrectNumberOfPathsInFirstLayer)
     shape.set_height(10);
     shape.set_layer_height(0.26);
     std::vector<Layer*> layerList = shape.get_layer_list();
-    Layer* firstLayer = layerList[1];
+    Layer* firstLayer = layerList[0];
     int numberOfPaths = firstLayer->get_number_of_paths();
     int expectedNumberOfPaths{38};
     EXPECT_EQ(numberOfPaths,expectedNumberOfPaths);
@@ -159,7 +159,7 @@ TEST(PathList,givenShape_getCorrectlySizedPathList)
     shape.set_height(10);
     shape.set_layer_height(0.26);
     std::vector<Layer*> layerList = shape.get_layer_list();
-    Layer* firstLayer = layerList[1];
+    Layer* firstLayer = layerList[0];
     std::vector<Path*> pathList = firstLayer->get_path_list();
     size_t numberOfPathsInList = pathList.size();
     int expectedNumberOfPaths{38};
@@ -172,9 +172,9 @@ TEST(PathList,givenShape_getCorrectNumberOfPointsInFirstPath)
     shape.set_height(10);
     shape.set_layer_height(0.26);
     std::vector<Layer*> layerList = shape.get_layer_list();
-    Layer* firstLayer = layerList[1];
+    Layer* firstLayer = layerList[0];
     std::vector<Path*> pathList = firstLayer->get_path_list();
-    Path* firstPath = pathList[1];
+    Path* firstPath = pathList[0];
     int numberOfPoints = firstPath->get_number_of_points();
     int expectedNumberOfPoints{10};
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
@@ -186,9 +186,9 @@ TEST(PathList,givenShape_getCorrectNumberOfPointsInFirstPathList)
     shape.set_height(10);
     shape.set_layer_height(0.26);
     std::vector<Layer*> layerList = shape.get_layer_list();
-    Layer* firstLayer = layerList[1];
+    Layer* firstLayer = layerList[0];
     std::vector<Path*> pathList = firstLayer->get_path_list();
-    Path* firstPath = pathList[1];
+    Path* firstPath = pathList[0];
     std::vector<Point*> pointList = firstPath->get_point_list();
     size_t numberOfPoints = pointList.size();
     int expectedNumberOfPoints{10};
@@ -198,7 +198,7 @@ TEST(PathList,givenShape_getCorrectNumberOfPointsInFirstPathList)
 TEST(LayerList,whenAskedForPointsInLayer_getCorrectNumberOfPointsInLayer)
 {
     Shape shape;
-    int firstLayer{1};
+    int firstLayer{0};
     std::vector<Point> pointList = shape.get_points_in_layer(firstLayer);
     size_t numberOfPointsInLayer = pointList.size();
     int expectedNumberOfPointsInLayer{380};
@@ -232,7 +232,7 @@ TEST(PrintOut,whenGivenPointList_printPointsToConsole)
 TEST(LayerLocations,whenAskedForLayerLocations_getLayerLocations)
 {
     Shape shape;
-    int firstLayer{1};
+    int firstLayer{0};
     std::vector<double> layerLocationVector = shape.get_layer_locations();
     size_t vectorLength = layerLocationVector.size();
     double layerHeight{0.26};
@@ -283,16 +283,28 @@ TEST(LayerNumber,whenConstructingShape_layerNumbersSet)
     EXPECT_VECTOR_EQ(layerNumberVector,expectedLayerNumbers);
 }
 
+TEST(PointLocations,whenConstructingShape_pointLocationsConstructed)
+{
+    Shape shape;
+    std::vector<Layer*> layerList = shape.get_layer_list();
+    Layer* firstLayer = layerList[0];
+    std::vector<Path*> pathList = firstLayer->get_path_list();
+    Path* firstPath = pathList[1];
+    std::vector<Point*> pointList = firstPath->get_point_list();
+    Point point;
+    point.print_list(pointList);
+}
+
 //TEST(PathLocations,whenAskedForPathLocations_getPathLocations)
 //{
 //    Shape shape;
-//    int firstLayer{1};
+//    int firstLayer{0};
 //}
 
 //TEST(PointList,whenAskedForPointsInLayer_getCorrectPointsInLayer)
 //{
 //    Shape shape;
-//    int firstLayer{1};
+//    int firstLayer{0};
 //    std::vector<Point> pointList = shape.get_points_in_layer(firstLayer);
 //    std::vector<Point> firstTenPoints;
 //    for (int i{0}; i<10; i++)
