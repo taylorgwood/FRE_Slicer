@@ -217,7 +217,7 @@ TEST(ShapeList,whenAskedForPointsInShape_getCorrectNumberOfPointsInShape)
 TEST(PrintOut,whenGivenPoint_printPointToConsole)
 {
     Point point{1,2,3};
-    point.print();
+//    point.print();
 }
 
 TEST(PrintOut,whenGivenPointList_printPointsToConsole)
@@ -226,7 +226,7 @@ TEST(PrintOut,whenGivenPointList_printPointsToConsole)
     Point secondPoint{4,5,6};
     Point thirdPoint{7,8,9};
     std::vector<Point> pointList = {firstPoint,secondPoint,thirdPoint};
-    firstPoint.print_list(pointList);
+//    firstPoint.print_list(pointList);
 }
 
 TEST(LayerLocations,whenAskedForLayerLocations_getLayerLocations)
@@ -246,11 +246,11 @@ TEST(LayerLocations,whenAskedForLayerLocations_getLayerLocations)
     EXPECT_VECTOR_EQ(layerLocationVector,expectedLayerHeights);
 }
 
-TEST(a,b_c)
+TEST(LayerLocations,whenConstructingShape_layerLocationsSet)
 {
     Shape shape;
     std::vector<Layer*> layerList = shape.get_layer_list();
-    std::vector<double> layerLocationVector; // = shape.get_layer_locations();
+    std::vector<double> layerLocationVector;
     size_t vectorLength = layerLocationVector.size();
     double layerHeight{0.26};
     double expectedLocation{0};
@@ -264,6 +264,23 @@ TEST(a,b_c)
         layerLocationVector.push_back(location);
     }
     EXPECT_VECTOR_EQ(layerLocationVector,expectedLayerHeights);
+}
+
+TEST(LayerNumber,whenConstructingShape_layerNumbersSet)
+{
+    Shape shape;
+    std::vector<Layer*> layerList = shape.get_layer_list();
+    std::vector<double> layerNumberVector;
+    size_t vectorLength = layerNumberVector.size();
+    std::vector<double> expectedLayerNumbers;
+    for (int i{0}; i<vectorLength; i++)
+    {
+        expectedLayerNumbers.push_back(i);
+        Layer* layer = layerList[i];
+        double number = layer->get_number();
+        layerNumberVector.push_back(number);
+    }
+    EXPECT_VECTOR_EQ(layerNumberVector,expectedLayerNumbers);
 }
 
 //TEST(PathLocations,whenAskedForPathLocations_getPathLocations)

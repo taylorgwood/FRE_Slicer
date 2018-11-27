@@ -13,9 +13,9 @@ Layer::Layer():mPathList{new std::vector<Path*>}
 
 Layer::Layer(int layerNumber, double layerLocation):mPathList{new std::vector<Path*>}
 {
-    create_paths();
     set_number(layerNumber);
     set_location(layerLocation);
+    create_paths();
 }
 
 double Layer::get_height() const
@@ -121,7 +121,10 @@ void Layer::create_paths()
     adjust_extrusion_width();
     for (int i{0}; i<numberOfPaths; i++)
     {
-        Path* newPath = new Path();
+        Point startPoint{0,0,0};
+        Point endPoint{1,1,1};
+        double diameter = get_diameter_of_print();
+        Path* newPath = new Path(); //startPoint,endPoint,diameter,mLocation);
         mPathList->push_back(newPath);
     }
 }

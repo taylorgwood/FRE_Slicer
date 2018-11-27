@@ -7,8 +7,9 @@ class Path
 public:
     ~Path();
     Path();
-    Path(Point startPoint, Point endPoint);
-    Path(Point startPoint, Point endPoint, double diameter);
+    Path(Point start, Point end);
+    Path(Point start, Point end, double diameter);
+    Path(Point start, Point end, double diameter, double layerLocation);
     Point  get_start() const;
     void   set_start(Point const startPoint);
     Point  get_end() const;
@@ -22,6 +23,9 @@ public:
     void   adjust_point_spacing();
     void   create_points();
     std::vector<Point*> get_point_list();
+    double get_z() const;
+    void   set_z(double const layerLocation);
+
 
 protected:
 
@@ -32,6 +36,7 @@ private:
     std::vector<Point*> *mPointList{nullptr};
     double mLength{10};
     double mResolution{1.0};
+    double mZ{0};
 };
 
 #endif // PATH_H
