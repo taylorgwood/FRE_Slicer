@@ -34,8 +34,10 @@ public:
     void   set_number(int const number);
     double get_location() const;
     void   set_location(double const location);
-    Point  get_path_start(int pathNumber);
-    Point  get_path_end(int pathNumber);
+//    Point  get_path_start(int pathNumber);
+//    Point  get_path_end(int pathNumber);
+    int    get_direction(int pathNumber);
+    std::vector<Point>  get_turn_points(int pathNumber);
 
 protected:
 

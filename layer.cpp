@@ -121,10 +121,14 @@ void Layer::create_paths()
     adjust_extrusion_width();
     for (int i{0}; i<numberOfPaths; i++)
     {
-        Point start = get_path_start(i);
-        Point end   = get_path_end(i);
+        int pathNumber = i;
+        std::vector<Point> turnPoints = get_turn_points(pathNumber);
+        Point start = turnPoints[0];
+        Point end = turnPoints[1];
+//        Point start = get_path_start(i);
+//        Point end   = get_path_end(i);
         double diameter = get_diameter_of_print();
-        Path* newPath = new Path(start,end,diameter);
+        Path* newPath = new Path(start,end,diameter,pathNumber);
         mPathList->push_back(newPath);
     }
 }
@@ -156,7 +160,7 @@ std::vector<Point> Layer::get_points()
     for (int i{0}; i<numberOfPaths; i++)
     {
         Path* path = get_path_list()[i];
-//        int numberOfPoints = path->get_number_of_points();
+        //        int numberOfPoints = path->get_number_of_points();
         std::vector<Point*> points = path->get_point_list();
         size_t numberOfPoints = points.size();
         for (int j{0}; j<numberOfPoints; j++)
@@ -188,42 +192,109 @@ void Layer::set_location(double const location)
     mLocation = location;
 }
 
-Point Layer::get_path_start(int pathNumber)
+//Point Layer::get_path_start(int pathNumber)
+//{
+
+//    double xLocation{0};
+//    double yLocation{0};
+//    double zLocation = get_location();
+//    int numberOfPaths = get_number_of_paths();
+//    int layerNumber = get_number();
+//    if (layerNumber%2 == 0)
+//    {
+//        xLocation = 0;
+//        yLocation = mWidth/numberOfPaths*pathNumber;
+//    }
+//    else
+//    {
+//        xLocation = mLength/numberOfPaths*pathNumber;
+//        yLocation = 0;
+//    }
+
+//    Point start{xLocation,yLocation,zLocation};
+//    return start;
+//}
+
+//Point Layer::get_path_end(int pathNumber)
+//{
+//    double xLocation{0};
+//    double yLocation{0};
+//    double zLocation = get_location();
+//    int numberOfPaths = get_number_of_paths();
+//    int layerNumber = get_number();
+//    if (layerNumber%2 == 0)
+//    {
+//        xLocation = mLength;
+//        yLocation = mWidth/numberOfPaths*pathNumber;
+//    }
+//    else
+//    {
+//        xLocation = mLength/numberOfPaths*pathNumber;
+//        yLocation = mWidth;
+//    }
+
+//    Point end{xLocation,yLocation,zLocation};
+//    return end;
+//}
+
+int Layer:: get_direction(int pathNumber)
 {
-    double xLocation{0};
-    double yLocation{0};
-    double zLocation = get_location();
-    int numberOfPaths = get_number_of_paths();
-    int layerNumber = get_number();
-    if (layerNumber%2 == 0)
+    int direction{0};
+    if (pathNumber%2 == 0)
     {
-        yLocation = mWidth/numberOfPaths*pathNumber;
+        direction = 1;
     }
     else
     {
-        xLocation = mLength/numberOfPaths*pathNumber;
+        direction = -1;
     }
-
-    Point start{xLocation,yLocation,zLocation};
-    return start;
+    return direction;
 }
 
-Point Layer::get_path_end(int pathNumber)
+std::vector<Point> Layer::get_turn_points(int pathNumber)
 {
-    double xLocation{mLength};
-    double yLocation{mWidth};
+    double xStart{0};
+    double yStart{0};
+    double xEnd{0};
+    double yEnd{0};
     double zLocation = get_location();
     int numberOfPaths = get_number_of_paths();
     int layerNumber = get_number();
     if (layerNumber%2 == 0)
     {
-        yLocation = mWidth/numberOfPaths*pathNumber;
+        if (pathNumber%2 == 0)
+        {
+            xStart = 0;
+            xEnd   = mLength;
+        }
+        else
+        {
+            xStart = mLength;
+            xEnd   = 0;
+        }
+        yStart = mWidth/numberOfPaths*pathNumber;
+        yEnd   = yStart;
     }
     else
     {
-        xLocation = mLength/numberOfPaths*pathNumber;
+        if (pathNumber%2 == 0)
+        {
+            yStart = 0;
+            yEnd   = mWidth;
+        }
+        else
+        {
+            yStart = mWidth;
+            yEnd   = 0;
+        }
+        xStart = mLength/numberOfPaths*pathNumber;
+        xEnd   = xStart;
     }
 
-    Point end{xLocation,yLocation,zLocation};
-    return end;
+    Point startPoint{xStart,yStart,zLocation};
+    Point endPoint{xEnd,yEnd,zLocation};
+    std::vector <Point> turnPoints;
+    turnPoints.push_back(startPoint);
+    turnPoints.push_back(endPoint);
+    return turnPoints;
 }

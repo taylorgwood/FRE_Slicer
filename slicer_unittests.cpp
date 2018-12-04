@@ -330,5 +330,20 @@ TEST(PointLocations,whenConstructingShape_pointLocationsCorrect)
     Path* thirdPath = pathList[2];
     std::vector<Point*> pointList = thirdPath->get_point_list();
     Point point;
-//    point.print_list(pointList);
+    point.print_list(pointList);
+}
+
+TEST(PointLocations,wenConstructingShape_pointLocationsFollowSwitchbackPattern)
+{
+    Shape shape;
+    std::vector<Layer*> layerList = shape.get_layer_list();
+    Layer* firstLayer = layerList[0];
+    std::vector<Path*> pathList = firstLayer->get_path_list();
+    Path* thirdPath = pathList[2];
+    std::vector<Point*> pointList3 = thirdPath->get_point_list();
+    Path* fourthPath = pathList[3];
+    std::vector<Point*> pointList4 = fourthPath->get_point_list();
+    Point point;
+    point.print_list(pointList3);
+    point.print_list(pointList4);
 }

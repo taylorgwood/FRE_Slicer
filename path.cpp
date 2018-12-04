@@ -25,6 +25,15 @@ Path::Path(Point start, Point end, double diameter):mPointList{new std::vector<P
     create_points();
 }
 
+Path::Path(Point start, Point end, double diameter, int pathNumber):mPointList{new std::vector<Point*>}
+{
+    set_start(start);
+    set_end(end);
+    set_diameter(diameter);
+    set_path_number(pathNumber);
+    create_points();
+}
+
 Point Path::get_start() const
 {
     return mStart;
@@ -128,4 +137,14 @@ double Path::get_material(int pointNumber, Point pointInfo) const
         material = 0.75;
     }
     return material;
+}
+
+void Path::set_path_number(int const pathNumber)
+{
+    mPathNumber = pathNumber;
+}
+
+int Path::get_path_number() const
+{
+    return mPathNumber;
 }

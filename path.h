@@ -9,6 +9,7 @@ public:
     Path();
     Path(Point start, Point end);
     Path(Point start, Point end, double diameter);
+    Path(Point start, Point end, double diameter, int pathNumber);
     Point  get_start() const;
     void   set_start(Point const startPoint);
     Point  get_end() const;
@@ -24,6 +25,8 @@ public:
     std::vector<Point*> get_point_list();
     double get_material(int pointNumber, Point pointInfo) const;
     Point* create_new_point(int pointNumber, int numberOfPointsInPath) const;
+    void   set_path_number(int const pathNumber);
+    int    get_path_number() const;
 
 protected:
 
@@ -34,6 +37,7 @@ private:
     std::vector<Point*> *mPointList{nullptr};
     double mLength{10};
     double mResolution{1.0};
+    int    mPathNumber{0};
 };
 
 #endif // PATH_H
