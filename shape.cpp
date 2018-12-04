@@ -115,13 +115,15 @@ std::vector<double> Shape::get_layer_locations()
     return layerLocationVector;
 }
 
-void Shape::generate_gcode()
+void Shape::generate_gcode(std::string fileName)
 {
-    std::ifstream fin;
-    std::ofstream fout;
-    std::string filename;
+    std::ofstream fout{fileName};
+    if (fout.fail())
+    {
+        return;
+    }
 
-    std::fstream newFile;
-    newFile.open("test.txt", std::fstream::in | std::fstream::out | std::fstream::app);
-    newFile << "more lorem ipsum";
+    fout << "Hello File!";
+
+    fout.close();
 }

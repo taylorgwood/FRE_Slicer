@@ -19,6 +19,7 @@ public:
     std::vector<Point>  get_points_in_layer(int layerNumber);
     std::vector<Point>  get_points();
     std::vector<double> get_layer_locations();
+    void generate_gcode(std::string fileName);
 
 protected:
 
@@ -27,7 +28,7 @@ private:
     double mLayerHeight{0.26};
     bool   mAutoAdjustLayers{true};
     std::vector<Layer*> *mLayerList;
-    void generate_gcode();
+
 
 };
 

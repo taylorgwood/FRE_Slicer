@@ -333,7 +333,7 @@ TEST(PointLocations,whenConstructingShape_pointLocationsCorrect)
     point.print_list(pointList);
 }
 
-TEST(PointLocations,wenConstructingShape_pointLocationsFollowSwitchbackPattern)
+TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
 {
     Shape shape;
     std::vector<Layer*> layerList = shape.get_layer_list();
@@ -346,4 +346,11 @@ TEST(PointLocations,wenConstructingShape_pointLocationsFollowSwitchbackPattern)
     Point point;
     point.print_list(pointList3);
     point.print_list(pointList4);
+}
+
+TEST(Gcode,whenAskedToCreateFile_newFileCreated)
+{
+    Shape shape;
+    std::string fileName = "testFile.txt";
+    shape.generate_gcode(fileName);
 }
