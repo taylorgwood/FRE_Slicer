@@ -1,4 +1,5 @@
 #include "shape.h"
+#include <fstream>
 
 Shape::~Shape()
 {
@@ -112,4 +113,15 @@ std::vector<double> Shape::get_layer_locations()
         layerLocationVector.push_back(layerLocation);
     }
     return layerLocationVector;
+}
+
+void Shape::generate_gcode()
+{
+    std::ifstream fin;
+    std::ofstream fout;
+    std::string filename;
+
+    std::fstream newFile;
+    newFile.open("test.txt", std::fstream::in | std::fstream::out | std::fstream::app);
+    newFile << "more lorem ipsum";
 }

@@ -192,65 +192,6 @@ void Layer::set_location(double const location)
     mLocation = location;
 }
 
-//Point Layer::get_path_start(int pathNumber)
-//{
-
-//    double xLocation{0};
-//    double yLocation{0};
-//    double zLocation = get_location();
-//    int numberOfPaths = get_number_of_paths();
-//    int layerNumber = get_number();
-//    if (layerNumber%2 == 0)
-//    {
-//        xLocation = 0;
-//        yLocation = mWidth/numberOfPaths*pathNumber;
-//    }
-//    else
-//    {
-//        xLocation = mLength/numberOfPaths*pathNumber;
-//        yLocation = 0;
-//    }
-
-//    Point start{xLocation,yLocation,zLocation};
-//    return start;
-//}
-
-//Point Layer::get_path_end(int pathNumber)
-//{
-//    double xLocation{0};
-//    double yLocation{0};
-//    double zLocation = get_location();
-//    int numberOfPaths = get_number_of_paths();
-//    int layerNumber = get_number();
-//    if (layerNumber%2 == 0)
-//    {
-//        xLocation = mLength;
-//        yLocation = mWidth/numberOfPaths*pathNumber;
-//    }
-//    else
-//    {
-//        xLocation = mLength/numberOfPaths*pathNumber;
-//        yLocation = mWidth;
-//    }
-
-//    Point end{xLocation,yLocation,zLocation};
-//    return end;
-//}
-
-int Layer:: get_direction(int pathNumber)
-{
-    int direction{0};
-    if (pathNumber%2 == 0)
-    {
-        direction = 1;
-    }
-    else
-    {
-        direction = -1;
-    }
-    return direction;
-}
-
 std::vector<Point> Layer::get_turn_points(int pathNumber)
 {
     double xStart{0};
@@ -290,7 +231,6 @@ std::vector<Point> Layer::get_turn_points(int pathNumber)
         xStart = mLength/numberOfPaths*pathNumber;
         xEnd   = xStart;
     }
-
     Point startPoint{xStart,yStart,zLocation};
     Point endPoint{xEnd,yEnd,zLocation};
     std::vector <Point> turnPoints;

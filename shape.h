@@ -27,7 +27,7 @@ private:
     double mLayerHeight{0.26};
     bool   mAutoAdjustLayers{true};
     std::vector<Layer*> *mLayerList;
-
+    void generate_gcode();
 
 };
 
