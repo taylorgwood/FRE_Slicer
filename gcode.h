@@ -9,11 +9,15 @@ class Gcode
 public:
     Gcode();
     void generate_file(Shape &shape);
-    void generate_gcode(std::ofstream& fout, Shape &shape);
+    void write_gcode(std::ofstream& fout, Shape &shape);
     std::ofstream create_empty_file();
     std::string get_file_name() const;
     void set_file_name(std::string const fileName);
-    void generate_layer_gcode(std::ofstream& fout, Shape& shape, int layerNumber);
+    void write_layer_gcode(std::ofstream& fout, Shape& shape, int layerNumber);
+    void write_points_in_layer(std::ofstream& fout, Layer *layer);
+    void write_initial_gcode(std::ofstream& fout, Shape& shape);
+
+
 
 protected:
 
