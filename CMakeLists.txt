@@ -21,6 +21,8 @@ add_library(${PROJECT_NAME} STATIC
     path.h
     point.cpp
     point.h
+    gcode.cpp
+    gcode.h
 )
 
 add_executable(${TEST_NAME} slicer_unittests.cpp)
