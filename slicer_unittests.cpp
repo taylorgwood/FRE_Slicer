@@ -349,9 +349,20 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
 //    point.print_list(pointList4);
 }
 
-TEST(Gcode,whenAskedToCreateFile_newFileCreated)
+TEST(Gcode,whenAskedToCreateEmptyFile_newEmptyFileCreated)
 {
     Gcode gcode;
-    std::string fileName = "testFile.txt";
-    gcode.create_file(fileName);
+    gcode.create_empty_file();
+}
+
+TEST(Gcode,whenAskedToGenerateGCodeFile_LayersPrintedInFile)
+{
+    Gcode gcode;
+    Shape shape;
+    gcode.generate_file(shape);
+}
+
+TEST(Gcode,whenAskedToGenerateGCodeFile_PointsPrintedInFile)
+{
+
 }

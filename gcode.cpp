@@ -5,24 +5,28 @@ Gcode::Gcode()
 
 }
 
-
-void Gcode::generate_gcode(std::string& fileName)
+void Gcode::generate_file(Shape& shape)
 {
-    std::ofstream fout = create_file(fileName);
-    // loop through layers, write_layer_gcode_to_file();
-        // loop through paths, write_path_points_to_file();
-
-
-    fout << "Hello File!";
-
+    std::ofstream fout = create_empty_file();
+    generate_gcode(fout, shape);
     fout.close();
-
 }
 
-std::ofstream Gcode::create_file(std::string& fileName)
+void Gcode::generate_gcode(std::ofstream& fout, Shape& shape)
 {
-    int numberOfChecks{0};
-    std::string newFileName = make_unique_file_name(fileName,numberOfChecks);
+    int numberOfLayers = shape.get_number_of_layers();
+    for (int i{0}; i<numberOfLayers; i++)
+    {
+        fout << "Layer" << i << std::endl;
+        int layerNumber{i};
+        generate_layer_gcode(fout, shape, layerNumber);
+    }
+}
+
+std::ofstream Gcode::create_empty_file()
+{
+    make_file_name_unique();
+    std::string fileName = get_file_name();
     std::ofstream fout{fileName};
     if (fout.fail())
     {
@@ -31,16 +35,17 @@ std::ofstream Gcode::create_file(std::string& fileName)
     return fout;
 }
 
-std::string Gcode::make_unique_file_name(std::string& fileName, int numberOfChecks)
+void Gcode::make_file_name_unique()
 {
-    std::string newFileName = fileName;
+    std::string fileName = get_file_name();
 
     if (does_file_exist(fileName))
     {
-        // do something here;
+        std::string suffix = "(1)";
+        fileName = fileName + suffix;
     }
 
-    return newFileName;
+    set_file_name(fileName);
 }
 
 bool Gcode::does_file_exist(const std::string& fileName)
@@ -51,4 +56,19 @@ bool Gcode::does_file_exist(const std::string& fileName)
         return true;
     }
     return false;
+}
+
+std::string Gcode::get_file_name() const
+{
+    return mFileName;
+}
+
+void Gcode::set_file_name(std::string const fileName)
+{
+    mFileName = fileName;
+}
+
+void Gcode::generate_layer_gcode(std::ofstream& fout, Shape& shape, int layerNumber)
+{
+    Layer* layer = shape.get_layer(layerNumber);
 }

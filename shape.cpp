@@ -113,3 +113,10 @@ std::vector<double> Shape::get_layer_locations()
     }
     return layerLocationVector;
 }
+
+Layer* Shape::get_layer(int layerNumber)
+{
+    std::vector<Layer*> layerList = get_layer_list();
+    Layer* layer = layerList[layerNumber];
+    return layer;
+}

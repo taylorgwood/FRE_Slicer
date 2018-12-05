@@ -8,14 +8,19 @@ class Gcode
 {
 public:
     Gcode();
-    void generate_gcode(std::string &fileName);
-    std::ofstream create_file(std::string& fileName);
+    void generate_file(Shape &shape);
+    void generate_gcode(std::ofstream& fout, Shape &shape);
+    std::ofstream create_empty_file();
+    std::string get_file_name() const;
+    void set_file_name(std::string const fileName);
+    void generate_layer_gcode(std::ofstream& fout, Shape& shape, int layerNumber);
 
 protected:
 
 private:
-    std::string make_unique_file_name(std::string& fileName, int numberOfChecks);
+    void make_file_name_unique();
     bool does_file_exist(const std::string& fileName);
+    std::string mFileName{"newFile.txt"};
 
 };
 
