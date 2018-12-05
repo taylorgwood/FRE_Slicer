@@ -19,10 +19,6 @@ public:
     std::vector<Point>  get_points_in_layer(int layerNumber);
     std::vector<Point>  get_points();
     std::vector<double> get_layer_locations();
-    void generate_gcode(std::string fileName);
-    std::string check_file_name(std::string fileName, int numberOfChecks);
-    bool does_file_exist(const std::string& fileName);
-
 
 protected:
 

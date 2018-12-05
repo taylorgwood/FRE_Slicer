@@ -4,6 +4,7 @@
 #include "path.h"
 #include "layer.h"
 #include "shape.h"
+#include "gcode.h"
 
 void EXPECT_POINT_EQ(Point firstPoint, Point secondPoint)
 {
@@ -330,7 +331,7 @@ TEST(PointLocations,whenConstructingShape_pointLocationsCorrect)
     Path* thirdPath = pathList[2];
     std::vector<Point*> pointList = thirdPath->get_point_list();
     Point point;
-    point.print_list(pointList);
+//    point.print_list(pointList);
 }
 
 TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
@@ -344,13 +345,13 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
     Path* fourthPath = pathList[3];
     std::vector<Point*> pointList4 = fourthPath->get_point_list();
     Point point;
-    point.print_list(pointList3);
-    point.print_list(pointList4);
+//    point.print_list(pointList3);
+//    point.print_list(pointList4);
 }
 
 TEST(Gcode,whenAskedToCreateFile_newFileCreated)
 {
-    Shape shape;
+    Gcode gcode;
     std::string fileName = "testFile.txt";
-    shape.generate_gcode(fileName);
+    gcode.create_file(fileName);
 }

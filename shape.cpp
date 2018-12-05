@@ -1,6 +1,4 @@
 #include "shape.h"
-#include <fstream>
-#include <sys/stat.h>
 
 Shape::~Shape()
 {
@@ -114,45 +112,4 @@ std::vector<double> Shape::get_layer_locations()
         layerLocationVector.push_back(layerLocation);
     }
     return layerLocationVector;
-}
-
-void Shape::generate_gcode(std::string fileName)
-{
-    // create file
-    // loop through layers, write_layer_gcode_to_file();
-        // loop through paths, write_path_points_to_file();
-    std::ofstream fout{fileName};
-    if (fout.fail())
-    {
-        std::cout << "Failed to write to file" << std::endl;
-        return;
-    }
-    int numberOfChecks{0};
-    check_file_name(fileName,numberOfChecks);
-
-    fout << "Hello File!";
-
-    fout.close();
-}
-
-std::string Shape::check_file_name(std::string fileName, int numberOfChecks)
-{
-    std::string newFileName = fileName;
-
-    if (does_file_exist(fileName))
-    {
-        // do something here;
-    }
-
-    return newFileName;
-}
-
-bool Shape::does_file_exist(const std::string& fileName)
-{
-    struct stat buf;
-    if (stat(fileName.c_str(), &buf) != -1)
-    {
-        return true;
-    }
-    return false;
 }
