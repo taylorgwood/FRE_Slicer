@@ -17,7 +17,7 @@ void Gcode::generate_gcode(std::ofstream& fout, Shape& shape)
     int numberOfLayers = shape.get_number_of_layers();
     for (int i{0}; i<numberOfLayers; i++)
     {
-        fout << "Layer" << i << std::endl;
+        fout << "; Layer: " << i << std::endl;
         int layerNumber{i};
         generate_layer_gcode(fout, shape, layerNumber);
     }
@@ -71,4 +71,16 @@ void Gcode::set_file_name(std::string const fileName)
 void Gcode::generate_layer_gcode(std::ofstream& fout, Shape& shape, int layerNumber)
 {
     Layer* layer = shape.get_layer(layerNumber);
+    std::vector<Point> pointsInLayer = layer->get_points();
+    size_t numberOfPointsInLayer = pointsInLayer.size();
+    for (int i{0}; i<numberOfPointsInLayer; i++)
+    {
+        Point point = pointsInLayer[i];
+        fout << "G1 ";
+        fout << " X " << point.get_x();
+        fout << " Y " << point.get_y();
+        fout << " Z " << point.get_z();
+        fout << " M " << point.get_material();
+        fout << std::endl;
+    }
 }
