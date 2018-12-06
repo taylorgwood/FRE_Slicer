@@ -21,24 +21,14 @@ void EXPECT_POINT_EQ(Point* firstPoint, Point* secondPoint)
 }
 
 
-void EXPECT_POINT_LIST_EQ(std::vector<Point> firstVector, std::vector<Point> secondVector)
+void EXPECT_POINT_LIST_EQ(std::vector<Point*> firstVector, std::vector<Point> secondVector)
 {
     size_t numberOfPoints = firstVector.size();
     for (int i{0}; i<numberOfPoints; i++)
     {
-        EXPECT_POINT_EQ(firstVector[i],secondVector[i]);
+        EXPECT_POINT_EQ(*firstVector[i],secondVector[i]);
     }
 }
-
-void EXPECT_POINT_LIST_EQ(std::vector<Point*> firstVector, std::vector<Point*> secondVector)
-{
-    size_t numberOfPoints = firstVector.size();
-    for (int i{0}; i<numberOfPoints; i++)
-    {
-        EXPECT_POINT_EQ(firstVector[i],secondVector[i]);
-    }
-}
-
 
 void EXPECT_VECTOR_EQ(std::vector<double> firstVector, std::vector<double> secondVector)
 {
@@ -47,6 +37,16 @@ void EXPECT_VECTOR_EQ(std::vector<double> firstVector, std::vector<double> secon
     {
         EXPECT_EQ(firstVector[i],secondVector[i]);
     }
+}
+
+bool does_file_exist(const std::string& completeFileName)
+{
+    struct stat buf;
+    if (stat(completeFileName.c_str(), &buf) != -1)
+    {
+        return true;
+    }
+    return false;
 }
 
 TEST(PointConstructor,givenNoValues_getZeroXYZ)
@@ -308,9 +308,22 @@ TEST(PointLocations,whenConstructingShape_pointLocationsConstructed)
     std::vector<Layer*> layerList = shape.get_layer_list();
     Layer* firstLayer = layerList[0];
     std::vector<Path*> pathList = firstLayer->get_path_list();
-    Path* firstPath = pathList[1];
-    std::vector<Point*> pointList = firstPath->get_point_list();
-    Point point;
+    Path* secondPath = pathList[1];
+    std::vector<Point*> pointList = secondPath->get_point_list();
+    std::vector<Point> expectedPointList;
+    for (int i{0}; i<11; i++)
+    {
+        double x{1};
+        double y{1};
+        double z{1};
+        Point point;
+        point.set_x(x);
+        point.set_y(y);
+        point.set_z(z);
+        expectedPointList.push_back(point);
+    }
+    EXPECT_POINT_LIST_EQ(pointList,expectedPointList);
+    //    Point point;
     //    point.print_list(pointList);
 }
 
@@ -330,8 +343,8 @@ TEST(PointLocations,whenConstructingShape_pointLocationsCorrect)
     std::vector<Path*> pathList = firstLayer->get_path_list();
     Path* thirdPath = pathList[2];
     std::vector<Point*> pointList = thirdPath->get_point_list();
-    Point point;
-//    point.print_list(pointList);
+//    Point point;
+    //    point.print_list(pointList);
 }
 
 TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
@@ -344,9 +357,9 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
     std::vector<Point*> pointList3 = thirdPath->get_point_list();
     Path* fourthPath = pathList[3];
     std::vector<Point*> pointList4 = fourthPath->get_point_list();
-    Point point;
-//    point.print_list(pointList3);
-//    point.print_list(pointList4);
+//    Point point;
+    //    point.print_list(pointList3);
+    //    point.print_list(pointList4);
 }
 
 TEST(Gcode,whenAskedToCreateEmptyFile_newEmptyFileCreated)
@@ -355,14 +368,29 @@ TEST(Gcode,whenAskedToCreateEmptyFile_newEmptyFileCreated)
     gcode.create_empty_file();
 }
 
-TEST(Gcode,whenAskedToGenerateGCodeFile_LayersPrintedInFile)
+
+TEST(Gcode,whenAskedToCreateFileWithName_namedFileCreated)
 {
     Gcode gcode;
-    Shape shape;
-    gcode.generate_file(shape);
+    Shape newShape;
+    std::string fileName = "testFileName";
+    gcode.generate_file(newShape,fileName);
+    std::string suffix = ".txt";
+    EXPECT_TRUE(does_file_exist(fileName + suffix));
 }
 
-TEST(Gcode,whenAskedToGenerateGCodeFile_PointsPrintedInFile)
+TEST(Gcode,whenAskedToGenerateGCodeFile_LayersPrintedInFile)
 {
-
+    Gcode newGcode;
+    Shape newShape;
+    std::string fileName = "testForLayers";
+    newGcode.generate_file(newShape, fileName);
 }
+
+//TEST(Gcode,whenAskedToGenerateGCodeFile_PointsPrintedInFile)
+//{
+//    Gcode newGcode;
+//    Shape newShape;
+//    std::string fileName = "testForPoints";
+//    newGcode.generate_file(newShape, fileName);
+//}

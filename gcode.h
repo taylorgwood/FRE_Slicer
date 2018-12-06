@@ -3,12 +3,13 @@
 #include <fstream>
 #include <sys/stat.h>
 #include "shape.h"
+#include <string>
 
 class Gcode
 {
 public:
     Gcode();
-    void   generate_file(Shape& shape);
+    void   generate_file(Shape& shape, std::string fileName);
     void   write_gcode(std::ofstream &fout, Shape &shape);
     std::ofstream create_empty_file();
     std::ofstream get_fout();
@@ -18,18 +19,18 @@ public:
     void   write_points_in_layer(std::ofstream& fout, Layer* layer);
     void   write_initial_gcode(std::ofstream& fout);
     void   write_points_in_path(std::ofstream &fout, Path* path);
-    double get_extrusion_distance(double diameter, int mPointCount);
+    double get_extrusion_distance(double diameter, Path *path, int pointCount);
     double get_extruder_A_displacement() const;
     double get_extruder_B_displacement() const;
     void   increment_extruder_A_displacement(double extruderAStep);
     void   increment_extruder_B_displacement(double extruderBStep);
-    double calculate_length();
+    double calculate_length(Path *path, int pointCount);
 
 protected:
 
 private:
     std::string make_file_name_unique();
-    bool   does_file_exist(const std::string& fileName);
+    bool   does_file_exist(const std::string& completeFileName);
     std::string mFileName{"newFile"};
     double mSyringeDiameter{14.9};
     double mSyringeCrossSectionalArea{174.366246256};

@@ -5,9 +5,10 @@ Gcode::Gcode()
 
 }
 
-void Gcode::generate_file(Shape& shape)
+void Gcode::generate_file(Shape& shape, std::string fileName)
 {
     //    set_shape(shape);
+    set_file_name(fileName);
     std::ofstream fout = create_empty_file();
     write_gcode(fout, shape);
     fout.close();
@@ -50,18 +51,20 @@ std::string Gcode::make_file_name_unique()
     std::string suffix = ".txt";
     std::string fileName = get_file_name();
     std::string completeFileName = fileName + suffix;
-    if (does_file_exist(completeFileName))
+    int incrementCount{1};
+    while(does_file_exist(completeFileName))
     {
-        std::string increment = "(1)";
-        completeFileName = fileName + increment + suffix;
+        std::string incrementText = std::to_string(incrementCount);
+        completeFileName = fileName + incrementText + suffix;
+        incrementCount++;
     }
     return completeFileName;
 }
 
-bool Gcode::does_file_exist(const std::string& fileName)
+bool Gcode::does_file_exist(const std::string& completeFileName)
 {
     struct stat buf;
-    if (stat(fileName.c_str(), &buf) != -1)
+    if (stat(completeFileName.c_str(), &buf) != -1)
     {
         return true;
     }
@@ -96,8 +99,6 @@ void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer)
         Path* path = pathsInLayer[i];
         write_points_in_path(fout, path);
     }
-    Path* path = pathsInLayer[0];
-
 }
 
 void Gcode::write_initial_gcode(std::ofstream& fout)
@@ -125,7 +126,7 @@ void Gcode::write_points_in_path(std::ofstream& fout, Path* path)
         fout << " X" << point->get_x();
         fout << " Y" << point->get_y();
         double materialRatio = point->get_material();
-        double extrusionDistance = get_extrusion_distance(diameter,mPointCount);
+        double extrusionDistance = get_extrusion_distance(diameter, path, i);
         increment_extruder_A_displacement(materialRatio*extrusionDistance);
         increment_extruder_B_displacement((1-materialRatio)*extrusionDistance);
         double extruderADisplacement = get_extruder_A_displacement();
@@ -137,10 +138,10 @@ void Gcode::write_points_in_path(std::ofstream& fout, Path* path)
     }
 }
 
-double Gcode::get_extrusion_distance(double diameter, int mPointCount)
+double Gcode::get_extrusion_distance(double diameter, Path* path, int pointCount)
 {
     double printCrossSectionalArea = pi*(diameter*diameter)/4;
-    double printLength = calculate_length();
+    double printLength = calculate_length(path, pointCount);
     double printVolume = printCrossSectionalArea*printLength;
     double extrusionDistance = printVolume/mSyringeCrossSectionalArea;
     return extrusionDistance;
@@ -166,10 +167,17 @@ void Gcode::increment_extruder_B_displacement(double extruderBStep)
     mExtruderBDisplacement += extruderBStep;
 }
 
-double Gcode::calculate_length()
+double Gcode::calculate_length(Path* path, int pointCount)
 {
-    double length{1};
-
-
+    double length{0};
+    std::vector<Point*> pointsInPath = path->get_point_list();
+    size_t numberOfPointsInPath = path->get_number_of_points();
+    if (pointCount != 0)
+    {
+    Point* previousPoint = pointsInPath[pointCount-1];
+    Point* currentPoint = pointsInPath[pointCount];
+    Point lengthVector = *currentPoint - *previousPoint;
+    length = lengthVector.get_magnitude();
+    }
     return length;
 }
