@@ -8,16 +8,16 @@
 
 void EXPECT_POINT_EQ(Point firstPoint, Point secondPoint)
 {
-    EXPECT_DOUBLE_EQ(firstPoint.get_x(),secondPoint.get_x());
-    EXPECT_DOUBLE_EQ(firstPoint.get_y(),secondPoint.get_y());
-    EXPECT_DOUBLE_EQ(firstPoint.get_z(),secondPoint.get_z());
+    EXPECT_NEAR(firstPoint.get_x(),secondPoint.get_x(), 0.00001);
+    EXPECT_NEAR(firstPoint.get_y(),secondPoint.get_y(), 0.00001);
+    EXPECT_NEAR(firstPoint.get_z(),secondPoint.get_z(), 0.00001);
 }
 
 void EXPECT_POINT_EQ(Point* firstPoint, Point* secondPoint)
 {
-    EXPECT_DOUBLE_EQ(firstPoint->get_x(),secondPoint->get_x());
-    EXPECT_DOUBLE_EQ(firstPoint->get_y(),secondPoint->get_y());
-    EXPECT_DOUBLE_EQ(firstPoint->get_z(),secondPoint->get_z());
+    EXPECT_NEAR(firstPoint->get_x(),secondPoint->get_x(), 0.00001);
+    EXPECT_NEAR(firstPoint->get_y(),secondPoint->get_y(), 0.00001);
+    EXPECT_NEAR(firstPoint->get_z(),secondPoint->get_z(), 0.00001);
 }
 
 
@@ -37,16 +37,6 @@ void EXPECT_VECTOR_EQ(std::vector<double> firstVector, std::vector<double> secon
     {
         EXPECT_EQ(firstVector[i],secondVector[i]);
     }
-}
-
-bool does_file_exist(const std::string& completeFileName)
-{
-    struct stat buf;
-    if (stat(completeFileName.c_str(), &buf) != -1)
-    {
-        return true;
-    }
-    return false;
 }
 
 TEST(PointConstructor,givenNoValues_getZeroXYZ)
@@ -313,9 +303,9 @@ TEST(PointLocations,whenConstructingShape_pointLocationsConstructed)
     std::vector<Point> expectedPointList;
     for (int i{0}; i<11; i++)
     {
-        double x{1};
-        double y{1};
-        double z{1};
+        double x = 10-i;
+        double y{0.263158};
+        double z{0.263158};
         Point point;
         point.set_x(x);
         point.set_y(y);
@@ -323,8 +313,8 @@ TEST(PointLocations,whenConstructingShape_pointLocationsConstructed)
         expectedPointList.push_back(point);
     }
     EXPECT_POINT_LIST_EQ(pointList,expectedPointList);
-    //    Point point;
-    //    point.print_list(pointList);
+//        Point point;
+//        point.print_list(pointList);
 }
 
 TEST(PointMath,whenAskedForNormalizedPoint_getNormalizedPoint)
@@ -376,7 +366,8 @@ TEST(Gcode,whenAskedToCreateFileWithName_namedFileCreated)
     std::string fileName = "testFileName";
     gcode.generate_file(newShape,fileName);
     std::string suffix = ".txt";
-    EXPECT_TRUE(does_file_exist(fileName + suffix));
+    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
+    // delete file
 }
 
 TEST(Gcode,whenAskedToGenerateGCodeFile_LayersPrintedInFile)
@@ -385,6 +376,7 @@ TEST(Gcode,whenAskedToGenerateGCodeFile_LayersPrintedInFile)
     Shape newShape;
     std::string fileName = "testForLayers";
     newGcode.generate_file(newShape, fileName);
+    // read some line from file
 }
 
 //TEST(Gcode,whenAskedToGenerateGCodeFile_PointsPrintedInFile)

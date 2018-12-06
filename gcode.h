@@ -25,12 +25,12 @@ public:
     void   increment_extruder_A_displacement(double extruderAStep);
     void   increment_extruder_B_displacement(double extruderBStep);
     double calculate_length(Path *path, int pointCount);
+    bool   does_file_exist(const std::string& completeFileName);
 
 protected:
 
 private:
     std::string make_file_name_unique();
-    bool   does_file_exist(const std::string& completeFileName);
     std::string mFileName{"newFile"};
     double mSyringeDiameter{14.9};
     double mSyringeCrossSectionalArea{174.366246256};

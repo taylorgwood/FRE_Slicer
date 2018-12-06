@@ -181,3 +181,6 @@ double Gcode::calculate_length(Path* path, int pointCount)
     }
     return length;
 }
+
+// delete file function
+//
