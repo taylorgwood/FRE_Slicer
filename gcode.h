@@ -10,7 +10,7 @@ public:
     Gcode();
     void   generate_file(Shape& shape);
     void   write_gcode(std::ofstream &fout, Shape &shape);
-    void create_empty_file();
+    std::ofstream create_empty_file();
     std::ofstream get_fout();
     std::string get_file_name() const;
     void   set_file_name(std::string const fileName);
@@ -28,9 +28,9 @@ public:
 protected:
 
 private:
-    void   make_file_name_unique();
+    std::string make_file_name_unique();
     bool   does_file_exist(const std::string& fileName);
-    std::string mFileName{"newFile.txt"};
+    std::string mFileName{"newFile"};
     double mSyringeDiameter{14.9};
     double mSyringeCrossSectionalArea{174.366246256};
     double const pi{3.14159265359};

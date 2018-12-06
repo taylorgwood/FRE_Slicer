@@ -7,9 +7,8 @@ Gcode::Gcode()
 
 void Gcode::generate_file(Shape& shape)
 {
-//    set_shape(shape);
-    create_empty_file();
-    std::ofstream fout = get_fout();
+    //    set_shape(shape);
+    std::ofstream fout = create_empty_file();
     write_gcode(fout, shape);
     fout.close();
 }
@@ -27,10 +26,12 @@ void Gcode::write_gcode(std::ofstream& fout, Shape& shape)
     }
 }
 
-void Gcode::create_empty_file()
+std::ofstream Gcode::create_empty_file()
 {
-    make_file_name_unique();
-
+    std::string completeFileName = make_file_name_unique();
+    set_file_name(completeFileName);
+    std::ofstream fout = get_fout();
+    return fout;
 }
 
 std::ofstream Gcode::get_fout()
@@ -44,15 +45,17 @@ std::ofstream Gcode::get_fout()
     return fout;
 }
 
-void Gcode::make_file_name_unique()
+std::string Gcode::make_file_name_unique()
 {
+    std::string suffix = ".txt";
     std::string fileName = get_file_name();
-    if (does_file_exist(fileName))
+    std::string completeFileName = fileName + suffix;
+    if (does_file_exist(completeFileName))
     {
-        std::string suffix = "(1)";
-        fileName = fileName + suffix;
+        std::string increment = "(1)";
+        completeFileName = fileName + increment + suffix;
     }
-    set_file_name(fileName);
+    return completeFileName;
 }
 
 bool Gcode::does_file_exist(const std::string& fileName)
@@ -78,7 +81,7 @@ void Gcode::set_file_name(std::string const fileName)
 void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer)
 {
     double zLocation = layer->get_location();
-    fout << "G1 " << "Z" << zLocation;
+    fout << "G1 " << " Z" << zLocation;
     fout << " F1200.000" << std::endl;
 
     write_points_in_layer(fout, layer);
