@@ -5,6 +5,9 @@
 #include "shape.h"
 #include <string>
 #include "stdio.h"
+#include <iomanip>
+#include <ctime>
+#include <sstream>
 
 class Gcode
 {
@@ -28,6 +31,7 @@ public:
     double calculate_length(Path *path, int pointCount);
     bool   does_file_exist(const std::string& completeFileName);
     void   delete_file();
+    std::string get_time_string();
 
 protected:
 

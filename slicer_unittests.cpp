@@ -356,6 +356,18 @@ TEST(Gcode,whenAskedToCreateEmptyFile_newEmptyFileCreated)
     std::string suffix = ".txt";
     std::string fileName = gcode.get_file_name();
     EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
+    gcode.delete_file();
+}
+
+TEST(Gcode,whenAskedToCreateFileWithName_namedFileCreated)
+{
+    Gcode gcode;
+    Shape newShape;
+    std::string fileName = "testFileName";
+    gcode.generate_file(newShape,fileName);
+    std::string suffix = ".txt";
+    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
+    gcode.delete_file();
 }
 
 TEST(Gcode,whenAskedToDeleteFile_fileDeleted)
@@ -369,36 +381,27 @@ TEST(Gcode,whenAskedToDeleteFile_fileDeleted)
     EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
 
     gcode.delete_file();
-
-    std::cout << updatedFileName << std::endl;
     EXPECT_FALSE(gcode.does_file_exist(updatedFileName + suffix));
 }
 
-//TEST(Gcode,whenAskedToCreateFileWithName_namedFileCreated)
-//{
-//    Gcode gcode;
-//    Shape newShape;
-//    std::string fileName = "testFileName";
-//    gcode.generate_file(newShape,fileName);
-//    std::string suffix = ".txt";
-//    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
-//    gcode.delete_file();
-//    // delete file
-//}
+TEST(Gcode,whenAskedToGenerateGCodeFile_LayersPrintedInFile)
+{
+    Gcode newGcode;
+    Shape newShape;
+    std::string fileName = "testForLayers";
+    newGcode.generate_file(newShape, fileName);
+    // read some line from file
+    newGcode.delete_file();
+}
 
-//TEST(Gcode,whenAskedToGenerateGCodeFile_LayersPrintedInFile)
-//{
-//    Gcode newGcode;
-//    Shape newShape;
-//    std::string fileName = "testForLayers";
-//    newGcode.generate_file(newShape, fileName);
-//    // read some line from file
-//}
+TEST(Gcode,whenAskedToGenerateGCodeFile_PointsPrintedInFile)
+{
+    Gcode newGcode;
+    Shape newShape;
+    std::string fileName = "testForPoints";
+    newGcode.generate_file(newShape, fileName);
+    // read some lines from file
+//    newGcode.delete_file();
+}
 
-//TEST(Gcode,whenAskedToGenerateGCodeFile_PointsPrintedInFile)
-//{
-//    Gcode newGcode;
-//    Shape newShape;
-//    std::string fileName = "testForPoints";
-//    newGcode.generate_file(newShape, fileName);
-//}
+
