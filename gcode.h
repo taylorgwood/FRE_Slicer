@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include "shape.h"
 #include <string>
+#include "stdio.h"
 
 class Gcode
 {
@@ -26,6 +27,7 @@ public:
     void   increment_extruder_B_displacement(double extruderBStep);
     double calculate_length(Path *path, int pointCount);
     bool   does_file_exist(const std::string& completeFileName);
+    void   delete_file();
 
 protected:
 

@@ -29,8 +29,10 @@ void Gcode::write_gcode(std::ofstream& fout, Shape& shape)
 
 std::ofstream Gcode::create_empty_file()
 {
-    std::string completeFileName = make_file_name_unique();
-    set_file_name(completeFileName);
+    std::string uniqueFileName = make_file_name_unique();
+    std::string suffix = ".txt";
+
+    set_file_name(uniqueFileName);
     std::ofstream fout = get_fout();
     return fout;
 }
@@ -38,7 +40,9 @@ std::ofstream Gcode::create_empty_file()
 std::ofstream Gcode::get_fout()
 {
     std::string fileName = get_file_name();
-    std::ofstream fout{fileName};
+    std::string suffix = ".txt";
+    std::string completeFileName = fileName + suffix;
+    std::ofstream fout{completeFileName};
     if (fout.fail())
     {
         std::cout << "Failed to write to file." << std::endl;
@@ -48,17 +52,17 @@ std::ofstream Gcode::get_fout()
 
 std::string Gcode::make_file_name_unique()
 {
-    std::string suffix = ".txt";
     std::string fileName = get_file_name();
-    std::string completeFileName = fileName + suffix;
+    std::string uniqueFileName = fileName;
     int incrementCount{1};
-    while(does_file_exist(completeFileName))
+    std::string suffix = ".txt";
+    while(does_file_exist(uniqueFileName + suffix))
     {
         std::string incrementText = std::to_string(incrementCount);
-        completeFileName = fileName + incrementText + suffix;
+        uniqueFileName = fileName + incrementText;
         incrementCount++;
     }
-    return completeFileName;
+    return uniqueFileName;
 }
 
 bool Gcode::does_file_exist(const std::string& completeFileName)
@@ -174,13 +178,27 @@ double Gcode::calculate_length(Path* path, int pointCount)
     size_t numberOfPointsInPath = path->get_number_of_points();
     if (pointCount != 0)
     {
-    Point* previousPoint = pointsInPath[pointCount-1];
-    Point* currentPoint = pointsInPath[pointCount];
-    Point lengthVector = *currentPoint - *previousPoint;
-    length = lengthVector.get_magnitude();
+        Point* previousPoint = pointsInPath[pointCount-1];
+        Point* currentPoint = pointsInPath[pointCount];
+        Point lengthVector = *currentPoint - *previousPoint;
+        length = lengthVector.get_magnitude();
     }
     return length;
 }
 
+void Gcode::delete_file()
+{
+    std::string fileName = get_file_name();
+    std::string suffix = ".txt";
+    std::string completeFileName = fileName + suffix;
+    if(does_file_exist(completeFileName))
+    {
+        std::remove(completeFileName.c_str());
+        if( std::remove(completeFileName.c_str()) != 0 )
+        {
+            std::cout << "Error deleting file" << std::endl;
+        }
+    }
+}
 // delete file function
 //
