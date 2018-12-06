@@ -194,7 +194,7 @@ void Gcode::delete_file()
     if(does_file_exist(completeFileName))
     {
         std::remove(completeFileName.c_str());
-        if( std::remove(completeFileName.c_str()) != 0 )
+        if( std::remove(completeFileName.c_str()) == 0 )
         {
             std::cout << "Error deleting file" << std::endl;
         }

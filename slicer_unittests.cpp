@@ -330,7 +330,7 @@ TEST(PointLocations,whenConstructingShape_pointLocationsCorrect)
     std::vector<Path*> pathList = firstLayer->get_path_list();
     Path* thirdPath = pathList[2];
     std::vector<Point*> pointList = thirdPath->get_point_list();
-//    Point point;
+    //    Point point;
     //    point.print_list(pointList);
 }
 
@@ -344,7 +344,7 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
     std::vector<Point*> pointList3 = thirdPath->get_point_list();
     Path* fourthPath = pathList[3];
     std::vector<Point*> pointList4 = fourthPath->get_point_list();
-//    Point point;
+    //    Point point;
     //    point.print_list(pointList3);
     //    point.print_list(pointList4);
 }
@@ -358,18 +358,21 @@ TEST(Gcode,whenAskedToCreateEmptyFile_newEmptyFileCreated)
     EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
 }
 
-//TEST(Gcode,whenAskedToDeleteFile_fileDeleted)
-//{
-//    Gcode gcode;
-//    Shape shape;
-//    std::string fileName = "deleteThisFile";
-//    gcode.generate_file(shape, fileName);
-//    gcode.delete_file();
-//    std::string suffix = ".txt";
+TEST(Gcode,whenAskedToDeleteFile_fileDeleted)
+{
+    Gcode gcode;
+    Shape shape;
+    std::string fileName = "deleteThisFile";
+    gcode.generate_file(shape, fileName);
+    std::string updatedFileName = gcode.get_file_name();
+    std::string suffix = ".txt";
+    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
 
-////    std::string fileName = gcode.get_file_name();
-//    EXPECT_FALSE(gcode.does_file_exist(fileName + suffix));
-//}
+    gcode.delete_file();
+
+    std::cout << updatedFileName << std::endl;
+    EXPECT_FALSE(gcode.does_file_exist(updatedFileName + suffix));
+}
 
 //TEST(Gcode,whenAskedToCreateFileWithName_namedFileCreated)
 //{
