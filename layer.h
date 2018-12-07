@@ -43,7 +43,7 @@ private:
     double mHeight{0.26};
     double mExtrusionWidth{0.26};
     double mInfillPercentage{100};
-    double mExtrusionMultiplier{1};
+    double mExtrusionMultiplier{1.0};
     double mLength{10};
     double mWidth{10};
     std::vector<Path*> *mPathList{nullptr};

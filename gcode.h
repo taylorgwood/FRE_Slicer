@@ -21,7 +21,7 @@ public:
     void   set_file_name(std::string const fileName);
     void   write_layer_gcode(std::ofstream& fout, Layer* layer);
     void   write_points_in_layer(std::ofstream& fout, Layer* layer);
-    void   write_initial_gcode(std::ofstream& fout);
+    void   write_initial_gcode(std::ofstream& fout, Shape &shape);
     void   write_points_in_path(std::ofstream &fout, Path* path);
     double get_extrusion_distance(double diameter, Path *path, int pointCount);
     double get_extruder_A_displacement() const;
@@ -32,6 +32,10 @@ public:
     bool   does_file_exist(const std::string& completeFileName);
     void   delete_file();
     std::string get_time_string();
+    std::string get_begin_layer_gcode(int layerNumber);
+    void   write_file_creation_information(std::ofstream &fout);
+    void   write_basic_settings(std::ofstream& fout, Shape &shape);
+
 
 protected:
 
