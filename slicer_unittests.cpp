@@ -330,8 +330,19 @@ TEST(PointLocations,whenConstructingShape_pointLocationsCorrect)
     std::vector<Path*> pathList = firstLayer->get_path_list();
     Path* thirdPath = pathList[2];
     std::vector<Point*> pointList = thirdPath->get_point_list();
-    //    Point point;
-    //    point.print_list(pointList);
+    std::vector<Point> expectedPointList;
+    for (int i{0}; i<11; i++)
+    {
+        double x = i;
+        double y{0.526316};
+        double z{0.263158};
+        Point point;
+        point.set_x(x);
+        point.set_y(y);
+        point.set_z(z);
+        expectedPointList.push_back(point);
+    }
+    EXPECT_POINT_LIST_EQ(pointList,expectedPointList);
 }
 
 TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
@@ -344,9 +355,29 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
     std::vector<Point*> pointList3 = thirdPath->get_point_list();
     Path* fourthPath = pathList[3];
     std::vector<Point*> pointList4 = fourthPath->get_point_list();
-    //    Point point;
-    //    point.print_list(pointList3);
-    //    point.print_list(pointList4);
+    std::vector<Point> expectedThirdPointList;
+    std::vector<Point> expectedFourthPointList;
+    for (int i{0}; i<11; i++)
+    {
+        double x3 = i;
+        double x4 = (10-i);
+        double y3 = (0.263158*2);
+        double y4 = (0.263158*3);
+        double z{0.263158};
+        Point point3;
+        Point point4;
+        point3.set_x(x3);
+        point3.set_y(y3);
+        point3.set_z(z);
+        point4.set_x(x4);
+        point4.set_y(y4);
+        point4.set_z(z);
+        expectedThirdPointList.push_back(point3);
+        expectedFourthPointList.push_back(point4);
+    }
+    EXPECT_POINT_LIST_EQ(pointList3,expectedThirdPointList);
+    EXPECT_POINT_LIST_EQ(pointList4,expectedFourthPointList);
+
 }
 
 TEST(Gcode,whenAskedToCreateEmptyFile_newEmptyFileCreated)

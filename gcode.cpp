@@ -228,8 +228,8 @@ void Gcode::write_basic_settings(std::ofstream& fout, Shape& shape)
 {
     double layerHeight = shape.get_layer_height();
     int    numberOfLayers = shape.get_number_of_layers();
-    fout << "; Layer Height:         " << layerHeight << " mm" << std::endl;
-    fout << "; Number Of Layers:     " << numberOfLayers << std::endl;
+    fout << "; Layer Height:          " << layerHeight << " mm" << std::endl;
+    fout << "; Number Of Layers:      " << numberOfLayers << std::endl;
     fout << std::endl;
 
     Layer* firstLayer = shape.get_layer(0);
@@ -238,19 +238,19 @@ void Gcode::write_basic_settings(std::ofstream& fout, Shape& shape)
     double infillPercentage = firstLayer->get_infill_percentage();
     Path*  firstPath = firstLayer->get_path(0);
     double materialResolution = firstPath->get_resolution();
-    fout << "; First Layer Settings: " << std::endl;
-    fout << "; Extrusion Width:      " << extrusionWidth << " mm" << std::endl;
-    fout << "; Extrusion Multiplier: " << extrusionMultiplier << std::endl;
-    fout << "; Infill Percentage:    " << infillPercentage << std::endl;
-    fout << "; Material Resolution:  " << materialResolution << " mm" << std::endl;
+    fout << "; First Layer Settings:  " << std::endl;
+    fout << ";  Extrusion Width:      " << extrusionWidth << " mm" << std::endl;
+    fout << ";  Extrusion Multiplier: " << extrusionMultiplier << std::endl;
+    fout << ";  Infill Percentage:    " << infillPercentage << std::endl;
+    fout << ";  Material Resolution:  " << materialResolution << " mm" << std::endl;
     fout << std::endl;
 
     double shapeHeight = shape.get_height();
     double firstLayerWidth = firstLayer->get_width();
     double firstLayerLength = firstLayer->get_length();
-    fout << "; Shape Settings: " << std::endl;
-    fout << "; Shape Height:         " << shapeHeight << " mm" << std::endl;
-    fout << "; First Layer Width:    " << firstLayerWidth << " mm" << std::endl;
-    fout << "; First Layer Length:   " << firstLayerLength << " mm" << std::endl;
+    fout << "; Shape Settings:        " << std::endl;
+    fout << ";  Shape Height:         " << shapeHeight << " mm" << std::endl;
+    fout << ";  First Layer Width:    " << firstLayerWidth << " mm" << std::endl;
+    fout << ";  First Layer Length:   " << firstLayerLength << " mm" << std::endl;
     fout << std::endl;
 }
