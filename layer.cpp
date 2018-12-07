@@ -50,7 +50,7 @@ void Layer::set_infill_percentage(const double infillPercentage)
 
 double Layer::get_extrusion_multiplier() const
 {
-    return mHeight;
+    return mExtrusionMultiplier;
 }
 
 void Layer::set_extrusion_multiplier(const double extrusionMultiplier)

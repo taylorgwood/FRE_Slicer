@@ -226,7 +226,6 @@ void Gcode::write_file_creation_information(std::ofstream& fout)
 
 void Gcode::write_basic_settings(std::ofstream& fout, Shape& shape)
 {
-
     double layerHeight = shape.get_layer_height();
     int    numberOfLayers = shape.get_number_of_layers();
     fout << "; Layer Height:         " << layerHeight << " mm" << std::endl;
@@ -236,11 +235,11 @@ void Gcode::write_basic_settings(std::ofstream& fout, Shape& shape)
     Layer* firstLayer = shape.get_layer(0);
     double extrusionWidth = firstLayer->get_extrusion_width();
     double extrusionMultiplier = firstLayer->get_extrusion_multiplier();
-    double materialResolution = 1;
+//    double materialResolution = 1;
     fout << "; First Layer Settings: " << std::endl;
     fout << "; Extrusion Width:      " << extrusionWidth << " mm" << std::endl;
     fout << "; Extrusion Multiplier: " << extrusionMultiplier << std::endl;
-    fout << "; Material Resolution:  " << materialResolution << " mm" << std::endl;
+//    fout << "; Material Resolution:  " << materialResolution << " mm" << std::endl;
     fout << std::endl;
 
     double shapeHeight = shape.get_height();
@@ -251,6 +250,4 @@ void Gcode::write_basic_settings(std::ofstream& fout, Shape& shape)
     fout << "; First Layer Width:    " << firstLayerWidth << " mm" << std::endl;
     fout << "; First Layer Length:   " << firstLayerLength << " mm" << std::endl;
     fout << std::endl;
-
-
 }
