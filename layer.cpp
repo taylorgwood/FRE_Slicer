@@ -125,8 +125,6 @@ void Layer::create_paths()
         std::vector<Point> turnPoints = get_turn_points(pathNumber);
         Point start = turnPoints[0];
         Point end = turnPoints[1];
-//        Point start = get_path_start(i);
-//        Point end   = get_path_end(i);
         double diameter = get_diameter_of_print();
         Path* newPath = new Path(start,end,diameter,pathNumber);
         mPathList->push_back(newPath);
@@ -237,4 +235,11 @@ std::vector<Point> Layer::get_turn_points(int pathNumber)
     turnPoints.push_back(startPoint);
     turnPoints.push_back(endPoint);
     return turnPoints;
+}
+
+Path* Layer::get_path(int pathNumber)
+{
+    std::vector<Path*> pathList = get_path_list();
+    Path* path = pathList[pathNumber];
+    return path;
 }

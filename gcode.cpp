@@ -235,11 +235,14 @@ void Gcode::write_basic_settings(std::ofstream& fout, Shape& shape)
     Layer* firstLayer = shape.get_layer(0);
     double extrusionWidth = firstLayer->get_extrusion_width();
     double extrusionMultiplier = firstLayer->get_extrusion_multiplier();
-//    double materialResolution = 1;
+    double infillPercentage = firstLayer->get_infill_percentage();
+    Path*  firstPath = firstLayer->get_path(0);
+    double materialResolution = firstPath->get_resolution();
     fout << "; First Layer Settings: " << std::endl;
     fout << "; Extrusion Width:      " << extrusionWidth << " mm" << std::endl;
     fout << "; Extrusion Multiplier: " << extrusionMultiplier << std::endl;
-//    fout << "; Material Resolution:  " << materialResolution << " mm" << std::endl;
+    fout << "; Infill Percentage:    " << infillPercentage << std::endl;
+    fout << "; Material Resolution:  " << materialResolution << " mm" << std::endl;
     fout << std::endl;
 
     double shapeHeight = shape.get_height();
