@@ -432,7 +432,30 @@ TEST(Gcode,whenAskedToGenerateGCodeFile_PointsPrintedInFile)
     std::string fileName = "testForPoints";
     newGcode.generate_file(newShape, fileName);
     // read some lines from file
-//    newGcode.delete_file();
+    newGcode.delete_file();
+}
+
+TEST(Gcode,whenAskedForInitialExtrusionAmount_getZeroExtrusionAmount)
+{
+    Gcode newGcode;
+    Shape newShape;
+    double displacementA = newGcode.get_extruder_A_displacement();
+    double displacementB = newGcode.get_extruder_B_displacement();
+    double totalDisplacement = displacementA + displacementB;
+    double expectedDisplacement = 0;
+    EXPECT_DOUBLE_EQ(totalDisplacement,expectedDisplacement);
+}
+
+TEST(Gcode,whenAskedForLayerExtrusionAmount_getCorrectLayerExtrusionAmount)
+{
+    Gcode newGcode;
+    Shape newShape;
+    int firstLayer{0};
+    double displacementA = newGcode.get_extruder_A_displacement(newShape, firstLayer);
+    double displacementB = newGcode.get_extruder_B_displacement(newShape, firstLayer);
+    double totalDisplacement = displacementA + displacementB;
+    double expectedDisplacement = 0;
+    EXPECT_DOUBLE_EQ(totalDisplacement,expectedDisplacement);
 }
 
 

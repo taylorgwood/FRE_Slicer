@@ -46,6 +46,7 @@ private:
     double mSyringeCrossSectionalArea{174.366246256};
     double const pi{3.14159265359};
     double mPointCount{0};
+    std::vector<double> mExtruderDisplacement;
     double mExtruderADisplacement{0};
     double mExtruderBDisplacement{0};
 
