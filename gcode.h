@@ -23,10 +23,10 @@ public:
     void   write_points_in_layer(std::ofstream& fout, Layer* layer);
     void   write_initial_gcode(std::ofstream& fout, Shape &shape);
     void   write_points_in_path(std::ofstream &fout, Path* path);
-    double get_extrusion_distance(double diameter, Path *path, int pointCount);
+    double get_extrusion_distance(double diameter, Point currentPoint);
     void   increment_extruder_displacement(double materialRatio, double extrusionDistance);
     std::vector<double> get_extruder_displacement() const;
-    double calculate_length(Path *path, int pointCount);
+    double calculate_length(Point currentPoint);
     bool   does_file_exist(const std::string& completeFileName);
     void   delete_file();
     std::string get_time_string();
@@ -46,6 +46,7 @@ private:
     double const pi{3.14159265359};
     double mPointCount{0};
     std::vector<double> mExtruderDisplacement{0,0};
+    Point mLastPoint{0,0,0};
 };
 
 #endif // GCODE_H

@@ -138,19 +138,20 @@ void Gcode::write_points_in_path(std::ofstream& fout, Path* path)
         fout << " X" << point->get_x();
         fout << " Y" << point->get_y();
         double materialRatio = point->get_material();
-        double extrusionDistance = get_extrusion_distance(diameter, path, i);
+        double extrusionDistance = get_extrusion_distance(diameter, *point);
         increment_extruder_displacement(materialRatio,extrusionDistance);
         fout << " A" << get_extruder_displacement()[0];
         fout << " B" << get_extruder_displacement()[1];
         fout << std::endl;
         mPointCount += 1;
+        mLastPoint = *point;
     }
 }
 
-double Gcode::get_extrusion_distance(double diameter, Path* path, int pointCount)
+double Gcode::get_extrusion_distance(double diameter, Point currentPoint)
 {
     double printCrossSectionalArea = pi*(diameter*diameter)/4;
-    double printLength = calculate_length(path, pointCount);
+    double printLength = calculate_length(currentPoint);
     double printVolume = printCrossSectionalArea*printLength;
     double extrusionDistance = printVolume/mSyringeCrossSectionalArea;
     return extrusionDistance;
@@ -169,18 +170,11 @@ void Gcode::increment_extruder_displacement(double materialRatio, double extrusi
     mExtruderDisplacement[1] += extruderStepB;
 }
 
-double Gcode::calculate_length(Path* path, int pointCount)
+double Gcode::calculate_length(Point currentPoint)
 {
     double length{0};
-    std::vector<Point*> pointsInPath = path->get_point_list();
-    size_t numberOfPointsInPath = path->get_number_of_points();
-    if (pointCount != 0)
-    {
-        Point* previousPoint = pointsInPath[pointCount-1];
-        Point* currentPoint = pointsInPath[pointCount];
-        Point lengthVector = *currentPoint - *previousPoint;
-        length = lengthVector.get_magnitude();
-    }
+    Point lengthVector = mLastPoint - currentPoint;
+    length = lengthVector.get_magnitude();
     return length;
 }
 
