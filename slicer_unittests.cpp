@@ -377,7 +377,6 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
     }
     EXPECT_POINT_LIST_EQ(pointList3,expectedThirdPointList);
     EXPECT_POINT_LIST_EQ(pointList4,expectedFourthPointList);
-
 }
 
 TEST(Gcode,whenAskedToCreateEmptyFile_newEmptyFileCreated)
@@ -439,20 +438,22 @@ TEST(Gcode,whenAskedForInitialExtrusionAmount_getZeroExtrusionAmount)
 {
     Gcode newGcode;
     Shape newShape;
-    double displacementA = newGcode.get_extruder_A_displacement();
-    double displacementB = newGcode.get_extruder_B_displacement();
+    double displacementA = newGcode.get_extruder_displacement()[0];
+    double displacementB = newGcode.get_extruder_displacement()[1];
     double totalDisplacement = displacementA + displacementB;
     double expectedDisplacement = 0;
     EXPECT_DOUBLE_EQ(totalDisplacement,expectedDisplacement);
 }
 
-TEST(Gcode,whenAskedForLayerExtrusionAmount_getCorrectLayerExtrusionAmount)
+TEST(Gcode,whenAskedForShapeExtrusionAmount_getCorrectShapeExtrusionAmount)
 {
     Gcode newGcode;
     Shape newShape;
-    int firstLayer{0};
-    double displacementA = newGcode.get_extruder_A_displacement(newShape, firstLayer);
-    double displacementB = newGcode.get_extruder_B_displacement(newShape, firstLayer);
+    std::string fileName = "deleteThisFile";
+    newGcode.generate_file(newShape,fileName);
+    newGcode.delete_file();
+    double displacementA = newGcode.get_extruder_displacement()[0];
+    double displacementB = newGcode.get_extruder_displacement()[1];
     double totalDisplacement = displacementA + displacementB;
     double expectedDisplacement = 0;
     EXPECT_DOUBLE_EQ(totalDisplacement,expectedDisplacement);

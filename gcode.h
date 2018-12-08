@@ -24,10 +24,8 @@ public:
     void   write_initial_gcode(std::ofstream& fout, Shape &shape);
     void   write_points_in_path(std::ofstream &fout, Path* path);
     double get_extrusion_distance(double diameter, Path *path, int pointCount);
-    double get_extruder_A_displacement() const;
-    double get_extruder_B_displacement() const;
-    void   increment_extruder_A_displacement(double extruderAStep);
-    void   increment_extruder_B_displacement(double extruderBStep);
+    void   increment_extruder_displacement(double materialRatio, double extrusionDistance);
+    std::vector<double> get_extruder_displacement() const;
     double calculate_length(Path *path, int pointCount);
     bool   does_file_exist(const std::string& completeFileName);
     void   delete_file();
@@ -46,10 +44,7 @@ private:
     double mSyringeCrossSectionalArea{174.366246256};
     double const pi{3.14159265359};
     double mPointCount{0};
-    std::vector<double> mExtruderDisplacement;
-    double mExtruderADisplacement{0};
-    double mExtruderBDisplacement{0};
-
+    std::vector<double> mExtruderDisplacement{0,0};
 };
 
 #endif // GCODE_H

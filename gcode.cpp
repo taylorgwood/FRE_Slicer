@@ -2,7 +2,6 @@
 
 Gcode::Gcode()
 {
-
 }
 
 void Gcode::generate_file(Shape& shape, std::string fileName)
@@ -140,12 +139,9 @@ void Gcode::write_points_in_path(std::ofstream& fout, Path* path)
         fout << " Y" << point->get_y();
         double materialRatio = point->get_material();
         double extrusionDistance = get_extrusion_distance(diameter, path, i);
-        increment_extruder_A_displacement(materialRatio*extrusionDistance);
-        increment_extruder_B_displacement((1-materialRatio)*extrusionDistance);
-        double extruderADisplacement = get_extruder_A_displacement();
-        double extruderBDisplacement = get_extruder_B_displacement();
-        fout << " A" << extruderADisplacement;
-        fout << " B" << extruderBDisplacement;
+        increment_extruder_displacement(materialRatio,extrusionDistance);
+        fout << " A" << get_extruder_displacement()[0];
+        fout << " B" << get_extruder_displacement()[1];
         fout << std::endl;
         mPointCount += 1;
     }
@@ -160,24 +156,17 @@ double Gcode::get_extrusion_distance(double diameter, Path* path, int pointCount
     return extrusionDistance;
 }
 
-double Gcode::get_extruder_A_displacement() const
+std::vector<double> Gcode::get_extruder_displacement() const
 {
-    return mExtruderADisplacement;
+    return mExtruderDisplacement;
 }
 
-double Gcode::get_extruder_B_displacement() const
+void Gcode::increment_extruder_displacement(double materialRatio, double extrusionDistance)
 {
-    return mExtruderBDisplacement;
-}
-
-void Gcode::increment_extruder_A_displacement(double extruderAStep)
-{
-    mExtruderADisplacement += extruderAStep;
-}
-
-void Gcode::increment_extruder_B_displacement(double extruderBStep)
-{
-    mExtruderBDisplacement += extruderBStep;
+    double extruderStepA = (materialRatio*extrusionDistance);
+    double extruderStepB = ((1-materialRatio)*extrusionDistance);
+    mExtruderDisplacement[0] += extruderStepA;
+    mExtruderDisplacement[1] += extruderStepB;
 }
 
 double Gcode::calculate_length(Path* path, int pointCount)
