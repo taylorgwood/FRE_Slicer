@@ -409,7 +409,6 @@ TEST(Gcode,whenAskedToDeleteFile_fileDeleted)
     std::string updatedFileName = gcode.get_file_name();
     std::string suffix = ".txt";
     EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
-
     gcode.delete_file();
     EXPECT_FALSE(gcode.does_file_exist(updatedFileName + suffix));
 }
@@ -455,7 +454,11 @@ TEST(Gcode,whenAskedForShapeExtrusionAmount_getCorrectShapeExtrusionAmount)
     double displacementA = newGcode.get_extruder_displacement()[0];
     double displacementB = newGcode.get_extruder_displacement()[1];
     double totalDisplacement = displacementA + displacementB;
-    double expectedDisplacement = 0;
+    double syringeDiameter = newGcode.get_syringe_diameter();
+    double pi = 3.14159265359;
+    double printCrossSectionalArea = pi*(syringeDiameter*syringeDiameter)/4;
+    double printVolume = 10*10*10;
+    double expectedDisplacement = printVolume/printCrossSectionalArea;
     EXPECT_DOUBLE_EQ(totalDisplacement,expectedDisplacement);
 }
 

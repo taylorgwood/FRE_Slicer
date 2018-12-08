@@ -243,3 +243,13 @@ void Gcode::write_basic_settings(std::ofstream& fout, Shape& shape)
     fout << ";  First Layer Length:   " << firstLayerLength << " mm" << std::endl;
     fout << std::endl;
 }
+
+double Gcode::get_syringe_diameter() const
+{
+    return mSyringeDiameter;
+}
+
+void Gcode::set_syringe_diameter()
+{
+
+}
