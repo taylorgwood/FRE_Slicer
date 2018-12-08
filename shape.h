@@ -20,8 +20,13 @@ public:
     std::vector<Point>  get_points();
     std::vector<double> get_layer_locations();
     Layer *get_layer(int layerNumber);
+    void set_extrusion_width(double extrusionWidth);
+    void set_infill_percentage(double infillPercentage);
+    void set_extrusion_multiplier(double extrusionMultiplier);
+    void set_width(double layerWidth);
+    void set_length(double layerLength);
 
-protected:
+    protected:
 
 private:
     double mHeight{10};

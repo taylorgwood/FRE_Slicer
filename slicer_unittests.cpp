@@ -444,7 +444,7 @@ TEST(Gcode,whenAskedForInitialExtrusionAmount_getZeroExtrusionAmount)
     EXPECT_DOUBLE_EQ(totalDisplacement,expectedDisplacement);
 }
 
-TEST(Gcode,whenAskedForShapeExtrusionAmount_getCorrectShapeExtrusionAmount)
+TEST(Extrusion,whenAskedForShapeExtrusionAmount_getCorrectShapeExtrusionAmount)
 {
     Gcode newGcode;
     Shape newShape;
@@ -460,6 +460,19 @@ TEST(Gcode,whenAskedForShapeExtrusionAmount_getCorrectShapeExtrusionAmount)
     double printVolume = 10*10*10;
     double expectedDisplacement = printVolume/printCrossSectionalArea;
     EXPECT_DOUBLE_EQ(totalDisplacement,expectedDisplacement);
+}
+
+TEST(Extrusion,whenCreatingShape_getCorrectLayerVolume)
+{
+    Shape newShape;
+    Layer* firstLayer = newShape.get_layer(0);
+    double extrusionWidth = firstLayer->get_extrusion_width();
+    double infillPercentage = firstLayer->get_infill_percentage();
+    double extrusionMultiplier = firstLayer->get_extrusion_multiplier();
+    double layerHeight = newShape.get_layer_height();
+    double print_diameter = firstLayer->get_diameter_of_print();
+    double layerVolume = extrusionMultiplier*extrusionWidth*infillPercentage/100;
+    int numberOfLayers = newShape.get_number_of_layers();
 }
 
 

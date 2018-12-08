@@ -2,14 +2,11 @@
 
 Shape::~Shape()
 {
-    //    layerArray = nullptr;
 }
 
 Shape::Shape():mLayerList{new std::vector<Layer*>}
 {
     create_layers();
-    //    create_layer_array();
-    //    fill_layer_array();
 }
 
 int Shape::get_number_of_layers()
@@ -119,4 +116,54 @@ Layer* Shape::get_layer(int layerNumber)
     std::vector<Layer*> layerList = get_layer_list();
     Layer* layer = layerList[layerNumber];
     return layer;
+}
+
+void Shape::set_extrusion_width(double extrusionWidth)
+{
+    size_t numberOfLayers = get_number_of_layers();
+    for (int i{0}; i<numberOfLayers; i++)
+    {
+        Layer* layer = get_layer(i);
+        layer->set_extrusion_width(extrusionWidth);
+    }
+}
+
+void Shape::set_infill_percentage(double infillPercentage)
+{
+    size_t numberOfLayers = get_number_of_layers();
+    for (int i{0}; i<numberOfLayers; i++)
+    {
+        Layer* layer = get_layer(i);
+        layer->set_infill_percentage(infillPercentage);
+    }
+}
+
+void Shape::set_extrusion_multiplier(double extrusionMultiplier)
+{
+    size_t numberOfLayers = get_number_of_layers();
+    for (int i{0}; i<numberOfLayers; i++)
+    {
+        Layer* layer = get_layer(i);
+        layer->set_extrusion_multiplier(extrusionMultiplier);
+    }
+}
+
+void Shape::set_width(double layerWidth)
+{
+    size_t numberOfLayers = get_number_of_layers();
+    for (int i{0}; i<numberOfLayers; i++)
+    {
+        Layer* layer = get_layer(i);
+        layer->set_width(layerWidth);
+    }
+}
+
+void Shape::set_length(double layerLength)
+{
+    size_t numberOfLayers = get_number_of_layers();
+    for (int i{0}; i<numberOfLayers; i++)
+    {
+        Layer* layer = get_layer(i);
+        layer->set_length(layerLength);
+    }
 }

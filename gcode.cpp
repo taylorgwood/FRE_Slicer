@@ -174,7 +174,10 @@ double Gcode::calculate_length(Point currentPoint)
 {
     double length{0};
     Point lengthVector = mLastPoint - currentPoint;
+    if (lengthVector.get_z() == 0)
+    {
     length = lengthVector.get_magnitude();
+    }
     return length;
 }
 
