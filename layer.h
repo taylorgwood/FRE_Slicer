@@ -22,7 +22,7 @@ public:
     double get_area() const;
     void   set_area(const double area);
     int    get_number_of_paths();
-    void   adjust_extrusion_width();
+    double get_adjusted_extrusion_width();
     std::vector<Path*> get_path_list();
     void   create_paths();
     double get_length() const;
@@ -36,6 +36,7 @@ public:
     void   set_location(double const location);
     std::vector<Point>  get_turn_points(int pathNumber);
     Path*  get_path(int pathNumber);
+    void   set_auto_adjust_path(bool adjustPaths);
 
 protected:
 
@@ -50,6 +51,7 @@ private:
     std::vector<Path*> *mPathList{nullptr};
     int    mNumber{0};
     double mLocation{0};
+    bool   mAutoAdjustPaths{true};
 
 };
 

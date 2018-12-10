@@ -21,11 +21,11 @@ int Shape::get_number_of_layers()
     return numberOfLayers;
 }
 
-void Shape::adjust_layer_height()
+double Shape::get_adjusted_layer_height()
 {
     int numberOfLayers = get_number_of_layers();
-    double realLayerHeight = mHeight/numberOfLayers;
-    set_layer_height(realLayerHeight);
+    double adjustedLayerHeight = mHeight/numberOfLayers;
+    return adjustedLayerHeight;
 }
 
 void Shape::set_layer_height(const double layerHeight)
@@ -51,7 +51,12 @@ double Shape::get_height() const
 void Shape::create_layers()
 {
     int numberOfLayers = get_number_of_layers();
-    adjust_layer_height();
+    double layerHeight = get_layer_height();
+    if (mAutoAdjustLayer == true)
+    {
+        layerHeight = get_adjusted_layer_height();
+    }
+    set_layer_height(layerHeight);
     double layerLocation{0};
     for (int i{0}; i<numberOfLayers; i++)
     {
@@ -167,3 +172,41 @@ void Shape::set_length(double layerLength)
         layer->set_length(layerLength);
     }
 }
+
+void Shape::set_auto_adjust_layer(bool adjustLayer)
+{
+    mAutoAdjustLayer = adjustLayer;
+}
+
+void Shape::set_auto_adjust_path(bool adjustPath)
+{
+    size_t numberOfLayers = get_number_of_layers();
+    for (int i{0}; i<numberOfLayers; i++)
+    {
+        Layer* layer = get_layer(i);
+        layer->set_auto_adjust_path(adjustPath);
+    }
+}
+
+void Shape::set_resolution(double resolution)
+{
+    size_t numberOfLayers = get_number_of_layers();
+    for (int i{0}; i<numberOfLayers; i++)
+    {
+        Layer* layer = get_layer(i);
+        size_t numberOfPaths = layer->get_number_of_paths();
+        for (int j{0}; j<numberOfLayers; j++)
+        {
+            Path* path = layer->get_path(j);
+            path->set_resolution(resolution);
+        }
+    }
+}
+
+double Shape::get_extrusion_width()
+{
+    Layer* firstLayer = get_layer(0);
+    double extrusionWidth = firstLayer->get_extrusion_width();
+    return extrusionWidth;
+}
+

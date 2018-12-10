@@ -107,13 +107,14 @@ TEST(ShapeFormation,givenShapeHeight_getNumberOfLayers)
     EXPECT_EQ(shape.get_number_of_layers(),expectedNumberOfLayers);
 }
 
-TEST(ShapeFormation,givenShapeHeihgt_getAdjustedNumberOfLayers)
+TEST(ShapeFormation,givenShapeHeight_getCorrectNumberOfLayers)
 {
     Shape shape;
     double initialLayerHeight{0.49};
     shape.set_layer_height(initialLayerHeight);
     shape.set_height(10);
-    shape.adjust_layer_height();
+    double adjustedLayerHeight = shape.get_adjusted_layer_height();
+    shape.set_layer_height(adjustedLayerHeight);
     int adjustedNumberOfLayers{shape.get_number_of_layers()};
     int expectedNumberOfLayers{20};
     double expectedLayerHeight{0.5};
@@ -132,10 +133,12 @@ TEST(PathNumber,givenLayerWidthAndPathWidth_getNumberOfPaths)
 TEST(PathNumber,givenLayerWidthAndPathWidth_getAdjustedNumberOfPaths)
 {
     Layer layer;
-    layer.adjust_extrusion_width();
-    double adjustedExtrusionWidth{layer.get_extrusion_width()};
+    double adjustedExtrusionWidth = layer.get_adjusted_extrusion_width();
+    layer.set_extrusion_width(adjustedExtrusionWidth);
     double expectedExtrusionWidth{0.26315789473};
+    int expectedNumberOfPaths{38};
     EXPECT_NEAR(adjustedExtrusionWidth,expectedExtrusionWidth,0.00001);
+    EXPECT_EQ(layer.get_number_of_paths(),expectedNumberOfPaths);
 }
 
 TEST(LayerList,givenShape_getCorrectlySizedLayerList)

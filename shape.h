@@ -9,7 +9,7 @@ public:
     ~Shape();
     Shape();
     int    get_number_of_layers();
-    void   adjust_layer_height();
+    double get_adjusted_layer_height();
     void   set_layer_height(const double layerHeight);
     double get_layer_height() const;
     void   set_height(const double height);
@@ -19,19 +19,23 @@ public:
     std::vector<Point>  get_points_in_layer(int layerNumber);
     std::vector<Point>  get_points();
     std::vector<double> get_layer_locations();
-    Layer *get_layer(int layerNumber);
-    void set_extrusion_width(double extrusionWidth);
-    void set_infill_percentage(double infillPercentage);
-    void set_extrusion_multiplier(double extrusionMultiplier);
-    void set_width(double layerWidth);
-    void set_length(double layerLength);
+    Layer  *get_layer(int layerNumber);
+    void   set_extrusion_width(double extrusionWidth);
+    void   set_infill_percentage(double infillPercentage);
+    void   set_extrusion_multiplier(double extrusionMultiplier);
+    void   set_width(double layerWidth);
+    void   set_length(double layerLength);
+    void   set_auto_adjust_layer(bool adjustLayer);
+    void   set_auto_adjust_path(bool adjustPath);
+    void   set_resolution(double resolution);
+    double get_extrusion_width();
 
-    protected:
+protected:
 
 private:
     double mHeight{10};
     double mLayerHeight{0.26};
-    bool   mAutoAdjustLayers{true};
+    bool   mAutoAdjustLayer{true};
     std::vector<Layer*> *mLayerList;
 
 

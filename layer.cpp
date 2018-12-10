@@ -103,11 +103,11 @@ int Layer::get_number_of_paths()
     return numberOfPaths;
 }
 
-void Layer::adjust_extrusion_width()
+double Layer::get_adjusted_extrusion_width()
 {
     int numberOfPaths = get_number_of_paths();
-    double realExtrusionWidth = mWidth/numberOfPaths;
-    set_extrusion_width(realExtrusionWidth);
+    double adjustedExtrusionWidth = mWidth/numberOfPaths;
+    return adjustedExtrusionWidth;
 }
 
 std::vector<Path*> Layer::get_path_list()
@@ -118,7 +118,12 @@ std::vector<Path*> Layer::get_path_list()
 void Layer::create_paths()
 {
     int numberOfPaths = get_number_of_paths();
-    adjust_extrusion_width();
+    double extrusionWidth = get_extrusion_width();
+    if (mAutoAdjustPaths == true)
+    {
+        double extrusionWidth = get_adjusted_extrusion_width();
+    }
+    set_extrusion_width(extrusionWidth);
     for (int i{0}; i<numberOfPaths; i++)
     {
         int pathNumber = i;
@@ -242,4 +247,9 @@ Path* Layer::get_path(int pathNumber)
     std::vector<Path*> pathList = get_path_list();
     Path* path = pathList[pathNumber];
     return path;
+}
+
+void Layer::set_auto_adjust_path(bool adjustPaths)
+{
+    mAutoAdjustPaths = adjustPaths;
 }
