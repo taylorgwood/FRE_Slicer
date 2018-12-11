@@ -65,7 +65,7 @@ void Shape::create_layers()
         int layerNumber{i};
         double layerHeight = get_layer_height();
         layerLocation += layerHeight;
-        Layer* newLayer = new Layer(layerNumber,layerLocation);
+        Layer* newLayer = new Layer(layerNumber,layerLocation,layerLength,layerWidth);
         mLayerList->push_back(newLayer);
     }
 }
