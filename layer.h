@@ -7,7 +7,8 @@ class Layer
 public:
     ~Layer();
     Layer();
-    Layer::Layer(int layerNumber, double layerLocation);
+    Layer(int layerNumber, double layerLocation);
+    Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth);
     double get_height() const;
     void   set_height(const double height);
     double get_extrusion_width() const;

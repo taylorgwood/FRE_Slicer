@@ -52,6 +52,8 @@ void Shape::create_layers()
 {
     int numberOfLayers = get_number_of_layers();
     double layerHeight = get_layer_height();
+    double layerLength = get_length();
+    double layerWidth  = get_width();
     if (mAutoAdjustLayer == true)
     {
         layerHeight = get_adjusted_layer_height();
@@ -153,24 +155,40 @@ void Shape::set_extrusion_multiplier(double extrusionMultiplier)
     }
 }
 
+double Shape::get_width()
+{
+    return mWidth;
+}
+
 void Shape::set_width(double layerWidth)
 {
-    size_t numberOfLayers = get_number_of_layers();
-    for (int i{0}; i<numberOfLayers; i++)
-    {
-        Layer* layer = get_layer(i);
-        layer->set_width(layerWidth);
-    }
+    mWidth = layerWidth;
+    mLayerList->clear();
+    create_layers();
+//    size_t numberOfLayers = get_number_of_layers();
+//    for (int i{0}; i<numberOfLayers; i++)
+//    {
+//        Layer* layer = get_layer(i);
+//        layer->set_width(layerWidth);
+//    }
+}
+
+double Shape::get_length()
+{
+    return mLength;
 }
 
 void Shape::set_length(double layerLength)
 {
-    size_t numberOfLayers = get_number_of_layers();
-    for (int i{0}; i<numberOfLayers; i++)
-    {
-        Layer* layer = get_layer(i);
-        layer->set_length(layerLength);
-    }
+    mLength = layerLength;
+    mLayerList->clear();
+    create_layers();
+//    size_t numberOfLayers = get_number_of_layers();
+//    for (int i{0}; i<numberOfLayers; i++)
+//    {
+//        Layer* layer = get_layer(i);
+//        layer->set_length(layerLength);
+//    }
 }
 
 void Shape::set_auto_adjust_layer(bool adjustLayer)

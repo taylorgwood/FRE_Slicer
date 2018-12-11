@@ -18,6 +18,15 @@ Layer::Layer(int layerNumber, double layerLocation):mPathList{new std::vector<Pa
     create_paths();
 }
 
+Layer::Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth):mPathList{new std::vector<Path*>}
+{
+    set_number(layerNumber);
+    set_location(layerLocation);
+    set_length(layerLength);
+    set_width(layerWidth);
+    create_paths();
+}
+
 double Layer::get_height() const
 {
     return mHeight;

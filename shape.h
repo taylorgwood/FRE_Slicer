@@ -23,7 +23,9 @@ public:
     void   set_extrusion_width(double extrusionWidth);
     void   set_infill_percentage(double infillPercentage);
     void   set_extrusion_multiplier(double extrusionMultiplier);
+    double get_width();
     void   set_width(double layerWidth);
+    double get_length();
     void   set_length(double layerLength);
     void   set_auto_adjust_layer(bool adjustLayer);
     void   set_auto_adjust_path(bool adjustPath);
@@ -34,6 +36,8 @@ protected:
 
 private:
     double mHeight{10};
+    double mWidth{10};
+    double mLength{10};
     double mLayerHeight{0.26};
     bool   mAutoAdjustLayer{true};
     std::vector<Layer*> *mLayerList;

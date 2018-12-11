@@ -478,4 +478,21 @@ TEST(Extrusion,whenCreatingShape_getCorrectLayerVolume)
     int numberOfLayers = newShape.get_number_of_layers();
 }
 
+TEST(ShapeSize,whenResettingLayerSize_getNewShapeSize)
+{
+    Shape shape;
+    double newShapeWidth = 8;
+    shape.set_width(newShapeWidth);
+    double actualShapeWidth = shape.get_width();
+    EXPECT_DOUBLE_EQ(newShapeWidth,actualShapeWidth);
+}
 
+TEST(ShapeSize,whenResettingLayerSize_getNewLayerSize)
+{
+    Shape shape;
+    double newShapeLength = 5;
+    shape.set_length(newShapeLength);
+    int firstLayer{0};
+    double actualLayerLength = shape.get_layer(firstLayer)->get_length();
+    EXPECT_DOUBLE_EQ(newShapeLength,actualLayerLength);
+}
