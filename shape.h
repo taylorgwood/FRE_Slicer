@@ -10,8 +10,9 @@ public:
     Shape();
     int    get_number_of_layers();
     double get_adjusted_layer_height();
-    void   set_layer_height(const double layerHeight);
+    void   set_layer_height(double layerHeight);
     double get_layer_height() const;
+    void   reset_layer_height(double layerHeight);
     void   set_height(const double height);
     double get_height() const;
     void   create_layers();

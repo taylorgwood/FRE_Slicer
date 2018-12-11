@@ -28,7 +28,7 @@ double Shape::get_adjusted_layer_height()
     return adjustedLayerHeight;
 }
 
-void Shape::set_layer_height(const double layerHeight)
+void Shape::set_layer_height(double layerHeight)
 {
     mLayerHeight = layerHeight;
 }
@@ -36,6 +36,17 @@ void Shape::set_layer_height(const double layerHeight)
 double Shape::get_layer_height() const
 {
     return mLayerHeight;
+}
+
+void Shape::reset_layer_height(double layerHeight)
+{
+    if (mAutoAdjustLayer==true)
+    {
+        layerHeight = get_adjusted_layer_height();
+    }
+    mLayerHeight = layerHeight;
+    mLayerList->clear();
+    create_layers();
 }
 
 void Shape::set_height(const double height)

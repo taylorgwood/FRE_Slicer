@@ -53,6 +53,7 @@ double Layer::get_extrusion_width() const
 
 void Layer::set_extrusion_width(double extrusionWidth)
 {
+    mExtrusionWidth = extrusionWidth;
     if (mAutoAdjustPaths==true)
     {
         extrusionWidth = get_adjusted_extrusion_width();
