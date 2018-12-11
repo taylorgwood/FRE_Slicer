@@ -37,6 +37,7 @@ Layer::Layer(int layerNumber, double layerLocation, double layerLength, double l
     set_extrusion_width(extrusionWidth);
     set_infill_percentage(infillPercentage);
     set_resolution(resolution);
+    set_auto_adjust_path(adjustPath);
     create_paths();
 }
 
