@@ -33,6 +33,7 @@ public:
     void   set_length(double layerLength);
     void   set_auto_adjust_layer(bool adjustLayer);
     void   set_auto_adjust_path(bool adjustPath);
+    double get_resolution();
     void   set_resolution(double resolution);
     double get_extrusion_width();
 
@@ -48,6 +49,7 @@ private:
     double mExtrusionMultiplier{1.0};
     double mExtrusionWidth{0.26};
     double mInfillPercentage{100};
+    double mResolution{1.0};
 
 
 };

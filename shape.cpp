@@ -76,6 +76,7 @@ void Shape::create_layers()
     double extrustionMultiplier = get_extrusion_multiplier();
     double extrusionWidth = get_extrusion_width();
     double infillPercentage = get_infill_percentage();
+    double resolution = get_resolution();
     if (mAutoAdjustLayer == true)
     {
         layerHeight = get_adjusted_layer_height();
@@ -87,7 +88,7 @@ void Shape::create_layers()
         int layerNumber{i};
         double layerHeight = get_layer_height();
         layerLocation += layerHeight;
-        Layer* newLayer = new Layer(layerNumber,layerLocation,layerLength,layerWidth, extrustionMultiplier, extrusionWidth, infillPercentage);
+        Layer* newLayer = new Layer(layerNumber,layerLocation,layerLength,layerWidth, extrustionMultiplier, extrusionWidth, infillPercentage, resolution);
         mLayerList->push_back(newLayer);
     }
 }
@@ -217,23 +218,19 @@ void Shape::set_auto_adjust_path(bool adjustPath)
     }
 }
 
+double Shape::get_resolution()
+{
+    return mResolution;
+}
+
 void Shape::set_resolution(double resolution)
 {
-    size_t numberOfLayers = get_number_of_layers();
-    for (int i{0}; i<numberOfLayers; i++)
-    {
-        Layer* layer = get_layer(i);
-        size_t numberOfPaths = layer->get_number_of_paths();
-        for (int j{0}; j<numberOfLayers; j++)
-        {
-            Path* path = layer->get_path(j);
-            path->set_resolution(resolution);
-        }
-    }
+    mResolution = resolution;
+    mLayerList->clear();
+    create_layers();
 }
 
 double Shape::get_extrusion_width()
 {
     return mExtrusionWidth;
 }
-

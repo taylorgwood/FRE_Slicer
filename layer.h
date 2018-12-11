@@ -9,7 +9,7 @@ public:
     Layer();
     Layer(int layerNumber, double layerLocation);
     Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth);
-    Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth, double extrusionMultiplier, double extrusionWidth, double infillPercentage)    ;
+    Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution)    ;
     double get_height() const;
     void   set_height(const double height);
     double get_extrusion_width() const;
