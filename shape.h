@@ -41,6 +41,9 @@ private:
     double mLayerHeight{0.26};
     bool   mAutoAdjustLayer{true};
     std::vector<Layer*> *mLayerList;
+    double mExtrusionMultiplier{1.0};
+    double mExtrusionWidth{0.26};
+    double mInfillPercentage{100};
 
 
 };

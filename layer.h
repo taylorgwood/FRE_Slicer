@@ -9,10 +9,11 @@ public:
     Layer();
     Layer(int layerNumber, double layerLocation);
     Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth);
+    Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth, double extrusionMultiplier, double extrusionWidth, double infillPercentage)    ;
     double get_height() const;
     void   set_height(const double height);
     double get_extrusion_width() const;
-    void   set_extrusion_width(const double extrusionWidth);
+    void   set_extrusion_width(double extrusionWidth);
     double get_infill_percentage() const;
     void   set_infill_percentage(const double infillPercentage);
     double get_extrusion_multiplier() const;

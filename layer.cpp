@@ -27,6 +27,15 @@ Layer::Layer(int layerNumber, double layerLocation, double layerLength, double l
     create_paths();
 }
 
+Layer::Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth, double extrusionMultiplier, double extrusionWidth, double infillPercentage):mPathList{new std::vector<Path*>}
+{
+    set_number(layerNumber);
+    set_location(layerLocation);
+    set_length(layerLength);
+    set_width(layerWidth);
+    create_paths();
+}
+
 double Layer::get_height() const
 {
     return mHeight;
@@ -42,8 +51,12 @@ double Layer::get_extrusion_width() const
     return mExtrusionWidth;
 }
 
-void Layer::set_extrusion_width(const double extrusionWidth)
+void Layer::set_extrusion_width(double extrusionWidth)
 {
+    if (mAutoAdjustPaths==true)
+    {
+        extrusionWidth = get_adjusted_extrusion_width();
+    }
     mExtrusionWidth = extrusionWidth;
 }
 

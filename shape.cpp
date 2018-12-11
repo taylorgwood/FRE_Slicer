@@ -127,32 +127,23 @@ Layer* Shape::get_layer(int layerNumber)
 
 void Shape::set_extrusion_width(double extrusionWidth)
 {
-    size_t numberOfLayers = get_number_of_layers();
-    for (int i{0}; i<numberOfLayers; i++)
-    {
-        Layer* layer = get_layer(i);
-        layer->set_extrusion_width(extrusionWidth);
-    }
+    mExtrusionWidth = extrusionWidth;
+    mLayerList->clear();
+    create_layers();
 }
 
 void Shape::set_infill_percentage(double infillPercentage)
 {
-    size_t numberOfLayers = get_number_of_layers();
-    for (int i{0}; i<numberOfLayers; i++)
-    {
-        Layer* layer = get_layer(i);
-        layer->set_infill_percentage(infillPercentage);
-    }
+    mInfillPercentage = infillPercentage;
+    mLayerList->clear();
+    create_layers();
 }
 
 void Shape::set_extrusion_multiplier(double extrusionMultiplier)
 {
-    size_t numberOfLayers = get_number_of_layers();
-    for (int i{0}; i<numberOfLayers; i++)
-    {
-        Layer* layer = get_layer(i);
-        layer->set_extrusion_multiplier(extrusionMultiplier);
-    }
+    mExtrusionMultiplier = extrusionMultiplier;
+    mLayerList->clear();
+    create_layers();
 }
 
 double Shape::get_width()
@@ -165,12 +156,6 @@ void Shape::set_width(double layerWidth)
     mWidth = layerWidth;
     mLayerList->clear();
     create_layers();
-//    size_t numberOfLayers = get_number_of_layers();
-//    for (int i{0}; i<numberOfLayers; i++)
-//    {
-//        Layer* layer = get_layer(i);
-//        layer->set_width(layerWidth);
-//    }
 }
 
 double Shape::get_length()
@@ -183,12 +168,6 @@ void Shape::set_length(double layerLength)
     mLength = layerLength;
     mLayerList->clear();
     create_layers();
-//    size_t numberOfLayers = get_number_of_layers();
-//    for (int i{0}; i<numberOfLayers; i++)
-//    {
-//        Layer* layer = get_layer(i);
-//        layer->set_length(layerLength);
-//    }
 }
 
 void Shape::set_auto_adjust_layer(bool adjustLayer)
