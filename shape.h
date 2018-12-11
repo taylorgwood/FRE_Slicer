@@ -22,7 +22,9 @@ public:
     std::vector<double> get_layer_locations();
     Layer  *get_layer(int layerNumber);
     void   set_extrusion_width(double extrusionWidth);
+    double get_infill_percentage();
     void   set_infill_percentage(double infillPercentage);
+    double get_extrusion_multiplier();
     void   set_extrusion_multiplier(double extrusionMultiplier);
     double get_width();
     void   set_width(double layerWidth);

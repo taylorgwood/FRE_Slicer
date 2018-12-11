@@ -65,6 +65,9 @@ void Shape::create_layers()
     double layerHeight = get_layer_height();
     double layerLength = get_length();
     double layerWidth  = get_width();
+    double extrustionMultiplier = get_extrusion_multiplier();
+    double extrusionWidth = get_extrusion_width();
+    double infillPercentage = get_infill_percentage();
     if (mAutoAdjustLayer == true)
     {
         layerHeight = get_adjusted_layer_height();
@@ -143,11 +146,21 @@ void Shape::set_extrusion_width(double extrusionWidth)
     create_layers();
 }
 
+double Shape::get_infill_percentage()
+{
+    return mInfillPercentage;
+}
+
 void Shape::set_infill_percentage(double infillPercentage)
 {
     mInfillPercentage = infillPercentage;
     mLayerList->clear();
     create_layers();
+}
+
+double Shape::get_extrusion_multiplier()
+{
+    return mExtrusionMultiplier;
 }
 
 void Shape::set_extrusion_multiplier(double extrusionMultiplier)
@@ -213,8 +226,6 @@ void Shape::set_resolution(double resolution)
 
 double Shape::get_extrusion_width()
 {
-    Layer* firstLayer = get_layer(0);
-    double extrusionWidth = firstLayer->get_extrusion_width();
-    return extrusionWidth;
+    return mExtrusionWidth;
 }
 
