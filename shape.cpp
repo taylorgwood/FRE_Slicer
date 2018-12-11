@@ -88,7 +88,7 @@ std::vector<Point> Shape::get_points()
     for (int i{0}; i<numberOfLayers; i++)
     {
         std::vector<Layer*> layerList = get_layer_list();
-        Layer *layer = layerList[1];
+        Layer *layer = layerList[i];
         std::vector<Point> pointsInLayer = layer->get_points();
         size_t numberOfPointsInLayer = pointsInLayer.size();
         for (int j{0}; j<numberOfPointsInLayer; j++)
