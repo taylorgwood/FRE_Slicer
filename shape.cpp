@@ -48,6 +48,7 @@ double Shape::get_layer_height() const
 
 void Shape::reset_layer_height(double layerHeight)
 {
+    mLayerHeight = layerHeight;
     if (mAutoAdjustLayer==true)
     {
         layerHeight = get_adjusted_layer_height();

@@ -10,6 +10,7 @@ public:
     Path(Point start, Point end);
     Path(Point start, Point end, double diameter);
     Path(Point start, Point end, double diameter, int pathNumber);
+    Path(Point start, Point end, double diameter, int pathNumber, double resolution);
     Point  get_start() const;
     void   set_start(Point const startPoint);
     Point  get_end() const;

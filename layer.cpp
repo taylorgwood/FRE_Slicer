@@ -33,6 +33,10 @@ Layer::Layer(int layerNumber, double layerLocation, double layerLength, double l
     set_location(layerLocation);
     set_length(layerLength);
     set_width(layerWidth);
+    set_extrusion_multiplier(extrusionMultiplier);
+    set_extrusion_width(extrusionWidth);
+    set_infill_percentage(infillPercentage);
+    set_resolution(resolution);
     create_paths();
 }
 
@@ -163,7 +167,8 @@ void Layer::create_paths()
         Point start = turnPoints[0];
         Point end = turnPoints[1];
         double diameter = get_diameter_of_print();
-        Path* newPath = new Path(start,end,diameter,pathNumber);
+        double resolution = get_resolution();
+        Path* newPath = new Path(start,end,diameter,pathNumber,resolution);
         mPathList->push_back(newPath);
     }
 }
@@ -284,4 +289,14 @@ Path* Layer::get_path(int pathNumber)
 void Layer::set_auto_adjust_path(bool adjustPaths)
 {
     mAutoAdjustPaths = adjustPaths;
+}
+
+double Layer::get_resolution() const
+{
+    return mResolution;
+}
+
+void Layer::set_resolution(double const resolution)
+{
+    mResolution = resolution;
 }

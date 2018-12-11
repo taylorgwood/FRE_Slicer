@@ -34,6 +34,16 @@ Path::Path(Point start, Point end, double diameter, int pathNumber):mPointList{n
     create_points();
 }
 
+Path::Path(Point start, Point end, double diameter, int pathNumber, double resolution):mPointList{new std::vector<Point*>}
+{
+    set_start(start);
+    set_end(end);
+    set_diameter(diameter);
+    set_path_number(pathNumber);
+    set_resolution(resolution);
+    create_points();
+}
+
 Point Path::get_start() const
 {
     return mStart;

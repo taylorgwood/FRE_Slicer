@@ -39,6 +39,8 @@ public:
     std::vector<Point>  get_turn_points(int pathNumber);
     Path*  get_path(int pathNumber);
     void   set_auto_adjust_path(bool adjustPaths);
+    double get_resolution() const;
+    void   set_resolution(double const resolution);
 
 protected:
 
@@ -54,7 +56,7 @@ private:
     int    mNumber{0};
     double mLocation{0};
     bool   mAutoAdjustPaths{true};
-
+    double mResolution{1};
 };
 
 #endif // LAYER_H
