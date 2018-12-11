@@ -114,6 +114,11 @@ int Layer::get_number_of_paths()
 {
     double exactNumberOfPaths = mWidth/get_modified_extrusion_width();
     int flooredNumberOfPaths = int(floor(mWidth/get_modified_extrusion_width()));
+    if (mNumber%2 != 0)
+    {
+        exactNumberOfPaths = mLength/get_modified_extrusion_width();
+        flooredNumberOfPaths = int(floor(mLength/get_modified_extrusion_width()));
+    }
     int numberOfPaths{flooredNumberOfPaths};
     if ((exactNumberOfPaths-flooredNumberOfPaths)>=0.5)
     {
