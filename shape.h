@@ -22,6 +22,7 @@ public:
     std::vector<Point>  get_points();
     std::vector<double> get_layer_locations();
     Layer  *get_layer(int layerNumber);
+    double get_extrusion_width();
     void   set_extrusion_width(double extrusionWidth);
     double get_infill_percentage();
     void   set_infill_percentage(double infillPercentage);
@@ -35,7 +36,6 @@ public:
     void   set_auto_adjust_path(bool adjustPath);
     double get_resolution();
     void   set_resolution(double resolution);
-    double get_extrusion_width();
 
 protected:
 
