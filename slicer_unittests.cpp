@@ -510,3 +510,17 @@ TEST(PathNumber,whenChangingShapeSize_getDifferentNumberOfPathsDependingOnOrient
     EXPECT_EQ(numberOfPathsInFirstLayer,19);
     EXPECT_EQ(numberOfPathsInSecondLayer,38);
 }
+
+TEST(PointNumber,whenChangingShapeSize_getDifferentNumberOfPointsDependingOnPathOrientation)
+{
+    double shapeHeight{10};
+    double shapeWidth{5};
+    double shapeLength{10};
+    Shape shape(shapeHeight,shapeWidth,shapeLength);
+    Layer* firstLayer = shape.get_layer(0);
+    int numberOfPointsInFirstLayerPath = firstLayer->get_path(0)->get_number_of_points();
+    Layer* secondLayer = shape.get_layer(1);
+    int numberOfPointsInSecondLayerPath = secondLayer->get_path(0)->get_number_of_points();
+    EXPECT_EQ(numberOfPointsInFirstLayerPath,11);
+    EXPECT_EQ(numberOfPointsInSecondLayerPath,6);
+}

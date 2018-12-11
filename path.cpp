@@ -66,7 +66,8 @@ void Path::set_diameter(double const diameter)
 
 int Path::get_number_of_points() const
 {
-    double exactNumberOfSegments = mLength/mResolution;
+    double length = get_length();
+    double exactNumberOfSegments = length/mResolution;
     int flooredNumberOfSegments = int(floor(exactNumberOfSegments));
     int numberOfPoints{flooredNumberOfSegments+1};
     return numberOfPoints;
@@ -84,14 +85,17 @@ double Path::get_resolution() const
 
 double Path::get_length() const
 {
-    return mLength;
+    Point pathVector = mStart-mEnd;
+    double length = pathVector.get_magnitude();
+    return length;
 }
 
 void Path::adjust_point_spacing()
 {
-    double exactNumberOfSegments = mLength/mResolution;
+    double length = get_length();
+    double exactNumberOfSegments = length/mResolution;
     int flooredNumberOfSegments = int(floor(exactNumberOfSegments));
-    double realResolution = mLength/flooredNumberOfSegments;
+    double realResolution = length/flooredNumberOfSegments;
     set_resolution(realResolution);
 }
 

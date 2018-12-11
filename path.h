@@ -35,7 +35,6 @@ private:
     Point  mEnd{0,0,0};
     double mDiameter{0.26};
     std::vector<Point*> *mPointList{nullptr};
-    double mLength{10};
     double mResolution{1.0};
     int    mPathNumber{0};
 };
