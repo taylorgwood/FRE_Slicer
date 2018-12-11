@@ -36,6 +36,7 @@ public:
     void   set_auto_adjust_path(bool adjustPath);
     double get_resolution();
     void   set_resolution(double resolution);
+    bool   get_auto_adjust_path();
 
 protected:
 
@@ -45,6 +46,7 @@ private:
     double mLength{10};
     double mLayerHeight{0.26};
     bool   mAutoAdjustLayer{true};
+    bool   mAutoAdjustPath{true};
     std::vector<Layer*> *mLayerList;
     double mExtrusionMultiplier{1.0};
     double mExtrusionWidth{0.26};

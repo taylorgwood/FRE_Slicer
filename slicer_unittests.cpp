@@ -524,3 +524,31 @@ TEST(PointNumber,whenChangingShapeSize_getDifferentNumberOfPointsDependingOnPath
     EXPECT_EQ(numberOfPointsInFirstLayerPath,11);
     EXPECT_EQ(numberOfPointsInSecondLayerPath,6);
 }
+
+TEST(Infill,whenChangingInfill_getCorrectlySizedLayer)
+{
+    Shape shape;
+    double newInfillPercentage{50};
+    shape.set_infill_percentage(newInfillPercentage);
+    Layer* firstLayer = shape.get_layer(0);
+    double layerWidth = firstLayer->get_width();
+    double layerLength = firstLayer->get_length();
+    double expectedLayerWidth{10};
+    double expectedLayerLength{10};
+    EXPECT_DOUBLE_EQ(layerWidth, expectedLayerWidth);
+    EXPECT_DOUBLE_EQ(layerLength,expectedLayerLength);
+}
+
+TEST(Infill,whenChangingInfill_getCorrectlySizedInfillPaths)
+{
+    Shape shape;
+    double newInfillPercentage{50};
+    shape.set_infill_percentage(newInfillPercentage);
+    Layer* firstLayer = shape.get_layer(0);
+    double layerWidth = firstLayer->get_width();
+    double layerLength = firstLayer->get_length();
+    double expectedLayerWidth{10};
+    double expectedLayerLength{10};
+    EXPECT_DOUBLE_EQ(layerWidth, expectedLayerWidth);
+    EXPECT_DOUBLE_EQ(layerLength,expectedLayerLength);
+}

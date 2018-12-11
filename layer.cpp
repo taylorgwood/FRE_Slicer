@@ -27,7 +27,7 @@ Layer::Layer(int layerNumber, double layerLocation, double layerLength, double l
     create_paths();
 }
 
-Layer::Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution):mPathList{new std::vector<Path*>}
+Layer::Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, bool adjustPath):mPathList{new std::vector<Path*>}
 {
     set_number(layerNumber);
     set_location(layerLocation);
