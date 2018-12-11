@@ -8,6 +8,7 @@ class Shape
 public:
     ~Shape();
     Shape();
+    Shape(double height, double width, double length);
     int    get_number_of_layers();
     double get_adjusted_layer_height();
     void   set_layer_height(double layerHeight);

@@ -135,6 +135,10 @@ double Layer::get_adjusted_extrusion_width()
 {
     int numberOfPaths = get_number_of_paths();
     double adjustedExtrusionWidth = mWidth/numberOfPaths;
+    if (mNumber%2 != 0)
+    {
+        adjustedExtrusionWidth = mLength/numberOfPaths;
+    }
     return adjustedExtrusionWidth;
 }
 

@@ -9,6 +9,14 @@ Shape::Shape():mLayerList{new std::vector<Layer*>}
     create_layers();
 }
 
+Shape::Shape(double height, double width, double length):mLayerList{new std::vector<Layer*>}
+{
+    mHeight = height;
+    mWidth = width;
+    mLength = length;
+    create_layers();
+}
+
 int Shape::get_number_of_layers()
 {
     double exactNumberOfLayers = mHeight/mLayerHeight;

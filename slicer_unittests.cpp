@@ -496,3 +496,17 @@ TEST(ShapeSize,whenResettingLayerSize_getNewLayerSize)
     double actualLayerLength = shape.get_layer(firstLayer)->get_length();
     EXPECT_DOUBLE_EQ(newShapeLength,actualLayerLength);
 }
+
+TEST(PathNumber,whenChangingShapeSize_getDifferentNumberOfPathsDependingOnOrientation)
+{
+    double shapeHeight{10};
+    double shapeWidth{5};
+    double shapeLength{10};
+    Shape shape(shapeHeight,shapeWidth,shapeLength);
+    Layer* firstLayer = shape.get_layer(0);
+    int numberOfPathsInFirstLayer = firstLayer->get_number_of_paths();
+    Layer* secondLayer = shape.get_layer(1);
+    int numberOfPathsInSecondLayer = secondLayer->get_number_of_paths();
+    EXPECT_EQ(numberOfPathsInFirstLayer,19);
+    EXPECT_EQ(numberOfPathsInSecondLayer,38);
+}
