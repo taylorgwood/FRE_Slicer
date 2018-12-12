@@ -128,7 +128,6 @@ std::string Gcode::get_time_string()
 
 void Gcode::write_points_in_path(std::ofstream& fout, Path* path)
 {
-    double diameter = path->get_diameter();
     std::vector<Point*> pointsInPath = path->get_point_list();
     size_t numberOfPointsInPath = path->get_number_of_points();
     for (int i{0}; i<numberOfPointsInPath; i++)
@@ -138,7 +137,7 @@ void Gcode::write_points_in_path(std::ofstream& fout, Path* path)
         fout << " X" << point->get_x();
         fout << " Y" << point->get_y();
         double materialRatio = point->get_material();
-        double extrusionDistance = get_extrusion_distance(diameter, *point);
+        double extrusionDistance = get_extrusion_distance(*point);
         increment_extruder_displacement(materialRatio,extrusionDistance);
         fout << " A" << get_extruder_displacement()[0];
         fout << " B" << get_extruder_displacement()[1];
@@ -148,8 +147,9 @@ void Gcode::write_points_in_path(std::ofstream& fout, Path* path)
     }
 }
 
-double Gcode::get_extrusion_distance(double diameter, Point currentPoint)
+double Gcode::get_extrusion_distance(Point currentPoint)
 {
+    double diameter = currentPoint.get_diameter();
     double printCrossSectionalArea = pi*(diameter*diameter)/4;
     double printLength = calculate_length(currentPoint);
     double printVolume = printCrossSectionalArea*printLength;

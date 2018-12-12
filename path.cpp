@@ -135,6 +135,8 @@ Point* Path::create_new_point(int pointNumber, int numberOfPointsInPath) const
     Point pointInfo = (mStart + step*pointNumber); // set material here
     double material = get_material(pointNumber,pointInfo);
     pointInfo.set_material(material);
+    double diameter = get_diameter();
+    pointInfo.set_diameter(diameter);
     Point* newPoint = new Point(pointInfo);
     return newPoint;
 }
