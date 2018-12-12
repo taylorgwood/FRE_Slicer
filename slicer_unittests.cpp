@@ -552,3 +552,28 @@ TEST(Infill,whenChangingInfill_getCorrectlySizedInfillPaths)
     EXPECT_DOUBLE_EQ(layerWidth, expectedLayerWidth);
     EXPECT_DOUBLE_EQ(layerLength,expectedLayerLength);
 }
+
+TEST(PathList,whenRequestingPathList_getCorrectlySizedPathList)
+{
+    Shape shape;
+    std::vector<Path>* pathList = shape.get_path_list();
+    size_t numberOfPaths = pathList->size();
+    int numberOfLayers = shape.get_number_of_layers();
+    int numberOfPathsInFirstLayer = shape.get_layer(0)->get_number_of_paths();
+    int expectedNumberOfPaths = numberOfLayers*numberOfPathsInFirstLayer;
+    EXPECT_EQ(numberOfPaths,expectedNumberOfPaths);
+}
+
+TEST(PathList,whenRequestingPathList_getCorrectLengthPathsInPathList)
+{
+    Shape shape;
+    std::vector<Path>* pathList = shape.get_path_list();
+    Path firstPath = pathList->at(0);
+    double firstPathLength = firstPath.get_length();
+    double expectedFirstPathLength = shape.get_length();
+    int numberOfPathsInFirstLayer = shape.get_layer(0)->get_number_of_paths();
+    Path secondLayerPath = pathList->at(numberOfPathsInFirstLayer+1);
+    double secondLayerPathLength = secondLayerPath.get_length();
+    double expectedLayerSecondPathLength = shape.get_width();
+    EXPECT_EQ(secondLayerPathLength,expectedLayerSecondPathLength);
+}

@@ -240,3 +240,22 @@ bool Shape::get_auto_adjust_path()
 {
     return mAutoAdjustPath;
 }
+
+std::vector<Path>* Shape::get_path_list()
+{
+    std::vector<Path>* pathList = new std::vector<Path>;
+
+    int numberOfLayers = get_number_of_layers();
+    for (int i{0}; i<numberOfLayers; i++)
+    {
+        Layer* layer = get_layer(i);
+        std::vector<Path*> layerPathList = layer->get_path_list();
+        size_t numberOfPaths = layerPathList.size();
+        for (int j{0}; j<numberOfPaths; j++)
+        {
+            Path* path = layerPathList.at(j);
+            pathList->push_back(*path);
+        }
+    }
+    return pathList;
+}

@@ -37,6 +37,7 @@ public:
     double get_resolution();
     void   set_resolution(double resolution);
     bool   get_auto_adjust_path();
+    std::vector<Path> *get_path_list();
 
 protected:
 
