@@ -10,6 +10,7 @@ public:
     Point();
     Point(double x, double y, double z);
     Point(double x, double y, double z, double material);
+    Point(double x, double y, double z, double material, double diameter);
     Point  operator+(const Point secondPoint) const;
     Point  operator-(const Point secondPoint) const;
     Point  operator*(const double scalar) const;
@@ -25,6 +26,8 @@ public:
     void   print_list(std::vector<Point*> pointList);
     Point  normalize();
     double get_magnitude();
+    void   set_diameter(const double diameter);
+    double get_diameter() const;
 
 protected:
 
@@ -33,7 +36,7 @@ private:
     double mY{0};
     double mZ{0};
     double mMaterial{0};
-
+    double mDiameter{0.26};
 };
 
 #endif // POINT_H

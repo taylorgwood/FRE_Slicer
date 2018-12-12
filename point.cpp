@@ -25,6 +25,16 @@ Point::Point(double x, double y, double z, double material)
     set_material(material);
 }
 
+Point::Point(double x, double y, double z, double material, double diameter)
+{
+    set_x(x);
+    set_y(y);
+    set_z(z);
+    set_material(material);
+    set_diameter(diameter);
+}
+
+
 Point Point::operator+(const Point secondPoint) const
 {
     double summedX = get_x() + secondPoint.get_x();
@@ -130,4 +140,14 @@ double Point::get_magnitude()
     double material = get_material();
     double magnitude = sqrt(x*x + y*y + z*z);
     return magnitude;
+}
+
+void Point::set_diameter(const double diameter)
+{
+    mDiameter = diameter;
+}
+
+double Point::get_diameter() const
+{
+    return mDiameter;
 }
