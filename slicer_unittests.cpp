@@ -596,6 +596,7 @@ TEST(PathList,whenRequestingPathList_getCorrectFirstPathLocation)
     Path firstPath = pathList->at(0);
     Point firstPathLocation = firstPath.get_start();
     double firstLayerLocation = shape.get_layer(0)->get_location();
+//    double extrusionWidthBuffer = shape.get_layer(0)->get_adjusted_extrusion_width()/2;
     Point expectedFirstLocation{0,0,firstLayerLocation};
     EXPECT_POINT_EQ(firstPathLocation,expectedFirstLocation);
 }
