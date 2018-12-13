@@ -85,7 +85,7 @@ void Shape::create_layers()
         layerHeight = get_adjusted_layer_height();
     }
     set_layer_height(layerHeight);
-    double layerLocation = layerHeight/2;
+    double layerLocation = -layerHeight/2;
     for (int i{0}; i<numberOfLayers; i++)
     {
         int layerNumber{i};
