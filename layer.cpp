@@ -175,7 +175,7 @@ void Layer::create_paths()
     {
         double extrusionWidth = get_adjusted_extrusion_width();
     }
-    set_extrusion_width(extrusionWidth);
+//    set_extrusion_width(extrusionWidth);
     for (int i{0}; i<numberOfPaths; i++)
     {
         int pathNumber = i;

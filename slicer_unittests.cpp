@@ -539,20 +539,6 @@ TEST(Infill,whenChangingInfill_getCorrectlySizedLayer)
     EXPECT_DOUBLE_EQ(layerLength,expectedLayerLength);
 }
 
-TEST(Infill,whenChangingInfill_getCorrectlySizedInfillPaths)
-{
-    Shape shape;
-    double newInfillPercentage{50};
-    shape.set_infill_percentage(newInfillPercentage);
-    Layer* firstLayer = shape.get_layer(0);
-    double layerWidth = firstLayer->get_width();
-    double layerLength = firstLayer->get_length();
-    double expectedLayerWidth{10};
-    double expectedLayerLength{10};
-    EXPECT_DOUBLE_EQ(layerWidth, expectedLayerWidth);
-    EXPECT_DOUBLE_EQ(layerLength,expectedLayerLength);
-}
-
 TEST(PathList,whenRequestingPathList_getCorrectlySizedPathList)
 {
     Shape shape;
@@ -615,20 +601,33 @@ TEST(PathList,whenRequestingPathList_getCorrectLastPathLocation)
     EXPECT_POINT_EQ(lastPathLocation,expectedLocation);
 }
 
-TEST(Infill,whenRequestingPathListWithChangedInfill_getCorrectLastPathLocation)
+
+TEST(Infill,whenChangingInfill_getCorrectNumberOfPaths)
 {
     Shape shape;
-    shape.set_infill_percentage(50);
-    Gcode gcode;
-        std::string fileName = "TestingFile";
-    gcode.generate_file(shape, fileName);
+    double newInfillPercentage{50};
+    shape.set_infill_percentage(newInfillPercentage);
     Layer* firstLayer = shape.get_layer(0);
-    int numberOfPaths = firstLayer->get_number_of_paths();
-    int lastPathNumber = (numberOfPaths-1);
-    std::vector<Path*> pathList = firstLayer->get_path_list();
-    Path* lastPath = pathList.at(lastPathNumber);
-    Point lastPathLocation = lastPath->get_start();
-    double firstLayerZLocation = firstLayer->get_location();
-    Point expectedLocation{10,9.736842,firstLayerZLocation};
-    EXPECT_POINT_EQ(lastPathLocation,expectedLocation);
+    size_t numberOfPathsInList = firstLayer->get_path_list().size();
+    double modifiedExtrusionWidth = firstLayer->get_modified_extrusion_width();
+    int expectedNumberOfPaths = firstLayer->get_width()/modifiedExtrusionWidth;
+    EXPECT_EQ(numberOfPathsInList,expectedNumberOfPaths);
 }
+
+//TEST(Infill,whenRequestingPathListWithChangedInfill_getCorrectLastPathLocation)
+//{
+//    Shape shape;
+//    shape.set_infill_percentage(50);
+//    Gcode gcode;
+//        std::string fileName = "TestingFile";
+//    gcode.generate_file(shape, fileName);
+//    Layer* firstLayer = shape.get_layer(0);
+//    int numberOfPaths = firstLayer->get_number_of_paths();
+//    int lastPathNumber = (numberOfPaths-1);
+//    std::vector<Path*> pathList = firstLayer->get_path_list();
+//    Path* lastPath = pathList.at(lastPathNumber);
+//    Point lastPathLocation = lastPath->get_start();
+//    double firstLayerZLocation = firstLayer->get_location();
+//    Point expectedLocation{10,9.736842,firstLayerZLocation};
+//    EXPECT_POINT_EQ(lastPathLocation,expectedLocation);
+//}
