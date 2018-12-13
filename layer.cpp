@@ -11,33 +11,48 @@ Layer::Layer():mPathList{new std::vector<Path*>}
     create_paths();
 }
 
-Layer::Layer(int layerNumber, double layerLocation):mPathList{new std::vector<Path*>}
+Layer::Layer(int number, double location):mPathList{new std::vector<Path*>}
 {
-    set_number(layerNumber);
-    set_location(layerLocation);
+    set_number(number);
+    set_location(location);
     create_paths();
 }
 
-Layer::Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth):mPathList{new std::vector<Path*>}
+Layer::Layer(int number, double location, double length, double width):mPathList{new std::vector<Path*>}
 {
-    set_number(layerNumber);
-    set_location(layerLocation);
-    set_length(layerLength);
-    set_width(layerWidth);
+    set_number(number);
+    set_location(location);
+    set_length(length);
+    set_width(width);
     create_paths();
 }
 
-Layer::Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, bool adjustPath):mPathList{new std::vector<Path*>}
+Layer::Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, bool adjustPath):mPathList{new std::vector<Path*>}
 {
-    set_number(layerNumber);
-    set_location(layerLocation);
-    set_length(layerLength);
-    set_width(layerWidth);
+    set_number(number);
+    set_location(location);
+    set_length(length);
+    set_width(width);
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
     set_infill_percentage(infillPercentage);
     set_resolution(resolution);
     set_auto_adjust_path(adjustPath);
+    create_paths();
+}
+
+Layer::Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, bool adjustPath, double height):mPathList{new std::vector<Path*>}
+{
+    set_number(number);
+    set_location(location);
+    set_length(length);
+    set_width(width);
+    set_extrusion_multiplier(extrusionMultiplier);
+    set_extrusion_width(extrusionWidth);
+    set_infill_percentage(infillPercentage);
+    set_resolution(resolution);
+    set_auto_adjust_path(adjustPath);
+    set_height(height);
     create_paths();
 }
 
@@ -242,6 +257,7 @@ std::vector<Point> Layer::get_turn_points(int pathNumber)
     double zLocation = get_location();
     int numberOfPaths = get_number_of_paths();
     int layerNumber = get_number();
+    double extrusionWidthBuffer = get_adjusted_extrusion_width()/2;
     if (layerNumber%2 == 0)
     {
         if (pathNumber%2 == 0)
@@ -254,7 +270,7 @@ std::vector<Point> Layer::get_turn_points(int pathNumber)
             xStart = mLength;
             xEnd   = 0;
         }
-        yStart = mWidth/numberOfPaths*pathNumber;
+        yStart = mWidth/numberOfPaths*pathNumber+extrusionWidthBuffer;
         yEnd   = yStart;
     }
     else
@@ -269,7 +285,7 @@ std::vector<Point> Layer::get_turn_points(int pathNumber)
             yStart = mWidth;
             yEnd   = 0;
         }
-        xStart = mLength/numberOfPaths*pathNumber;
+        xStart = mLength/numberOfPaths*pathNumber+extrusionWidthBuffer;
         xEnd   = xStart;
     }
     Point startPoint{xStart,yStart,zLocation};

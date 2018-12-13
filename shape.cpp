@@ -79,6 +79,7 @@ void Shape::create_layers()
     double infillPercentage = get_infill_percentage();
     double resolution = get_resolution();
     bool   adjustPath = get_auto_adjust_path();
+    double height = get_layer_height();
     if (mAutoAdjustLayer == true)
     {
         layerHeight = get_adjusted_layer_height();
@@ -90,7 +91,7 @@ void Shape::create_layers()
         int layerNumber{i};
         double layerHeight = get_layer_height();
         layerLocation += layerHeight;
-        Layer* newLayer = new Layer(layerNumber,layerLocation,layerLength,layerWidth, extrustionMultiplier, extrusionWidth, infillPercentage, resolution, adjustPath);
+        Layer* newLayer = new Layer(layerNumber,layerLocation,layerLength,layerWidth, extrustionMultiplier, extrusionWidth, infillPercentage, resolution, adjustPath, height);
         mLayerList->push_back(newLayer);
     }
 }

@@ -577,3 +577,57 @@ TEST(PathList,whenRequestingPathList_getCorrectLengthPathsInPathList)
     double expectedLayerSecondPathLength = shape.get_width();
     EXPECT_EQ(secondLayerPathLength,expectedLayerSecondPathLength);
 }
+
+TEST(LayerHeight,whenChangingLayerHeight_getCorrectPathDiameter)
+{
+    Shape shape;
+    double newLayerHeight{0.5};
+    shape.reset_layer_height(newLayerHeight);
+    Layer* firstLayer = shape.get_layer(0);
+    double pathDiameter = firstLayer->get_diameter_of_print();
+    double expectedPathDiameter{0.409306};
+    EXPECT_NEAR(pathDiameter, expectedPathDiameter,0.00001);
+}
+
+TEST(PathList,whenRequestingPathList_getCorrectFirstPathLocation)
+{
+    Shape shape;
+    std::vector<Path>* pathList = shape.get_path_list();
+    Path firstPath = pathList->at(0);
+    Point firstPathLocation = firstPath.get_start();
+    double firstLayerLocation = shape.get_layer(0)->get_location();
+    Point expectedFirstLocation{0,0,firstLayerLocation};
+    EXPECT_POINT_EQ(firstPathLocation,expectedFirstLocation);
+}
+
+TEST(PathList,whenRequestingPathList_getCorrectLastPathLocation)
+{
+    Shape shape;
+    Layer* firstLayer = shape.get_layer(0);
+    int numberOfPaths = firstLayer->get_number_of_paths();
+    int lastPathNumber = (numberOfPaths-1);
+    std::vector<Path*> pathList = firstLayer->get_path_list();
+    Path* lastPath = pathList.at(lastPathNumber);
+    Point lastPathLocation = lastPath->get_start();
+    double firstLayerZLocation = firstLayer->get_location();
+    Point expectedLocation{10,9.736842,firstLayerZLocation};
+    EXPECT_POINT_EQ(lastPathLocation,expectedLocation);
+}
+
+TEST(Infill,whenRequestingPathListWithChangedInfill_getCorrectLastPathLocation)
+{
+    Shape shape;
+    shape.set_infill_percentage(50);
+    Gcode gcode;
+        std::string fileName = "TestingFile";
+    gcode.generate_file(shape, fileName);
+    Layer* firstLayer = shape.get_layer(0);
+    int numberOfPaths = firstLayer->get_number_of_paths();
+    int lastPathNumber = (numberOfPaths-1);
+    std::vector<Path*> pathList = firstLayer->get_path_list();
+    Path* lastPath = pathList.at(lastPathNumber);
+    Point lastPathLocation = lastPath->get_start();
+    double firstLayerZLocation = firstLayer->get_location();
+    Point expectedLocation{10,9.736842,firstLayerZLocation};
+    EXPECT_POINT_EQ(lastPathLocation,expectedLocation);
+}

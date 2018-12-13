@@ -7,9 +7,10 @@ class Layer
 public:
     ~Layer();
     Layer();
-    Layer(int layerNumber, double layerLocation);
-    Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth);
-    Layer(int layerNumber, double layerLocation, double layerLength, double layerWidth, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, bool adjustPath)    ;
+    Layer(int number, double location);
+    Layer(int number, double location, double length, double width);
+    Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, bool adjustPath);
+    Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, bool adjustPath, double height);
     double get_height() const;
     void   set_height(const double height);
     double get_extrusion_width() const;
