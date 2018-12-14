@@ -44,6 +44,19 @@ Path::Path(Point start, Point end, double diameter, int pathNumber, double resol
     create_points();
 }
 
+Path::Path(Point start, Point end, double diameter, int pathNumber, double resolution, double shapeWidth, double shapeLength, double shapeHeight):mPointList{new std::vector<Point*>}
+{
+    set_start(start);
+    set_end(end);
+    set_diameter(diameter);
+    set_path_number(pathNumber);
+    set_resolution(resolution);
+    set_shape_width(shapeWidth);
+    set_shape_length(shapeLength);
+    set_shape_height(shapeHeight);
+    create_points();
+}
+
 Point Path::get_start() const
 {
     return mStart;
@@ -144,14 +157,21 @@ Point* Path::create_new_point(int pointNumber, int numberOfPointsInPath) const
 double Path::get_material(int pointNumber, Point pointInfo) const
 {
     double material{0};
-    if (pointInfo.get_x() < 5)
-    {
-        material = 0.25;
-    }
-    else
-    {
-        material = 0.75;
-    }
+    double xLocation = pointInfo.get_x();
+    double yLocation = pointInfo.get_y();
+    double zLocation = pointInfo.get_z();
+    double magnitude = pointInfo.get_magnitude();
+    double shapeMagnitude = sqrt(mShapeHeight*mShapeHeight + mShapeLength*mShapeLength + mShapeWidth*mShapeWidth);
+    material = magnitude/shapeMagnitude;
+
+//    if (pointInfo.get_x() < 5)
+//    {
+//        material = 0.25;
+//    }
+//    else
+//    {
+//        material = 0.75;
+//    }
     return material;
 }
 
@@ -163,4 +183,19 @@ void Path::set_path_number(int const pathNumber)
 int Path::get_path_number() const
 {
     return mPathNumber;
+}
+
+void Path::set_shape_width(double shapeWidth)
+{
+    mShapeWidth = shapeWidth;
+}
+
+void Path::set_shape_length(double shapeLength)
+{
+    mShapeLength = shapeLength;
+}
+
+void Path::set_shape_height(double shapeHeight)
+{
+    mShapeHeight = shapeHeight;
 }

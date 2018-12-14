@@ -11,6 +11,7 @@ public:
     Layer(int number, double location, double length, double width);
     Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, bool adjustPath);
     Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, bool adjustPath, double height);
+    Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, bool adjustPath, double height, double shapeHeight);
     double get_height() const;
     void   set_height(const double height);
     double get_extrusion_width() const;
@@ -42,6 +43,7 @@ public:
     void   set_auto_adjust_path(bool adjustPaths);
     double get_resolution() const;
     void   set_resolution(double const resolution);
+    void   set_shape_height(double shapeHeight);
 
 protected:
 
@@ -58,6 +60,7 @@ private:
     double mLocation{0};
     bool   mAutoAdjustPaths{true};
     double mResolution{1};
+    double mShapeHeight;
 };
 
 #endif // LAYER_H

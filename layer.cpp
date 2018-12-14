@@ -56,6 +56,22 @@ Layer::Layer(int number, double location, double length, double width, double ex
     create_paths();
 }
 
+Layer::Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, bool adjustPath, double height, double shapeHeight):mPathList{new std::vector<Path*>}
+{
+    set_number(number);
+    set_location(location);
+    set_length(length);
+    set_width(width);
+    set_extrusion_multiplier(extrusionMultiplier);
+    set_extrusion_width(extrusionWidth);
+    set_infill_percentage(infillPercentage);
+    set_resolution(resolution);
+    set_auto_adjust_path(adjustPath);
+    set_height(height);
+    set_shape_height(shapeHeight);
+    create_paths();
+}
+
 double Layer::get_height() const
 {
     return mHeight;
@@ -184,7 +200,7 @@ void Layer::create_paths()
         Point end = turnPoints[1];
         double diameter = get_diameter_of_print();
         double resolution = get_resolution();
-        Path* newPath = new Path(start,end,diameter,pathNumber,resolution);
+        Path* newPath = new Path(start,end,diameter,pathNumber,resolution, mWidth, mLength, mShapeHeight);
         mPathList->push_back(newPath);
     }
 }
@@ -316,4 +332,9 @@ double Layer::get_resolution() const
 void Layer::set_resolution(double const resolution)
 {
     mResolution = resolution;
+}
+
+void Layer::set_shape_height(double shapeHeight)
+{
+    mShapeHeight = shapeHeight;
 }
