@@ -162,7 +162,7 @@ double Path::get_material(int pointNumber, Point pointInfo) const
     double zLocation = pointInfo.get_z()-mShapeHeight/2;
     double magnitude = pointInfo.get_magnitude();
     double locationMagnitude = sqrt(xLocation*xLocation + yLocation*yLocation + zLocation*zLocation);
-    double shapeMagnitude = sqrt(mShapeHeight*mShapeHeight + mShapeLength*mShapeLength + mShapeWidth*mShapeWidth);
+    double shapeMagnitude = sqrt(mShapeHeight*mShapeHeight + mShapeLength*mShapeLength + mShapeWidth*mShapeWidth)/2;
     material = locationMagnitude/shapeMagnitude;
 
 //    if (pointInfo.get_x() < 5)
