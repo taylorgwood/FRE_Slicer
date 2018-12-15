@@ -303,11 +303,13 @@ TEST(PointLocations,whenConstructingShape_pointLocationsConstructed)
     Path* secondPath = pathList[1];
     std::vector<Point*> pointList = secondPath->get_point_list();
     std::vector<Point> expectedPointList;
+    double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
+    double layerHeight = shape.get_layer_height();
     for (int i{0}; i<11; i++)
     {
         double x = 10-i;
-        double y{0.263158};
-        double z{0.263158};
+        double y = modifiedExtrusionWidth*3/2;
+        double z = layerHeight/2;
         Point point;
         point.set_x(x);
         point.set_y(y);
@@ -334,11 +336,13 @@ TEST(PointLocations,whenConstructingShape_pointLocationsCorrect)
     Path* thirdPath = pathList[2];
     std::vector<Point*> pointList = thirdPath->get_point_list();
     std::vector<Point> expectedPointList;
+    double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
+    double layerHeight = shape.get_layer_height();
     for (int i{0}; i<11; i++)
     {
         double x = i;
-        double y{0.526316};
-        double z{0.263158};
+        double y = modifiedExtrusionWidth*5/2;
+        double z = layerHeight/2;
         Point point;
         point.set_x(x);
         point.set_y(y);
@@ -360,13 +364,15 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
     std::vector<Point*> pointList4 = fourthPath->get_point_list();
     std::vector<Point> expectedThirdPointList;
     std::vector<Point> expectedFourthPointList;
+    double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
+    double layerHeight = shape.get_layer_height();
     for (int i{0}; i<11; i++)
     {
         double x3 = i;
         double x4 = (10-i);
-        double y3 = (0.263158*2);
-        double y4 = (0.263158*3);
-        double z{0.263158};
+        double y3 = (modifiedExtrusionWidth*5/2);
+        double y4 = (modifiedExtrusionWidth*7/2);
+        double z = layerHeight/2;
         Point point3;
         Point point4;
         point3.set_x(x3);
@@ -582,8 +588,8 @@ TEST(PathList,whenRequestingPathList_getCorrectFirstPathLocation)
     Path firstPath = pathList->at(0);
     Point firstPathLocation = firstPath.get_start();
     double firstLayerLocation = shape.get_layer(0)->get_location();
-//    double extrusionWidthBuffer = shape.get_layer(0)->get_adjusted_extrusion_width()/2;
-    Point expectedFirstLocation{0,0,firstLayerLocation};
+    double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
+    Point expectedFirstLocation{0,modifiedExtrusionWidth/2,firstLayerLocation};
     EXPECT_POINT_EQ(firstPathLocation,expectedFirstLocation);
 }
 
@@ -597,7 +603,9 @@ TEST(PathList,whenRequestingPathList_getCorrectLastPathLocation)
     Path* lastPath = pathList.at(lastPathNumber);
     Point lastPathLocation = lastPath->get_start();
     double firstLayerZLocation = firstLayer->get_location();
-    Point expectedLocation{10,9.736842,firstLayerZLocation};
+    double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
+    double expectedYLocation = shape.get_width()-modifiedExtrusionWidth/2;
+    Point expectedLocation{10,expectedYLocation,firstLayerZLocation};
     EXPECT_POINT_EQ(lastPathLocation,expectedLocation);
 }
 
