@@ -157,6 +157,7 @@ Point* Path::create_new_point(int pointNumber, int numberOfPointsInPath) const
 double Path::get_material(int pointNumber, Point pointInfo) const
 {
     double material{0};
+    // Note: Change this code to define the material throughout the print.
     double xLocation = pointInfo.get_x()-mShapeWidth/2;
     double yLocation = pointInfo.get_y()-mShapeLength/2;
     double zLocation = pointInfo.get_z()-mShapeHeight/2;
@@ -164,15 +165,6 @@ double Path::get_material(int pointNumber, Point pointInfo) const
     double locationMagnitude = sqrt(xLocation*xLocation + yLocation*yLocation + zLocation*zLocation);
     double shapeMagnitude = sqrt(mShapeHeight*mShapeHeight + mShapeLength*mShapeLength + mShapeWidth*mShapeWidth)/2;
     material = locationMagnitude/shapeMagnitude;
-
-//    if (pointInfo.get_x() < 5)
-//    {
-//        material = 0.25;
-//    }
-//    else
-//    {
-//        material = 0.75;
-//    }
     return material;
 }
 

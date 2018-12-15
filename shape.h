@@ -54,7 +54,6 @@ private:
     double mInfillPercentage{100};
     double mResolution{1.0};
 
-
 };
 
 #endif // SHAPE_H

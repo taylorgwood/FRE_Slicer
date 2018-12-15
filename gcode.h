@@ -34,7 +34,7 @@ public:
     void   write_file_creation_information(std::ofstream &fout);
     void   write_basic_settings(std::ofstream& fout, Shape &shape);
     double get_syringe_diameter() const;
-    void   set_syringe_diameter();
+    void   set_syringe_diameter(double syringeDiameter);
 
 protected:
 

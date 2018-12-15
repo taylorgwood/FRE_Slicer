@@ -6,8 +6,6 @@ Point::~Point()
 
 Point::Point()
 {
-    // set X, Y
-    // set material
 }
 
 Point::Point(double x, double y, double z)

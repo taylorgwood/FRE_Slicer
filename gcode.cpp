@@ -108,7 +108,6 @@ void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
     write_file_creation_information(fout);
     write_basic_settings(fout, shape);
 
-    // Startup code
     fout << "G28 ; home all axes" << std::endl;
     fout << "G21 ; set units to millimeters" << std::endl;
     fout << "G90 ; use absolute coordinates" << std::endl;
@@ -246,7 +245,7 @@ double Gcode::get_syringe_diameter() const
     return mSyringeDiameter;
 }
 
-void Gcode::set_syringe_diameter()
+void Gcode::set_syringe_diameter(double syringeDiameter)
 {
-
+    mSyringeDiameter = syringeDiameter;
 }

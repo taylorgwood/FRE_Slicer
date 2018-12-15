@@ -191,7 +191,6 @@ void Layer::create_paths()
     {
         double extrusionWidth = get_adjusted_extrusion_width();
     }
-//    set_extrusion_width(extrusionWidth);
     for (int i{0}; i<numberOfPaths; i++)
     {
         int pathNumber = i;
@@ -232,7 +231,6 @@ std::vector<Point> Layer::get_points()
     for (int i{0}; i<numberOfPaths; i++)
     {
         Path* path = get_path_list()[i];
-        //        int numberOfPoints = path->get_number_of_points();
         std::vector<Point*> points = path->get_point_list();
         size_t numberOfPoints = points.size();
         for (int j{0}; j<numberOfPoints; j++)
