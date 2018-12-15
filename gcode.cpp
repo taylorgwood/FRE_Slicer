@@ -131,12 +131,18 @@ void Gcode::write_points_in_path(std::ofstream& fout, Path* path)
     size_t numberOfPointsInPath = path->get_number_of_points();
     for (int i{0}; i<numberOfPointsInPath; i++)
     {
+        int pointNumber{i};
         Point* point = pointsInPath[i];
         fout << "G1 ";
         fout << " X" << point->get_x();
         fout << " Y" << point->get_y();
         double materialRatio = point->get_material();
         double extrusionDistance = get_extrusion_distance(*point);
+        int pathNumber = path->get_path_number();
+        if (pointNumber == 0 && pathNumber == 0)
+        {
+            extrusionDistance = 0;
+        }
         increment_extruder_displacement(materialRatio,extrusionDistance);
         fout << " A" << get_extruder_displacement()[0];
         fout << " B" << get_extruder_displacement()[1];
