@@ -248,8 +248,7 @@ bool Shape::get_auto_adjust_path()
 std::vector<Path>* Shape::get_path_list()
 {
     std::vector<Path>* pathList = new std::vector<Path>;
-
-    int numberOfLayers = get_number_of_layers();
+    size_t numberOfLayers = get_layer_list().size();
     for (int i{0}; i<numberOfLayers; i++)
     {
         Layer* layer = get_layer(i);
