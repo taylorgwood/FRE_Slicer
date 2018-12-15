@@ -200,6 +200,11 @@ void Layer::create_paths()
         double diameter = get_diameter_of_print();
         double resolution = get_resolution();
         Path* newPath = new Path(start,end,diameter,pathNumber,resolution, mWidth, mLength, mShapeHeight);
+        if (pathNumber == 0)
+        {
+            int firstPointInPath{0};
+            newPath->get_point_list().at(firstPointInPath)->set_diameter(0);
+        }
         mPathList->push_back(newPath);
     }
 }
