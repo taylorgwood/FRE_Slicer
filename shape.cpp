@@ -63,6 +63,13 @@ void Shape::set_height(const double height)
     mHeight = height;
 }
 
+void Shape::reset_height(double height)
+{
+    mHeight = height;
+    mLayerList->clear();
+    create_layers();
+}
+
 double Shape::get_height() const
 {
     return mHeight;
@@ -115,7 +122,7 @@ std::vector<Point> Shape::get_points()
     std::vector<Point> pointList;
     std::vector<Layer*> layerList = get_layer_list();
     size_t numberOfLayers = layerList.size();
-//    int numberOfLayers = get_number_of_layers();
+    //    int numberOfLayers = get_number_of_layers();
     for (int i{0}; i<numberOfLayers; i++)
     {
         std::vector<Layer*> layerList = get_layer_list();

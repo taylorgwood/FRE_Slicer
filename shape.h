@@ -15,6 +15,7 @@ public:
     double get_layer_height() const;
     void   reset_layer_height(double layerHeight);
     void   set_height(const double height);
+    void   reset_height(double height);
     double get_height() const;
     void   create_layers();
     std::vector<Layer*> get_layer_list();
