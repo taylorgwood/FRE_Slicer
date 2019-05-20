@@ -14,7 +14,7 @@ public:
     Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, bool adjustPath, double height, double shapeHeight);
     double get_height() const;
     void   set_height(const double height);
-    double get_extrusion_width() const;
+    double get_extrusion_width();
     void   set_extrusion_width(double extrusionWidth);
     double get_infill_percentage() const;
     void   set_infill_percentage(const double infillPercentage);

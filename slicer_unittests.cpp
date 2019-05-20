@@ -34,7 +34,7 @@ void EXPECT_VECTOR_EQ(std::vector<double> firstVector, std::vector<double> secon
     size_t vectorSize = firstVector.size();
     for (int i{0}; i<vectorSize; i++)
     {
-        EXPECT_EQ(firstVector[i],secondVector[i]);
+        EXPECT_NEAR(firstVector[i],secondVector[i],0.00001);
     }
 }
 
@@ -72,6 +72,7 @@ TEST(PathConstructor,givenTwoPoints_getPath)
 TEST(LayerExtrusionWidth,givenDefaultParameters_getExtrusionWidth)
 {
     Layer layer;
+    layer.set_auto_adjust_path(0);
     double calculatedExtrusionWidth = layer.get_modified_extrusion_width();
     double expectedExtrusionWidth = layer.get_extrusion_width();
     EXPECT_DOUBLE_EQ(calculatedExtrusionWidth,expectedExtrusionWidth);
@@ -81,6 +82,7 @@ TEST(LayerExtrusionWidth,givenChangedParameters_getCorrectExtrusionWidth)
 {
     Layer layer;
     layer.set_infill_percentage(50);
+    layer.set_auto_adjust_path(0);
     double calculatedExtrusionWidth = layer.get_modified_extrusion_width();
     double expectedExtrusionWidth = layer.get_extrusion_width()*2;
     EXPECT_DOUBLE_EQ(calculatedExtrusionWidth,expectedExtrusionWidth);
@@ -187,7 +189,7 @@ TEST(PathList,givenShape_getCorrectNumberOfPointsInFirstPath)
     std::vector<Path*> pathList = firstLayer->get_path_list();
     Path* firstPath = pathList[0];
     int numberOfPoints = firstPath->get_number_of_points();
-    int expectedNumberOfPoints{11};
+    int expectedNumberOfPoints{10};
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
 }
 
@@ -202,7 +204,7 @@ TEST(PathList,givenShape_getCorrectNumberOfPointsInFirstPathList)
     Path* firstPath = pathList[0];
     std::vector<Point*> pointList = firstPath->get_point_list();
     size_t numberOfPoints = pointList.size();
-    int expectedNumberOfPoints{11};
+    int expectedNumberOfPoints{10};
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
 }
 
@@ -212,7 +214,7 @@ TEST(LayerList,whenAskedForPointsInLayer_getCorrectNumberOfPointsInLayer)
     int firstLayer{0};
     std::vector<Point> pointList = shape.get_points_in_layer(firstLayer);
     size_t numberOfPointsInLayer = pointList.size();
-    int expectedNumberOfPointsInLayer{(38*11)};
+    int expectedNumberOfPointsInLayer{(38*10)};
     EXPECT_EQ(numberOfPointsInLayer,expectedNumberOfPointsInLayer);
 }
 
@@ -221,7 +223,7 @@ TEST(ShapeList,whenAskedForPointsInShape_getCorrectNumberOfPointsInShape)
     Shape shape;
     std::vector<Point> pointList = shape.get_points();
     size_t numberOfPoints = pointList.size();
-    int expectedNumberOfPoints{(38*38*11)};
+    int expectedNumberOfPoints{(38*38*10)};
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
 }
 
@@ -246,7 +248,7 @@ TEST(LayerLocations,whenAskedForLayerLocations_getLayerLocations)
     int firstLayer{0};
     std::vector<double> layerLocationVector = shape.get_layer_locations();
     size_t vectorLength = layerLocationVector.size();
-    double layerHeight{0.26};
+    double layerHeight{0.26315789473};
     double height{0};
     std::vector<double> expectedLayerHeights;
     for (int i{0}; i<vectorLength; i++)
@@ -305,9 +307,11 @@ TEST(PointLocations,whenConstructingShape_pointLocationsConstructed)
     std::vector<Point> expectedPointList;
     double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
     double layerHeight = shape.get_layer_height();
+    double diameter = secondPath->get_diameter();
+    double pointLength = (10-diameter)/((secondPath->get_number_of_points())-1);
     for (int i{0}; i<11; i++)
     {
-        double x = 10-i;
+        double x = 10-(diameter/2)-i*pointLength;
         double y = modifiedExtrusionWidth*3/2;
         double z = layerHeight/2;
         Point point;
@@ -338,9 +342,11 @@ TEST(PointLocations,whenConstructingShape_pointLocationsCorrect)
     std::vector<Point> expectedPointList;
     double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
     double layerHeight = shape.get_layer_height();
+    double diameter = thirdPath->get_diameter();
+    double pointLength = (10-diameter)/((thirdPath->get_number_of_points())-1);
     for (int i{0}; i<11; i++)
     {
-        double x = i;
+        double x = (diameter/2) + i*pointLength;
         double y = modifiedExtrusionWidth*5/2;
         double z = layerHeight/2;
         Point point;
@@ -366,10 +372,12 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
     std::vector<Point> expectedFourthPointList;
     double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
     double layerHeight = shape.get_layer_height();
+    double diameter = thirdPath->get_diameter();
+    double pointLength = (10-diameter)/((fourthPath->get_number_of_points())-1);
     for (int i{0}; i<11; i++)
     {
-        double x3 = i;
-        double x4 = (10-i);
+        double x3 = (diameter/2) + i*pointLength;
+        double x4 = (10-diameter/2) - i*pointLength;
         double y3 = (modifiedExtrusionWidth*5/2);
         double y4 = (modifiedExtrusionWidth*7/2);
         double z = layerHeight/2;
@@ -527,8 +535,8 @@ TEST(PointNumber,whenChangingShapeSize_getDifferentNumberOfPointsDependingOnPath
     int numberOfPointsInFirstLayerPath = firstLayer->get_path(0)->get_number_of_points();
     Layer* secondLayer = shape.get_layer(1);
     int numberOfPointsInSecondLayerPath = secondLayer->get_path(0)->get_number_of_points();
-    EXPECT_EQ(numberOfPointsInFirstLayerPath,11);
-    EXPECT_EQ(numberOfPointsInSecondLayerPath,6);
+    EXPECT_EQ(numberOfPointsInFirstLayerPath,10);
+    EXPECT_EQ(numberOfPointsInSecondLayerPath,5);
 }
 
 TEST(Infill,whenChangingInfill_getCorrectlySizedLayer)
@@ -562,11 +570,11 @@ TEST(PathList,whenRequestingPathList_getCorrectLengthPathsInPathList)
     std::vector<Path>* pathList = shape.get_path_list();
     Path firstPath = pathList->at(0);
     double firstPathLength = firstPath.get_length();
-    double expectedFirstPathLength = shape.get_length();
+    double expectedFirstPathLength = shape.get_length()-firstPath.get_diameter();
     int numberOfPathsInFirstLayer = shape.get_layer(0)->get_number_of_paths();
     Path secondLayerPath = pathList->at(numberOfPathsInFirstLayer+1);
     double secondLayerPathLength = secondLayerPath.get_length();
-    double expectedLayerSecondPathLength = shape.get_width();
+    double expectedLayerSecondPathLength = shape.get_width()-secondLayerPath.get_diameter();
     EXPECT_EQ(secondLayerPathLength,expectedLayerSecondPathLength);
 }
 
@@ -589,7 +597,8 @@ TEST(PathList,whenRequestingPathList_getCorrectFirstPathLocation)
     Point firstPathLocation = firstPath.get_start();
     double firstLayerLocation = shape.get_layer(0)->get_location();
     double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
-    Point expectedFirstLocation{0,modifiedExtrusionWidth/2,firstLayerLocation};
+    double diameter = firstPath.get_diameter();
+    Point expectedFirstLocation{diameter/2,modifiedExtrusionWidth/2,firstLayerLocation};
     EXPECT_POINT_EQ(firstPathLocation,expectedFirstLocation);
 }
 
@@ -605,7 +614,8 @@ TEST(PathList,whenRequestingPathList_getCorrectLastPathLocation)
     double firstLayerZLocation = firstLayer->get_location();
     double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
     double expectedYLocation = shape.get_width()-modifiedExtrusionWidth/2;
-    Point expectedLocation{10,expectedYLocation,firstLayerZLocation};
+    double expectedXLocation = shape.get_length()-lastPath->get_diameter()/2;
+    Point expectedLocation{expectedXLocation,expectedYLocation,firstLayerZLocation};
     EXPECT_POINT_EQ(lastPathLocation,expectedLocation);
 }
 

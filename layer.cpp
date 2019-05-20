@@ -82,9 +82,14 @@ void Layer::set_height(const double height)
     mHeight = height;
 }
 
-double Layer::get_extrusion_width() const
+double Layer::get_extrusion_width()
 {
-    return mExtrusionWidth;
+    double extrusionWidth = mExtrusionWidth;
+    if (mAutoAdjustPaths == true)
+    {
+        extrusionWidth = get_adjusted_extrusion_width();
+    }
+    return extrusionWidth;
 }
 
 void Layer::set_extrusion_width(double extrusionWidth)
@@ -186,11 +191,6 @@ std::vector<Path*> Layer::get_path_list()
 void Layer::create_paths()
 {
     int numberOfPaths = get_number_of_paths();
-    double extrusionWidth = get_extrusion_width();
-    if (mAutoAdjustPaths == true)
-    {
-        double extrusionWidth = get_adjusted_extrusion_width();
-    }
     for (int i{0}; i<numberOfPaths; i++)
     {
         int pathNumber = i;
@@ -274,37 +274,43 @@ std::vector<Point> Layer::get_turn_points(int pathNumber)
     double xEnd{0};
     double yEnd{0};
     double zLocation = get_location();
-    int numberOfPaths = get_number_of_paths();
+//    int numberOfPaths = get_number_of_paths();
     int layerNumber = get_number();
-    double extrusionWidthBuffer = get_adjusted_extrusion_width()/2;
+    double extrusionWidth = get_extrusion_width();
+    double extrusionWidthBuffer = extrusionWidth/2;
+    double diameter = get_diameter_of_print();
+    if (mAutoAdjustPaths == true)
+    {
+        double extrusionWidth = get_adjusted_extrusion_width();
+    }
     if (layerNumber%2 == 0)
     {
         if (pathNumber%2 == 0)
         {
-            xStart = 0;
-            xEnd   = mLength;
+            xStart = 0+diameter/2;
+            xEnd   = mLength-diameter/2;
         }
         else
         {
-            xStart = mLength;
-            xEnd   = 0;
+            xStart = mLength-diameter/2;
+            xEnd   = 0+diameter/2;
         }
-        yStart = mWidth/numberOfPaths*pathNumber+extrusionWidthBuffer;
+        yStart = extrusionWidth*pathNumber+extrusionWidthBuffer;
         yEnd   = yStart;
     }
     else
     {
         if (pathNumber%2 == 0)
         {
-            yStart = 0;
-            yEnd   = mWidth;
+            yStart = 0+diameter/2;
+            yEnd   = mWidth-diameter/2;
         }
         else
         {
-            yStart = mWidth;
-            yEnd   = 0;
+            yStart = mWidth-diameter/2;
+            yEnd   = 0+diameter/2;
         }
-        xStart = mLength/numberOfPaths*pathNumber+extrusionWidthBuffer;
+        xStart = extrusionWidth*pathNumber+extrusionWidthBuffer;
         xEnd   = xStart;
     }
     Point startPoint{xStart,yStart,zLocation};
