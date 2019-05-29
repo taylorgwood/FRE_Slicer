@@ -77,7 +77,6 @@ private:
     bool   mAutoAdjustPaths{true};
     double mResolution{1};
     double mShapeHeight;
-    bool   mInfill45{0};
     double mInfillAngle{0};
     Point  mPointA;
     Point  mPointB;

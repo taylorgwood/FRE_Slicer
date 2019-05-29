@@ -28,8 +28,7 @@ Layer::Layer(int number, double location, double length, double width):mPathList
     set_location(location);
     set_length(length);
     set_width(width);
-    set_infill_size();
-    set_corners();
+    //    set_infill_size();
     create_paths();
 }
 
@@ -39,8 +38,7 @@ Layer::Layer(int number, double location, double length, double width, double ex
     set_location(location);
     set_length(length);
     set_width(width);
-    set_infill_size();
-    set_corners();
+    //    set_infill_size();
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
     set_infill_percentage(infillPercentage);
@@ -54,8 +52,8 @@ Layer::Layer(int number, double location, double length, double width, double ex
     set_location(location);
     set_length(length);
     set_width(width);
-    set_infill_size();
-    set_corners();
+    //    set_infill_size();
+    //    set_corners();
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
     set_infill_percentage(infillPercentage);
@@ -70,8 +68,8 @@ Layer::Layer(int number, double location, double length, double width, double ex
     set_location(location);
     set_length(length);
     set_width(width);
-    set_infill_size();
-    set_corners();
+    //    set_infill_size();
+    //    set_corners();
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
     set_infill_percentage(infillPercentage);
@@ -113,10 +111,11 @@ void Layer::set_extrusion_multiplier(const double extrusionMultiplier)
 
 double Layer::get_diameter_of_print()
 {
-    double volume = get_volume();
+    //    double volume = get_volume();
     double modifiedExtrusionWidth = get_modified_extrusion_width();
-    double area = mLength*mWidth;
-    double diameterOfPrint = sqrt(volume*4*modifiedExtrusionWidth/(area*pi));
+    //    double area = mLength*mWidth;
+    double height = get_height();
+    double diameterOfPrint = sqrt(height*4*modifiedExtrusionWidth/(pi));
     return diameterOfPrint;
 }
 
@@ -145,6 +144,8 @@ void Layer::set_extrusion_width(double extrusionWidth)
         extrusionWidth = get_adjusted_extrusion_width();
     }
     mExtrusionWidth = extrusionWidth;
+    set_infill_size();
+    set_corners();
 }
 
 double Layer::get_adjusted_extrusion_width()
@@ -164,11 +165,11 @@ double Layer::get_perpendicular_to_path_distance()
     double perpendicularToPathDistance{0};
     if (mNumber%2 == 0)
     {
-        perpendicularToPathDistance = mInfillWidth/std::cos(theta);
+        perpendicularToPathDistance = mWidth/std::cos(theta);
     }
     else
     {
-        perpendicularToPathDistance = mInfillLength/std::sin(theta);
+        perpendicularToPathDistance = mLength/std::sin(theta);
     }
     return perpendicularToPathDistance;
 }
@@ -184,8 +185,8 @@ int Layer::get_number_of_infill_paths()
 {
     int numberOfInfillPaths{0};
     double perpendicularToPathDistance = get_perpendicular_to_path_distance();
-    double extrusionWidth = get_extrusion_width();
-    double exactNumberOfPaths = (perpendicularToPathDistance/extrusionWidth);
+    double modifiedExtrusionWidth = get_modified_extrusion_width();
+    double exactNumberOfPaths = (perpendicularToPathDistance/modifiedExtrusionWidth);
     double flooredNumberOfPaths = floor(exactNumberOfPaths);
     numberOfInfillPaths = int(flooredNumberOfPaths);
     if ((exactNumberOfPaths-flooredNumberOfPaths) >= 0.5)
@@ -204,19 +205,31 @@ std::vector<Path*> Layer::get_path_list()
 void Layer::create_paths()
 {
     set_extrusion_width(mExtrusionWidth);
+    set_infill_size();
     std::vector <Point> perimeterPointList = get_perimeter_points();
     int numberOfPaths = static_cast<int>(perimeterPointList.size())-1;
 
     for (int i{0}; i<numberOfPaths; i++)
     {
         int pathNumber = i;
+        bool duplicate{false};
         double diameter = get_diameter_of_print();
         double resolution = get_resolution();
         Point currentPoint = perimeterPointList.at(i);
         Point nextPoint = perimeterPointList.at(i+1);
-        Path* newPath = new Path(currentPoint,nextPoint,diameter,pathNumber,resolution, mWidth, mLength, mShapeHeight);
-
-        mPathList->push_back(newPath);
+        double smallNumber{0.0001};
+        if (abs(currentPoint.get_x() - nextPoint.get_x())<smallNumber)
+        {
+            if(abs(currentPoint.get_y() - nextPoint.get_y())<smallNumber)
+            {
+                duplicate = true;
+            }
+        }
+        if (duplicate == false)
+        {
+            Path* newPath = new Path(currentPoint,nextPoint,diameter,pathNumber,resolution, mWidth, mLength, mShapeHeight);
+            mPathList->push_back(newPath);
+        }
     }
 }
 
@@ -228,7 +241,8 @@ double Layer::get_length() const
 void Layer::set_length(double const length)
 {
     mLength = length;
-    mInfillLength = length-get_diameter_of_print();
+    mInfillLength = length-get_modified_extrusion_width();
+    set_corners();
 }
 
 double Layer::get_width() const
@@ -239,7 +253,8 @@ double Layer::get_width() const
 void Layer::set_width(double const width)
 {
     mWidth = width;
-    mInfillWidth = width-get_diameter_of_print();
+    mInfillWidth = width-get_modified_extrusion_width();
+    set_corners();
 }
 
 std::vector<Point> Layer::get_points()
@@ -590,10 +605,21 @@ std::vector <Point> Layer::get_perimeter_points()
                 if (bottomPoint == bottomSize)
                 {
                     finish = true;
-                    perimeterPointList.push_back(cornerB);
+                    if ((theta) < 0.001)
+                    {
+                        if (get_number_of_infill_paths()%2 == 0)
+                        {
+                            perimeterPointList.push_back(cornerA);
+                        }
+                        else
+                        {
+                            //                            perimeterPointList.push_back(cornerB);
+                        }
+                    }
                 }
             }
         }
+
     }
     else
     {
@@ -732,15 +758,23 @@ std::vector <Point> Layer::get_perimeter_points()
                 if (rightPoint == rightSize)
                 {
                     finish = true;
-                    perimeterPointList.push_back(cornerC);
+                    if ((theta - pi) < 0.001)
+                    {
+                        perimeterPointList.at(1) = cornerD;
+                        int num = get_number_of_infill_paths();
+                        if (num%2 == 0)
+                        {
+                            perimeterPointList.push_back(cornerB);
+                        }
+                        else
+                        {
+//                            perimeterPointList.push_back(cornerC);
+                        }
+                    }
 
                 }
             }
         }
-    }
-    if ((theta - pi) < 0.001)
-    {
-        perimeterPointList.at(1) = cornerD;
     }
     return perimeterPointList;
 }
@@ -784,10 +818,11 @@ void Layer::set_corners()
     double zLocation = get_location();
     double infillWidth = get_infill_width();
     double infillLength = get_infill_length();
-    Point pointA(diameter/2,diameter/2,zLocation);
-    Point pointB(infillWidth+diameter/2,diameter/2,zLocation);
-    Point pointC(infillWidth+diameter/2,infillLength+diameter/2,zLocation);
-    Point pointD(diameter/2,infillLength+diameter/2,zLocation);
+    double mEW = get_modified_extrusion_width();
+    Point pointA(mEW/2,mEW/2,zLocation);
+    Point pointB(infillWidth+mEW/2,mEW/2,zLocation);
+    Point pointC(infillWidth+mEW/2,infillLength+mEW/2,zLocation);
+    Point pointD(mEW/2,infillLength+mEW/2,zLocation);
     mPointA = pointA;
     mPointB = pointB;
     mPointC = pointC;
@@ -806,7 +841,8 @@ std::vector <Point> Layer::get_corners()
 
 void Layer::set_infill_size()
 {
-    double diameter = get_diameter_of_print();
-    mInfillLength = mLength-diameter;
-    mInfillWidth = mWidth-diameter;
+    //    double diameter = get_diameter_of_print();
+    double modifiedExtrusionWidth = get_modified_extrusion_width();
+    mInfillLength = mLength-modifiedExtrusionWidth;
+    mInfillWidth = mWidth-modifiedExtrusionWidth;
 }
