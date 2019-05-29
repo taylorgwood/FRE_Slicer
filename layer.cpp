@@ -458,10 +458,12 @@ std::vector <Point> Layer::get_perimeter_points()
     int rightSize = static_cast<int>(rightSidePoints.size());
     int topSize = static_cast<int>(topSidePoints.size());
     int leftSize = static_cast<int>(leftSidePoints.size());
+    double theta = get_infill_angle()/180*pi;
 
     if (mNumber%2==0)
     {
         // for Even:---------------------------------------------------------------------------------
+
         perimeterPointList.push_back(cornerD); // first point is D
         int pointCount{0};
         int leftPoint{0};
@@ -603,7 +605,6 @@ std::vector <Point> Layer::get_perimeter_points()
         int rightPoint{0};
         int leftPoint{0};
         int topPoint{0};
-        //        int numberOfPoints = static_cast<int>(create_angled_ray_origin_list().size())*4;
         bool finish{false};
         while (finish == false)
         {
@@ -625,16 +626,16 @@ std::vector <Point> Layer::get_perimeter_points()
             }
             else // Right
             {
-                if (leftSize > 0)
+                if (rightSize > 0)
                 {
-                                    }
-                    else
+                }
+                else
+                {
+                    if (rightPoint == 0)
                     {
-                        if (leftPoint == 0)
-                        {
-                            perimeterPointList.push_back(cornerA); // not sure about this
-                        }
+                        perimeterPointList.push_back(cornerD); // not sure about this
                     }
+                }
                 if (rightPoint < rightSize)
                 {
                     perimeterPointList.push_back(rightSidePoints.at(rightPoint));
@@ -644,7 +645,13 @@ std::vector <Point> Layer::get_perimeter_points()
             // 2---------------------------------------------------------------------------------
             if (leftPoint < leftSize) // Left
             {
-                perimeterPointList.push_back(leftSidePoints.at(leftPoint));
+                if (leftSize == 1)
+                {
+                }
+                else
+                {
+                    perimeterPointList.push_back(leftSidePoints.at(leftPoint));
+                }
                 leftPoint++;
             }
             else // Top
@@ -730,6 +737,10 @@ std::vector <Point> Layer::get_perimeter_points()
                 }
             }
         }
+    }
+    if ((theta - pi) < 0.001)
+    {
+        perimeterPointList.at(1) = cornerD;
     }
     return perimeterPointList;
 }

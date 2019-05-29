@@ -809,7 +809,7 @@ TEST(SetAngle,givenAngleLessThanZero_getAdjustedAngle)
 TEST(A,B_c)
 {
     Layer layer;
-    layer.set_number(0);
+    layer.set_number(1);
     layer.set_infill_angle(0);
     std::vector <Point> perimeterPoints = layer.get_perimeter_points();
     EXPECT_EQ(1,1);
@@ -841,117 +841,5 @@ TEST(A,B_c)
             std::cout << point.get_y() << std::endl;
         }
 }
-
-
-
-//TEST(Perimeter,givenLayer_getCorrectPerimeter)
-//{
-//    Layer layer;
-//    double layerWidth{10};
-//    double layerLength{8};
-//    layer.set_width(layerWidth);
-//    layer.set_length(layerLength);
-//    double perimeter = layer.get_perimeter();
-//    double diameter = layer.get_diameter_of_print();
-//    double expectedPerimeter = 2*layerWidth+2*layerLength-4*diameter;
-//    EXPECT_DOUBLE_EQ(perimeter,expectedPerimeter);
-//}
-
-//TEST(Infill45,whenGiven45DegLayer_getCorrectNumberOfPaths)
-//{
-//    Layer layer;
-//    double layerWidth{3};
-//    double layerLength{2};
-//    layer.set_width(layerWidth);
-//    layer.set_length(layerLength);
-//    layer.set_infill_to_45_degrees();
-//    int numberOfPaths = layer.get_number_of_paths();
-//    int expectedNumberOfPaths{12};
-//    EXPECT_DOUBLE_EQ(numberOfPaths,expectedNumberOfPaths);
-//    layer.set_infill_to_90_degrees();
-//    numberOfPaths = layer.get_number_of_paths();
-//}
-
-//TEST(Infill45,whenGiven45DegLayer_getCorrectWidthBetweenPaths)
-//{
-//    Layer layer;
-//    double layerWidth{10};
-//    double layerLength{8};
-//    layer.set_width(layerWidth);
-//    layer.set_length(layerLength);
-//    layer.set_infill_to_45_degrees();
-//    double modifiedEW = layer.get_modified_extrusion_width();
-//    double expectedEW = 0.2619791933963;
-//    EXPECT_NEAR(modifiedEW,expectedEW,0.00001);
-//}
-
-//TEST(PerimeterPointList,whenGiven45DegLayer_getCorrectFirstPoint)
-//{
-//    Layer layer;
-//    layer.set_width(2);
-//    layer.set_length(2);
-//    layer.set_infill_to_45_degrees();
-//    std::vector<Point> perimeterPoints = layer.get_45_degree_perimeter_points();
-//    Point firstPoint = perimeterPoints.at(0);
-//    double modifiedEW = layer.get_modified_extrusion_width();
-//    double sinOf45Degrees = 0.707107;
-//    double width45 = modifiedEW/sinOf45Degrees;
-//    double diameter = layer.get_diameter_of_print();
-//    Point expectedFirstPoint(width45/2+diameter/2,diameter/2,0);
-//    int numberOfPoints = layer.get_number_of_paths()*2;
-//    Point lastPoint = perimeterPoints.at(numberOfPoints-1);
-////    EXPECT_POINT_EQ(firstPoint,expectedFirstPoint);
-//    std::cout << "  " << std::endl;
-//    std::cout << "  " << std::endl;
-//    std::cout << "width45:  " << width45 << std::endl;
-//    std::cout << "diameter:  " << diameter << std::endl;
-//    std::cout << "  " << std::endl;
-//    std::cout << "  " << std::endl;
-//    std::cout << "First X:  " << firstPoint.get_x() << std::endl;
-//    std::cout << "First Y:  " << firstPoint.get_x() << std::endl;
-//    std::cout << "  " << std::endl;
-//    std::cout << "  " << std::endl;
-//    std::cout << "Last X:  " << lastPoint.get_x() << std::endl;
-//    std::cout << "Last Y:  " << lastPoint.get_x() << std::endl;
-
-//    for (int i{0}; i<numberOfPoints; i++)
-//    {
-//        Point point = perimeterPoints.at(i);
-//        std::cout << i << " X " << point.get_x() << std::endl;
-//        std::cout << "  Y " << point.get_y() << std::endl;
-//        std::cout << std::endl;
-//    }
-
-//    for (int i{0}; i<numberOfPoints; i++)
-//    {
-//        Point point = perimeterPoints.at(i);
-//        std::cout << i << " X " << point.get_x() << std::endl;
-//    }
-//    std::cout << std::endl;
-//    std::cout << std::endl;
-//    for (int i{0}; i<numberOfPoints; i++)
-//    {
-//        Point point = perimeterPoints.at(i);
-//        std::cout << i << " Y " << point.get_y() << std::endl;
-
-//    }
-//}
-
-//TEST(PerimeterPointList,whenGiven45DegLayer_getCorrectLastPoint)
-//{
-//    Layer layer;
-//    layer.set_width(2);
-//    layer.set_length(2);
-//    layer.set_infill_to_45_degrees();
-//    std::vector<Point> perimeterPoints = layer.get_45_degree_perimeter_points();
-//    int numberOfPoints = layer.get_number_of_paths()*2;
-//    Point lastPoint = perimeterPoints.at(numberOfPoints-1);
-//    double modifiedEW = layer.get_modified_extrusion_width();
-//    double sinOf45Degrees = 0.707107;
-//    double width45 = modifiedEW/sinOf45Degrees;
-//    double diameter = layer.get_diameter_of_print();
-//    Point expectedLastPoint(diameter/2,diameter/2+width45/2,0);
-//    EXPECT_POINT_EQ(lastPoint,expectedLastPoint);
-//}
 
 
