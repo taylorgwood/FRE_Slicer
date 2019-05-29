@@ -41,11 +41,6 @@ public:
     void   set_number(int const number);
     double get_location() const;
     void   set_location(double const location);
-    //    std::vector<Point> get_45_degree_turn_points();
-//    std::vector<Point> get_90_degree_turn_points(int pathNumber);
-    //    std::vector<Point> get_perimeter_points();
-//        std::vector<Point> get_45_degree_perimeter_points();
-    //    std::vector<Point> get_90_degree_perimeter_points();
     Path*  get_path(int pathNumber);
     void   set_auto_adjust_path(bool adjustPaths);
     double get_resolution() const;

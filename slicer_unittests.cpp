@@ -494,66 +494,66 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
 //    int numberOfLayers = newShape.get_number_of_layers();
 //}
 
-TEST(ShapeSize,whenResettingLayerSize_getNewShapeSize)
-{
-    Shape shape;
-    double newShapeWidth = 8;
-    shape.set_width(newShapeWidth);
-    double actualShapeWidth = shape.get_width();
-    EXPECT_DOUBLE_EQ(newShapeWidth,actualShapeWidth);
-}
+//TEST(ShapeSize,whenResettingLayerSize_getNewShapeSize)
+//{
+//    Shape shape;
+//    double newShapeWidth = 8;
+//    shape.set_width(newShapeWidth);
+//    double actualShapeWidth = shape.get_width();
+//    EXPECT_DOUBLE_EQ(newShapeWidth,actualShapeWidth);
+//}
 
-TEST(ShapeSize,whenResettingLayerSize_getNewLayerSize)
-{
-    Shape shape;
-    double newShapeLength = 5;
-    shape.set_length(newShapeLength);
-    int firstLayer{0};
-    double actualLayerLength = shape.get_layer(firstLayer)->get_length();
-    EXPECT_DOUBLE_EQ(newShapeLength,actualLayerLength);
-}
+//TEST(ShapeSize,whenResettingLayerSize_getNewLayerSize)
+//{
+//    Shape shape;
+//    double newShapeLength = 5;
+//    shape.set_length(newShapeLength);
+//    int firstLayer{0};
+//    double actualLayerLength = shape.get_layer(firstLayer)->get_length();
+//    EXPECT_DOUBLE_EQ(newShapeLength,actualLayerLength);
+//}
 
-TEST(PathNumber,whenChangingShapeSize_getDifferentNumberOfPathsDependingOnOrientation)
-{
-    double shapeHeight{10};
-    double shapeWidth{5};
-    double shapeLength{10};
-    Shape shape(shapeHeight,shapeWidth,shapeLength);
-    Layer* firstLayer = shape.get_layer(0);
-    int numberOfPathsInFirstLayer = firstLayer->get_number_of_infill_paths();
-    Layer* secondLayer = shape.get_layer(1);
-    int numberOfPathsInSecondLayer = secondLayer->get_number_of_infill_paths();
-    EXPECT_EQ(numberOfPathsInFirstLayer,19);
-    EXPECT_EQ(numberOfPathsInSecondLayer,38);
-}
+//TEST(PathNumber,whenChangingShapeSize_getDifferentNumberOfPathsDependingOnOrientation)
+//{
+//    double shapeHeight{10};
+//    double shapeWidth{5};
+//    double shapeLength{10};
+//    Shape shape(shapeHeight,shapeWidth,shapeLength);
+//    Layer* firstLayer = shape.get_layer(0);
+//    int numberOfPathsInFirstLayer = firstLayer->get_number_of_infill_paths();
+//    Layer* secondLayer = shape.get_layer(1);
+//    int numberOfPathsInSecondLayer = secondLayer->get_number_of_infill_paths();
+//    EXPECT_EQ(numberOfPathsInFirstLayer,19);
+//    EXPECT_EQ(numberOfPathsInSecondLayer,38);
+//}
 
-TEST(PointNumber,whenChangingShapeSize_getDifferentNumberOfPointsDependingOnPathOrientation)
-{
-    double shapeHeight{10};
-    double shapeWidth{5};
-    double shapeLength{10};
-    Shape shape(shapeHeight,shapeWidth,shapeLength);
-    Layer* firstLayer = shape.get_layer(0);
-    int numberOfPointsInFirstLayerPath = firstLayer->get_path(0)->get_number_of_points();
-    Layer* secondLayer = shape.get_layer(1);
-    int numberOfPointsInSecondLayerPath = secondLayer->get_path(0)->get_number_of_points();
-    EXPECT_EQ(numberOfPointsInFirstLayerPath,10);
-    EXPECT_EQ(numberOfPointsInSecondLayerPath,5);
-}
+//TEST(PointNumber,whenChangingShapeSize_getDifferentNumberOfPointsDependingOnPathOrientation)
+//{
+//    double shapeHeight{10};
+//    double shapeWidth{5};
+//    double shapeLength{10};
+//    Shape shape(shapeHeight,shapeWidth,shapeLength);
+//    Layer* firstLayer = shape.get_layer(0);
+//    int numberOfPointsInFirstLayerPath = firstLayer->get_path(0)->get_number_of_points();
+//    Layer* secondLayer = shape.get_layer(1);
+//    int numberOfPointsInSecondLayerPath = secondLayer->get_path(0)->get_number_of_points();
+//    EXPECT_EQ(numberOfPointsInFirstLayerPath,10);
+//    EXPECT_EQ(numberOfPointsInSecondLayerPath,5);
+//}
 
-TEST(Infill,whenChangingInfill_getCorrectlySizedLayer)
-{
-    Shape shape;
-    double newInfillPercentage{50};
-    shape.set_infill_percentage(newInfillPercentage);
-    Layer* firstLayer = shape.get_layer(0);
-    double layerWidth = firstLayer->get_width();
-    double layerLength = firstLayer->get_length();
-    double expectedLayerWidth{10};
-    double expectedLayerLength{10};
-    EXPECT_DOUBLE_EQ(layerWidth, expectedLayerWidth);
-    EXPECT_DOUBLE_EQ(layerLength,expectedLayerLength);
-}
+//TEST(Infill,whenChangingInfill_getCorrectlySizedLayer)
+//{
+//    Shape shape;
+//    double newInfillPercentage{50};
+//    shape.set_infill_percentage(newInfillPercentage);
+//    Layer* firstLayer = shape.get_layer(0);
+//    double layerWidth = firstLayer->get_width();
+//    double layerLength = firstLayer->get_length();
+//    double expectedLayerWidth{10};
+//    double expectedLayerLength{10};
+//    EXPECT_DOUBLE_EQ(layerWidth, expectedLayerWidth);
+//    EXPECT_DOUBLE_EQ(layerLength,expectedLayerLength);
+//}
 
 //TEST(PathList,whenRequestingPathList_getCorrectlySizedPathList)
 //{
@@ -581,16 +581,16 @@ TEST(Infill,whenChangingInfill_getCorrectlySizedLayer)
 //    EXPECT_EQ(secondLayerPathLength,expectedSecondLayerPathLength);
 //}
 
-TEST(LayerHeight,whenChangingLayerHeight_getCorrectPathDiameter)
-{
-    Shape shape;
-    double newLayerHeight{0.5};
-    shape.reset_layer_height(newLayerHeight);
-    Layer* firstLayer = shape.get_layer(0);
-    double pathDiameter = firstLayer->get_diameter_of_print();
-    double expectedPathDiameter{0.409306};
-    EXPECT_NEAR(pathDiameter, expectedPathDiameter,0.00001);
-}
+//TEST(LayerHeight,whenChangingLayerHeight_getCorrectPathDiameter)
+//{
+//    Shape shape;
+//    double newLayerHeight{0.5};
+//    shape.reset_layer_height(newLayerHeight);
+//    Layer* firstLayer = shape.get_layer(0);
+//    double pathDiameter = firstLayer->get_diameter_of_print();
+//    double expectedPathDiameter{0.409306};
+//    EXPECT_NEAR(pathDiameter, expectedPathDiameter,0.00001);
+//}
 
 //TEST(PathList,whenRequestingPathList_getCorrectFirstPathLocation)
 //{
@@ -809,7 +809,7 @@ TEST(SetAngle,givenAngleLessThanZero_getAdjustedAngle)
 TEST(A,B_c)
 {
     Layer layer;
-    layer.set_number(1);
+    layer.set_number(0);
     layer.set_infill_angle(0);
     std::vector <Point> perimeterPoints = layer.get_perimeter_points();
     EXPECT_EQ(1,1);
@@ -839,7 +839,6 @@ TEST(A,B_c)
         {
             Point point = perimeterPoints.at(i);
             std::cout << point.get_y() << std::endl;
-
         }
 }
 

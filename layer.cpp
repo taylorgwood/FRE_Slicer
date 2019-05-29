@@ -45,7 +45,6 @@ Layer::Layer(int number, double location, double length, double width, double ex
     set_extrusion_width(extrusionWidth);
     set_infill_percentage(infillPercentage);
     set_resolution(resolution);
-    //    set_auto_adjust_path(adjustPath);
     create_paths();
 }
 
@@ -61,7 +60,6 @@ Layer::Layer(int number, double location, double length, double width, double ex
     set_extrusion_width(extrusionWidth);
     set_infill_percentage(infillPercentage);
     set_resolution(resolution);
-    //    set_auto_adjust_path(adjustPath);
     set_height(height);
     create_paths();
 }
@@ -78,7 +76,6 @@ Layer::Layer(int number, double location, double length, double width, double ex
     set_extrusion_width(extrusionWidth);
     set_infill_percentage(infillPercentage);
     set_resolution(resolution);
-    //    set_auto_adjust_path(adjustPath);
     set_height(height);
     set_shape_height(shapeHeight);
     create_paths();
@@ -117,7 +114,6 @@ void Layer::set_extrusion_multiplier(const double extrusionMultiplier)
 double Layer::get_diameter_of_print()
 {
     double volume = get_volume();
-    //    double infillRatio = mInfillPercentage/100;
     double modifiedExtrusionWidth = get_modified_extrusion_width();
     double area = mLength*mWidth;
     double diameterOfPrint = sqrt(volume*4*modifiedExtrusionWidth/(area*pi));
@@ -155,7 +151,6 @@ double Layer::get_adjusted_extrusion_width()
 {
     double adjustedExtrusionWidth{0};
     int numberOfPaths = get_number_of_infill_paths();
-    //    double diameter = get_diameter_of_print();
     double perpendicularToPathDistance = get_perpendicular_to_path_distance();
     adjustedExtrusionWidth = (perpendicularToPathDistance)/(numberOfPaths);
 
@@ -165,27 +160,15 @@ double Layer::get_adjusted_extrusion_width()
 double Layer::get_perpendicular_to_path_distance()
 {
     double theta = get_infill_angle()/180*pi;
-    //    double zLocation = get_location();
-    //    std::vector <Point> corners = get_corners();
-    //    Point cornerA = corners.at(0);
-    //    Point cornerB = corners.at(1);
-    //    Point cornerC = corners.at(2);
-    //    Point cornerD = corners.at(3);
-    //    Point pointE(cos(theta+pi/2),sin(theta+pi/2),0);
-    ////    double magnitudeE =
-    ////    Point vectorE = (pointE).normalize();
-    //    Point diagonalDistance = (cornerC-cornerA);
-    //    Point diagonalDistanceNormalized = diagonalDistance.normalize();
-    // = (vectorE.dot(diagonalDistanceNormalized))/std::cos(theta); //*diagonalDistance.get_magnitude();
 
     double perpendicularToPathDistance{0};
     if (mNumber%2 == 0)
     {
-        perpendicularToPathDistance = mWidth/std::cos(theta);
+        perpendicularToPathDistance = mInfillWidth/std::cos(theta);
     }
     else
     {
-        perpendicularToPathDistance = mLength/std::cos(theta);
+        perpendicularToPathDistance = mInfillLength/std::sin(theta);
     }
     return perpendicularToPathDistance;
 }
@@ -210,41 +193,6 @@ int Layer::get_number_of_infill_paths()
         numberOfInfillPaths = flooredNumberOfPaths+1;
     }
 
-
-    //    double modifiedEW = get_modified_extrusion_width();
-    //    int numberOfPaths{0};
-    //    int flooredNumberOfPaths{0};
-    //    double exactNumberOfPaths{0};
-
-    //    if (mInfill45 == true)
-    //    {
-    //        //        double perimeter = get_perimeter();
-    //        //        double sinOf45Degrees = 0.70710678118;
-    //        //        double width45 = modifiedEW/sinOf45Degrees;
-    //        //        exactNumberOfPaths = (perimeter/2)/width45;
-    //        //        flooredNumberOfPaths = int(floor(exactNumberOfPaths));
-    //    }
-    //    else
-    //    {
-    //        exactNumberOfPaths = (mWidth/modifiedEW);
-    //        flooredNumberOfPaths = int(floor(exactNumberOfPaths));
-    //        if (mNumber%2 != 0)
-    //        {
-    //            exactNumberOfPaths = (mLength/modifiedEW);
-    //            flooredNumberOfPaths = int(floor(exactNumberOfPaths));
-    //        }
-    //    }
-
-    //    numberOfPaths = flooredNumberOfPaths;
-
-    //    if ((exactNumberOfPaths-flooredNumberOfPaths) >= 0.5)
-    //    {
-    //        numberOfPaths = flooredNumberOfPaths+1;
-    //    }
-    //    if (numberOfPaths==1)
-    //    {
-    //        numberOfPaths = 2;
-    //    }
     return numberOfInfillPaths;
 }
 
@@ -255,8 +203,7 @@ std::vector<Path*> Layer::get_path_list()
 
 void Layer::create_paths()
 {
-    //    int numberOfPaths = get_number_of_infill_paths();
-
+    set_extrusion_width(mExtrusionWidth);
     std::vector <Point> perimeterPointList = get_perimeter_points();
     int numberOfPaths = static_cast<int>(perimeterPointList.size())-1;
 
@@ -269,49 +216,8 @@ void Layer::create_paths()
         Point nextPoint = perimeterPointList.at(i+1);
         Path* newPath = new Path(currentPoint,nextPoint,diameter,pathNumber,resolution, mWidth, mLength, mShapeHeight);
 
-        //        newPath->set_start(currentPoint);
-        //        newPath->set_end(nextPoint);
         mPathList->push_back(newPath);
     }
-    //    if (mInfill45 == true)
-    //    {
-    //        std::vector <Point> turnPoints = get_45_degree_turn_points();
-
-    //        for (int i{0}; i<numberOfPaths*2; i+=2)
-    //        {
-    //            int pathNumber = i;
-    //            Point start = turnPoints.at(i);
-    //            Point end = turnPoints.at(i+1);
-    //            double diameter = get_diameter_of_print();
-    //            double resolution = get_resolution();
-    //            Path* newPath = new Path(start,end,diameter,pathNumber,resolution, mWidth, mLength, mShapeHeight);
-    //            if (pathNumber == 0)
-    //            {
-    //                int firstPointInPath{0};
-    //                newPath->get_point_list().at(firstPointInPath)->set_diameter(0);
-    //            }
-    //            mPathList->push_back(newPath);
-    //        }
-    //    }
-    //    else
-    //    {
-    //    for (int i{0}; i<numberOfPaths; i++)
-    //    {
-    //        int pathNumber = i;
-    //        std::vector<Point> turnPoints = get_90_degree_turn_points(pathNumber);
-    //        Point start = turnPoints[0];
-    //        Point end = turnPoints[1];
-    //        double diameter = get_diameter_of_print();
-    //        double resolution = get_resolution();
-    //        Path* newPath = new Path(start,end,diameter,pathNumber,resolution, mWidth, mLength, mShapeHeight);
-    //        if (pathNumber == 0)
-    //        {
-    //            int firstPointInPath{0};
-    //            newPath->get_point_list().at(firstPointInPath)->set_diameter(0);
-    //        }
-    //        mPathList->push_back(newPath);
-    //    }
-    //    }
 }
 
 double Layer::get_length() const
@@ -373,241 +279,6 @@ void Layer::set_location(double const location)
 {
     mLocation = location;
 }
-
-//std::vector<Point> Layer::get_90_degree_turn_points(int pathNumber)
-//{
-//    double xStart{0};
-//    double yStart{0};
-//    double xEnd{0};
-//    double yEnd{0};
-//    double zLocation = get_location();
-//    //    int numberOfPaths = get_number_of_paths();
-//    int layerNumber = get_number();
-//    double extrusionWidth = get_extrusion_width();
-//    double extrusionWidthBuffer = extrusionWidth/2;
-//    double diameter = get_diameter_of_print();
-//    if (mAutoAdjustPaths == true)
-//    {
-//        double extrusionWidth = get_adjusted_extrusion_width();
-//    }
-//    if (layerNumber%2 == 0)
-//    {
-//        if (pathNumber%2 == 0)
-//        {
-//            xStart = 0+diameter/2;
-//            xEnd   = mLength-diameter/2;
-//        }
-//        else
-//        {
-//            xStart = mLength-diameter/2;
-//            xEnd   = 0+diameter/2;
-//        }
-//        yStart = extrusionWidth*pathNumber+extrusionWidthBuffer;
-//        yEnd   = yStart;
-//    }
-//    else
-//    {
-//        if (pathNumber%2 == 0)
-//        {
-//            yStart = 0+diameter/2;
-//            yEnd   = mWidth-diameter/2;
-//        }
-//        else
-//        {
-//            yStart = mWidth-diameter/2;
-//            yEnd   = 0+diameter/2;
-//        }
-//        xStart = extrusionWidth*pathNumber+extrusionWidthBuffer;
-//        xEnd   = xStart;
-//    }
-//    Point startPoint{xStart,yStart,zLocation};
-//    Point endPoint{xEnd,yEnd,zLocation};
-//    std::vector <Point> turnPoints;
-//    turnPoints.push_back(startPoint);
-//    turnPoints.push_back(endPoint);
-//    return turnPoints;
-//}
-
-//std::vector<Point> Layer::get_45_degree_turn_points()
-//{
-//    std::vector<Point> turnPoints;
-//    std::vector<Point> perimeterPoints = get_45_degree_perimeter_points();
-
-//    int numberOfPaths = get_number_of_paths();
-//    int numberOfPoints = numberOfPaths*2;
-//    for(int i{0}; i<(numberOfPaths); i++)
-//    {
-//        i;
-//        Point startPoint = perimeterPoints.at(i);
-//        int endLocation = numberOfPoints-1-i;
-//        Point endPoint = perimeterPoints.at(endLocation);
-//        turnPoints.push_back(startPoint);
-//        turnPoints.push_back(endPoint);
-//    }
-//    return turnPoints;
-//}
-
-//std::vector<Point> Layer::get_perimeter_points()
-//{
-//    std::vector<Point> perimeterPoints;
-
-//    if (mInfill45 == true)
-//    {
-//        perimeterPoints = get_45_degree_perimeter_points();
-//    }
-//    else
-//    {
-//        perimeterPoints = get_90_degree_perimeter_points();
-//    }
-
-//    return perimeterPoints;
-//}
-
-//std::vector<Point> Layer::get_45_degree_perimeter_points()
-//{
-//    std::vector<Point> perimeterPoints;
-//    double modifiedEW = get_modified_extrusion_width();
-//    double sinOf45Degrees = 0.707107;
-//    double width45 = modifiedEW/sinOf45Degrees;
-//    double diameter = get_diameter_of_print();
-//    double xStart{diameter/2};
-//    double yStart{diameter/2};
-//    double xEnd = xStart + mWidth-diameter;
-//    double yEnd = yStart + mLength-diameter;
-
-//    double traversedLength = width45/2; // start half way
-//    int numberOfTurnPoints = get_number_of_paths()*2;
-//    for (int i{0};i<numberOfTurnPoints; i++)
-//    {
-//        Point point(0,0,mLocation);
-//        if (mNumber%2 == 0)
-//        {
-//            if (traversedLength > (mWidth*2+mLength-diameter*3)) // fourth side
-//            {
-//                point.set_x(xStart);
-//                point.set_y(yEnd - (traversedLength - (mWidth*2+mLength-diameter*3)));
-//            }
-//            else if (traversedLength > (mWidth+mLength-diameter*2)) // third side
-//            {
-//                point.set_x(xEnd - (traversedLength - (mWidth+mLength-diameter*2)));
-//                point.set_y(yEnd);
-//            }
-//            else if (traversedLength > (mWidth-diameter)) // second side
-//            {
-//                point.set_x(xEnd);
-//                point.set_y(yStart + traversedLength - (mWidth-diameter));
-//            }
-//            else // first side
-//            {
-//                point.set_x(xStart+traversedLength);
-//                point.set_y(yStart);
-//            }
-
-//            traversedLength += width45;
-//            perimeterPoints.push_back(point);
-//        }
-//        else
-//        {
-//            if (traversedLength > (mWidth*2+mLength-diameter*3)) // fourth side
-//            {
-//                point.set_x(xEnd);
-//                point.set_y(yEnd - (traversedLength - (mWidth*2+mLength-diameter*3)));
-//            }
-//            else if (traversedLength > (mWidth+mLength-diameter*2)) // third side
-//            {
-//                point.set_x(xStart + (traversedLength - (mWidth+mLength-diameter*2)));
-//                point.set_y(yEnd);
-//            }
-//            else if (traversedLength > (mWidth-diameter)) // second side
-//            {
-//                point.set_x(xStart);
-//                point.set_y(yStart + traversedLength - mWidth-diameter);
-//            }
-//            else // first side
-//            {
-//                point.set_x(xEnd - traversedLength);
-//                point.set_y(yStart);
-//            }
-
-//            traversedLength += width45;
-//            perimeterPoints.push_back(point);
-//        }
-//    }
-//    return perimeterPoints;
-//    // add corner points!
-//}
-
-//std::vector<Point> Layer::get_90_degree_perimeter_points()
-//{
-//    std::vector<Point> perimeterPoints;
-//    double modifiedEW = get_modified_extrusion_width();
-//    double diameter = get_diameter_of_print();
-//    double xStart{diameter/2};
-//    double yStart{diameter/2};
-//    double xEnd = xStart + mWidth-diameter;
-//    double yEnd = yStart + mLength-diameter;
-
-
-//    //    double traverseStart{0};
-//    //    if (mNumber%2 == 0)
-//    //    {
-//    //        int numberOfPaths = get_number_of_paths();
-//    //        traverseStart = (mWidth-modifiedEW*(numberOfPaths))/2;
-//    //    }
-//    //    else
-//    //    {
-//    //        int numberOfPaths = get_number_of_paths();
-//    //        traverseStart = (mLength-modifiedEW*(numberOfPaths))/2;
-//    //    }
-
-//    double traversedLength = 0;
-//    int numberOfPaths = get_number_of_paths();
-//    int numberOfTurnPoints = numberOfPaths*2;
-//    int mirrorLocation{1};
-//    for (int i{0};i<numberOfTurnPoints; i++)
-//    {
-//        Point point(0,0,mLocation);
-//        if (mNumber%2 == 0)
-//        {
-//            if (traversedLength > (mWidth-diameter)) // opposite side
-//            {
-//                Point mirrorPoint = perimeterPoints.at(i-mirrorLocation);
-//                point.set_x(mirrorPoint.get_x());
-////                point.set_x(xStart + mWidth*2 - traversedLength);
-//                point.set_y(yEnd);
-//                mirrorLocation += 2;
-//            }
-//            else // first side
-//            {
-//                point.set_x(xStart + traversedLength);
-//                point.set_y(yStart);
-//            }
-
-//            traversedLength += modifiedEW;
-//            perimeterPoints.push_back(point);
-//        }
-//        else
-//        {
-//            if (traversedLength > (mWidth-diameter)) // opposite side
-//            {
-//                point.set_x(xEnd);
-//                Point mirrorPoint = perimeterPoints.at(i-mirrorLocation);
-//                point.set_y(mirrorPoint.get_y());
-//                mirrorLocation += 2;
-////                point.set_y(yStart + mLength - traversedLength - diameter/2);
-//            }
-//            else // first side
-//            {
-//                point.set_x(xStart);
-//                point.set_y(yStart + traversedLength);
-//            }
-//            traversedLength += modifiedEW;
-//            perimeterPoints.push_back(point);
-//        }
-//    }
-//    return perimeterPoints;
-//}
-
 
 Path* Layer::get_path(int pathNumber)
 {
@@ -675,7 +346,6 @@ void Layer::set_infill_angle(double infillAngle)
     }
     mInfillAngle = infillAngle;
     create_paths();
-    // re-create paths?
 }
 
 double Layer::get_infill_angle()
@@ -692,9 +362,6 @@ std::vector <Point> Layer::create_angled_ray_origin_list()
 {
     std::vector <Point> angledRayOriginList;
 
-    //    double diameter = get_diameter_of_print();
-    //    double infillWidth = mInfillWidth;
-    //    double infillLength = mInfillLength;
     double zLocation = get_location();
 
     std::vector <Point> corners = get_corners();
@@ -714,25 +381,20 @@ std::vector <Point> Layer::create_angled_ray_origin_list()
         theta -= pi;
     }
 
-
-    //    double xStart = diameter/2;
-
     int k{0};
     bool bEnd{false};
     while(bEnd == false)
     {
-        //        double b{0};
         double yStart = cornerA.get_y();
         double xStart = cornerA.get_x();
         if (mNumber%2 ==0)
         {
-            yStart = cornerD.get_y() - angleWidth/2 - angleWidth*k;
+            yStart = cornerD.get_y() - angleWidth*k;
         }
         else
         {
-            xStart = cornerA.get_y() + angleWidth/2 + angleWidth*k;
+            xStart = cornerA.get_y() + angleWidth*k;
         }
-        //        double yStart = b;
         Point origin(xStart,yStart,zLocation);
         Point rayOrigin = origin;
 
@@ -762,10 +424,6 @@ std::vector <Point> Layer::get_intersection_points_list(Path path)
     Point start = path.get_start();
     Point end = path.get_end();
     double theta = get_infill_angle()/180*pi;
-    //    if (mNumber%2 != 0)
-    //    {
-    //        theta += 90/180*pi;
-    //    }
 
     std::vector <Point> angledRayOriginList = create_angled_ray_origin_list();
     int numberOfPaths = angledRayOriginList.size();
@@ -782,10 +440,6 @@ std::vector <Point> Layer::get_intersection_points_list(Path path)
 std::vector <Point> Layer::get_perimeter_points()
 {
     std::vector <Point> perimeterPointList;
-    //    double diameter = get_diameter_of_print();
-    //    double width = get_width()-diameter;
-    //    double length = get_length()-diameter;
-    //    double zLocation = get_location();
 
     std::vector <Point> corners = get_corners();
     Point cornerA = corners.at(0);
@@ -807,26 +461,38 @@ std::vector <Point> Layer::get_perimeter_points()
 
     if (mNumber%2==0)
     {
-        // for Even:
+        // for Even:---------------------------------------------------------------------------------
         perimeterPointList.push_back(cornerD); // first point is D
         int pointCount{0};
         int leftPoint{0};
         int bottomPoint{0};
         int topPoint{0};
         int rightPoint{0};
-        //        int numberOfPoints = static_cast<int>(create_angled_ray_origin_list().size())*4;
         bool finish{false};
         while (finish == false)
         {
-            // 1
+            // 1---------------------------------------------------------------------------------
             if (leftPoint < leftSize) // Left
             {
                 perimeterPointList.push_back(leftSidePoints.at(leftPoint));
                 leftPoint++;
+                if (rightSize > 0)
+                {
+                }
+                else
+                {
+                    if (rightPoint == 0)
+                    {
+                        perimeterPointList.push_back(cornerB);
+                    }
+                }
             }
             else // Bottom
             {
-                if (leftPoint > 0)
+                if (bottomSize > 0)
+                {
+                }
+                else
                 {
                     if (bottomPoint==0)
                     {
@@ -839,35 +505,7 @@ std::vector <Point> Layer::get_perimeter_points()
                     bottomPoint++;
                 }
             }
-            // 2
-            if (topPoint < topSize) // Top
-            {
-                perimeterPointList.push_back(topSidePoints.at(topPoint));
-                topPoint++;
-            }
-            else // Right
-            {
-                if (topPoint > 0)
-                {
-                    if (topSize > 0)
-                    {
-
-                    }
-                    else
-                    {
-                        if (rightPoint==0)
-                        {
-                            perimeterPointList.push_back(cornerC);
-                        }
-                    }
-                }
-                if (rightPoint < rightSize)
-                {
-                    perimeterPointList.push_back(rightSidePoints.at(rightPoint));
-                    rightPoint++;
-                }
-            }
-            // 3
+            // 2---------------------------------------------------------------------------------
             if (topPoint < topSize) // Top
             {
                 perimeterPointList.push_back(topSidePoints.at(topPoint));
@@ -877,7 +515,31 @@ std::vector <Point> Layer::get_perimeter_points()
             {
                 if (rightSize > 0)
                 {
+                }
+                else
+                {
+                    if (rightPoint==0)
+                    {
+                        perimeterPointList.push_back(cornerC);
+                    }
+                }
 
+                if (rightPoint < rightSize)
+                {
+                    perimeterPointList.push_back(rightSidePoints.at(rightPoint));
+                    rightPoint++;
+                }
+            }
+            // 3---------------------------------------------------------------------------------
+            if (topPoint < topSize) // Top
+            {
+                perimeterPointList.push_back(topSidePoints.at(topPoint));
+                topPoint++;
+            }
+            else // Right
+            {
+                if (rightSize > 0)
+                {
                 }
                 else
                 {
@@ -892,7 +554,7 @@ std::vector <Point> Layer::get_perimeter_points()
                     rightPoint++;
                 }
             }
-            // 4
+            // 4---------------------------------------------------------------------------------
             if (leftPoint < leftSize) // Left
             {
                 perimeterPointList.push_back(leftSidePoints.at(leftPoint));
@@ -907,7 +569,6 @@ std::vector <Point> Layer::get_perimeter_points()
                 {
                     if (bottomPoint == 0)
                     {
-                        //                        perimeterPointList.push_back(cornerA);
                     }
                     else
                     {
@@ -927,21 +588,14 @@ std::vector <Point> Layer::get_perimeter_points()
                 if (bottomPoint == bottomSize)
                 {
                     finish = true;
-                    //                    if ((perimeterPointList.at(i-1).get_x() - cornerB.get_x()) < 0.1)
-                    //                    {
                     perimeterPointList.push_back(cornerB);
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        perimeterPointList.push_back(cornerA);
-                    //                    }
                 }
             }
         }
     }
     else
     {
-        // for Odd:
+        // for Odd:---------------------------------------------------------------------------------
 
         perimeterPointList.push_back(cornerA); // first point is A
         int pointCount{0};
@@ -953,32 +607,41 @@ std::vector <Point> Layer::get_perimeter_points()
         bool finish{false};
         while (finish == false)
         {
-            // 1
+            // 1---------------------------------------------------------------------------------
             if (bottomPoint < bottomSize) // Bottom
             {
                 perimeterPointList.push_back(bottomSidePoints.at(bottomPoint));
                 bottomPoint++;
-            }
-            else // Right
-            {
-                if (rightSize > 0)
+                if (topSize > 0)
                 {
                 }
                 else
                 {
-                    if (rightPoint==0)
+                    if (topPoint==0)
                     {
-                        perimeterPointList.push_back(cornerB);
+                        perimeterPointList.push_back(cornerD);
                     }
                 }
-
+            }
+            else // Right
+            {
+                if (leftSize > 0)
+                {
+                                    }
+                    else
+                    {
+                        if (leftPoint == 0)
+                        {
+                            perimeterPointList.push_back(cornerA); // not sure about this
+                        }
+                    }
                 if (rightPoint < rightSize)
                 {
                     perimeterPointList.push_back(rightSidePoints.at(rightPoint));
                     rightPoint++;
                 }
             }
-            // 2
+            // 2---------------------------------------------------------------------------------
             if (leftPoint < leftSize) // Left
             {
                 perimeterPointList.push_back(leftSidePoints.at(leftPoint));
@@ -1003,7 +666,7 @@ std::vector <Point> Layer::get_perimeter_points()
                     topPoint++;
                 }
             }
-            // 3
+            // 3---------------------------------------------------------------------------------
             if (leftPoint < leftSize) // Left
             {
                 perimeterPointList.push_back(leftSidePoints.at(leftPoint));
@@ -1028,7 +691,7 @@ std::vector <Point> Layer::get_perimeter_points()
                     topPoint++;
                 }
             }
-            // 4
+            // 4---------------------------------------------------------------------------------
             if (bottomPoint < bottomSize) // Bottom
             {
                 perimeterPointList.push_back(bottomSidePoints.at(bottomPoint));
@@ -1044,7 +707,6 @@ std::vector <Point> Layer::get_perimeter_points()
                 {
                     if (rightPoint ==0 )
                     {
-//                        perimeterPointList.push_back(cornerB);
                     }
                     else
                     {
@@ -1063,14 +725,8 @@ std::vector <Point> Layer::get_perimeter_points()
                 if (rightPoint == rightSize)
                 {
                     finish = true;
-                    //                    if ((perimeterPointList.at(i-1).get_x() == cornerC.get_x()) < 0.1)
-                    //                    {
                     perimeterPointList.push_back(cornerC);
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        perimeterPointList.push_back(cornerD);
-                    //                    }
+
                 }
             }
         }
