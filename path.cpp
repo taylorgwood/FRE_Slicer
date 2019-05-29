@@ -118,6 +118,11 @@ void Path::adjust_point_spacing()
     double length = get_length();
     double exactNumberOfSegments = length/mResolution;
     int flooredNumberOfSegments = int(floor(exactNumberOfSegments));
+    if (flooredNumberOfSegments < 1)
+    {
+        flooredNumberOfSegments = 1;
+    }
+
     double realResolution = length/flooredNumberOfSegments;
     set_resolution(realResolution);
 }

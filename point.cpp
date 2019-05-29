@@ -149,3 +149,27 @@ double Point::get_diameter() const
 {
     return mDiameter;
 }
+
+Point  Point::cross(Point secondPoint)
+{
+    double X1 = this->get_x();
+    double Y1 = this->get_y();
+    double Z1 = this-> get_z();
+    double X2 = secondPoint.get_x();
+    double Y2 = secondPoint.get_y();
+    double Z2 = secondPoint.get_z();
+    double crossX = Y1*Z2 - Z1*Y2;
+    double crossY = -X1*Z2 + Z1*X2;
+    double crossZ = X1*Y2 - Y1*X2;
+    Point crossProduct(crossX,crossY,crossZ);
+    return crossProduct;
+}
+
+double Point::dot(Point secondPoint)
+{
+    double x = this->get_x()*secondPoint.get_x();
+    double y = this->get_y()*secondPoint.get_y();
+    double z = this->get_z()*secondPoint.get_z();
+    double dotProduct = (x+y+z);
+    return dotProduct;
+}

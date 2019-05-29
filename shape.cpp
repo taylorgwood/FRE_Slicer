@@ -86,7 +86,7 @@ void Shape::create_layers()
     double infillPercentage = get_infill_percentage();
     double resolution = get_resolution();
     double shapeHeight = get_height();
-    bool   adjustPath = get_auto_adjust_path();
+//    bool   adjustPath = get_auto_adjust_path();
     if (mAutoAdjustLayer == true)
     {
         layerHeight = get_adjusted_layer_height();
@@ -97,7 +97,7 @@ void Shape::create_layers()
     {
         int layerNumber{i};
         layerLocation += layerHeight;
-        Layer* newLayer = new Layer(layerNumber,layerLocation,layerLength,layerWidth, extrustionMultiplier, extrusionWidth, infillPercentage, resolution, adjustPath, layerHeight, shapeHeight);
+        Layer* newLayer = new Layer(layerNumber,layerLocation,layerLength,layerWidth, extrustionMultiplier, extrusionWidth, infillPercentage, resolution, layerHeight, shapeHeight);
         mLayerList->push_back(newLayer);
     }
 }
@@ -123,7 +123,7 @@ std::vector<Point> Shape::get_points()
     //    int numberOfLayers = get_number_of_layers();
     for (int i{0}; i<numberOfLayers; i++)
     {
-        std::vector<Layer*> layerList = get_layer_list();
+//        std::vector<Layer*> layerList = get_layer_list();
         Layer *layer = layerList[i];
         std::vector<Point> pointsInLayer = layer->get_points();
         size_t numberOfPointsInLayer = pointsInLayer.size();
@@ -221,12 +221,12 @@ void Shape::set_auto_adjust_layer(bool adjustLayer)
     create_layers();
 }
 
-void Shape::set_auto_adjust_path(bool adjustPath)
-{
-    mAutoAdjustPath = adjustPath;
-    mLayerList->clear();
-    create_layers();
-}
+//void Shape::set_auto_adjust_path(bool adjustPath)
+//{
+//    mAutoAdjustPath = adjustPath;
+//    mLayerList->clear();
+//    create_layers();
+//}
 
 double Shape::get_resolution()
 {
@@ -245,10 +245,10 @@ double Shape::get_extrusion_width()
     return mExtrusionWidth;
 }
 
-bool Shape::get_auto_adjust_path()
-{
-    return mAutoAdjustPath;
-}
+//bool Shape::get_auto_adjust_path()
+//{
+//    return mAutoAdjustPath;
+//}
 
 std::vector<Path>* Shape::get_path_list()
 {

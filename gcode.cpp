@@ -95,7 +95,7 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer)
 void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer)
 {
     std::vector<Path*> pathsInLayer = layer->get_path_list();
-    size_t numberOfPathsInLayer = layer->get_number_of_paths();
+    size_t numberOfPathsInLayer = layer->get_number_of_infill_paths();
     for (int i{0}; i<numberOfPathsInLayer; i++)
     {
         Path* path = pathsInLayer[i];

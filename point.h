@@ -28,6 +28,8 @@ public:
     double get_magnitude();
     void   set_diameter(const double diameter);
     double get_diameter() const;
+    Point  cross(Point secondPoint);
+    double dot(Point secondPoint);
 
 protected:
 
