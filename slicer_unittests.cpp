@@ -783,6 +783,31 @@ TEST(SetAngle,givenAngleLessThanZero_getAdjustedAngle)
     EXPECT_DOUBLE_EQ(adjustedAngle,expectedAngle);
 }
 
+TEST(LayerSize,givenTopSize_getSameBottomLayer)
+{
+    Shape shape;
+    double newTopWidth{4};
+    shape.set_top_width(newTopWidth);
+    Layer* firstLayer = shape.get_layer(0);
+    double firstLayerWidth = firstLayer->get_width();
+    EXPECT_DOUBLE_EQ(firstLayerWidth,shape.get_width());
+}
+
+TEST(LayerSize,givenTopSize_getCorrectlySizedTopLayer)
+{
+    Shape shape;
+    double newTopWidth{4};
+    shape.set_top_width(newTopWidth);
+    int numberOfLayers = shape.get_number_of_layers();
+    Layer* topLayer = shape.get_layer(numberOfLayers-1);
+    double topLayerWidth = topLayer->get_width();
+    double extrusionWidth = topLayer->get_modified_extrusion_width();
+    double expectedTopLayerWidth = shape.get_top_width(); //+extrusionWidth/2;
+    EXPECT_DOUBLE_EQ(topLayerWidth,expectedTopLayerWidth);
+    Gcode gcode;
+    gcode.generate_file(shape,"trapezoid_test");
+}
+
 TEST(PrintOut,PrintOutPerimeterPoints)
 {
 //        Layer layer;

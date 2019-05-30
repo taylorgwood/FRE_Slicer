@@ -77,10 +77,11 @@ double Shape::get_height() const
 
 void Shape::create_layers()
 {
+    mLayerList->clear();
     int numberOfLayers = get_number_of_layers();
     double layerHeight = get_layer_height();
     double layerLength = get_length();
-    double layerWidth  = get_width();
+//    double layerWidth  = get_width();
     double extrustionMultiplier = get_extrusion_multiplier();
     double extrusionWidth = get_extrusion_width();
     double infillPercentage = get_infill_percentage();
@@ -96,6 +97,7 @@ void Shape::create_layers()
     for (int i{0}; i<numberOfLayers; i++)
     {
         int layerNumber{i};
+        double layerWidth = get_layer_width(layerNumber);
         layerLocation += layerHeight;
         Layer* newLayer = new Layer(layerNumber,layerLocation,layerLength,layerWidth, extrustionMultiplier, extrusionWidth, infillPercentage, resolution, layerHeight, shapeHeight);
         mLayerList->push_back(newLayer);
@@ -266,4 +268,33 @@ std::vector<Path>* Shape::get_path_list()
         }
     }
     return pathList;
+}
+
+void Shape::set_top_width(double topWidth)
+{
+    if (topWidth < 0)
+    {
+        double minimumWidth{0.26};
+        topWidth = minimumWidth;
+    }
+    mTopWidth = topWidth;
+    create_layers();
+}
+
+double Shape::get_top_width() const
+{
+    return mTopWidth;
+}
+
+double Shape::get_layer_width(int layerNumber)
+{
+    double shapeWidth = get_width();
+    double shapeHeight = get_height();
+    double topWidth = get_top_width();
+    double widthDifference = shapeWidth-topWidth;
+    double theta = std::atan2(shapeHeight,widthDifference);
+    double layerHeight = (layerNumber+0.5)*get_layer_height();
+    double heightDifference = shapeHeight-layerHeight;
+    double layerWidth = topWidth + heightDifference/std::tan(theta);
+    return layerWidth;
 }

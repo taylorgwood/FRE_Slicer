@@ -39,6 +39,9 @@ public:
     void   set_resolution(double resolution);
 //    bool   get_auto_adjust_path();
     std::vector<Path> *get_path_list();
+    void   set_top_width(double topWidth);
+    double get_top_width() const;
+    double get_layer_width(int layerNumber);
 
 protected:
 
@@ -54,7 +57,7 @@ private:
     double mExtrusionWidth{0.26};
     double mInfillPercentage{100};
     double mResolution{1.0};
-
+    double mTopWidth{10};
 };
 
 #endif // SHAPE_H
