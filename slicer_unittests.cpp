@@ -242,7 +242,7 @@ TEST(ShapeList,whenAskedForPointsInShape_getCorrectNumberOfPointsInShape)
 TEST(PrintOut,whenGivenPoint_printPointToConsole)
 {
     Point point{1,2,3};
-    //    point.print();
+//        point.print();
 }
 
 TEST(PrintOut,whenGivenPointList_printPointsToConsole)
@@ -310,29 +310,29 @@ TEST(LayerNumber,whenConstructingShape_layerNumbersSet)
 
 TEST(PointLocations,whenConstructingShape_pointLocationsConstructed)
 {
-    //    Shape shape;
-    //    std::vector<Layer*> layerList = shape.get_layer_list();
-    //    Layer* firstLayer = layerList[0];
-    //    std::vector<Path*> pathList = firstLayer->get_path_list();
-    //    Path* secondPath = pathList[1];
-    //    std::vector<Point*> pointList = secondPath->get_point_list();
-    //    std::vector<Point> expectedPointList;
-    //    double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
-    //    double layerHeight = shape.get_layer_height();
-    //    double diameter = secondPath->get_diameter();
-    //    double pointLength = (10-diameter)/((secondPath->get_number_of_points())-1);
-    //    for (int i{0}; i<11; i++)
-    //    {
-    //        double x = 10-(diameter/2)-i*pointLength;
-    //        double y = modifiedExtrusionWidth*3/2;
-    //        double z = layerHeight/2;
-    //        Point point;
-    //        point.set_x(x);
-    //        point.set_y(y);
-    //        point.set_z(z);
-    //        expectedPointList.push_back(point);
-    //    }
-    //    EXPECT_POINT_LIST_EQ(pointList,expectedPointList);
+//        Shape shape;
+//        std::vector<Layer*> layerList = shape.get_layer_list();
+//        Layer* firstLayer = layerList[0];
+//        std::vector<Path*> pathList = firstLayer->get_path_list();
+//        Path* secondPath = pathList[1];
+//        std::vector<Point*> pointList = secondPath->get_point_list();
+//        std::vector<Point> expectedPointList;
+//        double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
+//        double layerHeight = shape.get_layer_height();
+//        double diameter = secondPath->get_diameter();
+//        double pointLength = (10-modifiedExtrusionWidth)/((secondPath->get_number_of_points())-1);
+//        for (int i{0}; i<11; i++)
+//        {
+//            double x = 10-(modifiedExtrusionWidth/2)-i*pointLength;
+//            double y = modifiedExtrusionWidth*3/2;
+//            double z = layerHeight/2;
+//            Point point;
+//            point.set_x(x);
+//            point.set_y(y);
+//            point.set_z(z);
+//            expectedPointList.push_back(point);
+//        }
+//        EXPECT_POINT_LIST_EQ(pointList,expectedPointList);
 }
 
 TEST(PointMath,whenAskedForNormalizedPoint_getNormalizedPoint)
@@ -408,18 +408,18 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
     //    EXPECT_POINT_LIST_EQ(pointList4,expectedFourthPointList);
 }
 
-//TEST(Gcode,whenAskedToCreateEmptyFile_newEmptyFileCreated)
-//{
+TEST(Gcode,whenAskedToCreateEmptyFile_newEmptyFileCreated)
+{
 //    Gcode gcode;
 //    gcode.create_empty_file();
 //    std::string suffix = ".txt";
 //    std::string fileName = gcode.get_file_name();
 //    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
 //    gcode.delete_file();
-//}
+}
 
-//TEST(Gcode,whenAskedToCreateFileWithName_namedFileCreated)
-//{
+TEST(Gcode,whenAskedToCreateFileWithName_namedFileCreated)
+{
 //    Gcode gcode;
 //    Shape newShape;
 //    std::string fileName = "testFileName";
@@ -427,10 +427,10 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
 //    std::string suffix = ".txt";
 //    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
 //    gcode.delete_file();
-//}
+}
 
-//TEST(Gcode,whenAskedToDeleteFile_fileDeleted)
-//{
+TEST(Gcode,whenAskedToDeleteFile_fileDeleted)
+{
 //    Gcode gcode;
 //    Shape shape;
 //    std::string fileName = "deleteThisFile";
@@ -440,38 +440,38 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
 //    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
 //    gcode.delete_file();
 //    EXPECT_FALSE(gcode.does_file_exist(updatedFileName + suffix));
-//}
+}
 
-//TEST(Gcode,whenAskedToGenerateGCodeFile_LayersPrintedInFile)
-//{
+TEST(Gcode,whenAskedToGenerateGCodeFile_LayersPrintedInFile)
+{
 //    Gcode newGcode;
 //    Shape newShape;
 //    std::string fileName = "testForLayers";
 //    newGcode.generate_file(newShape, fileName);
 //    // read some line from file
 //    newGcode.delete_file();
-//}
+}
 
-//TEST(Gcode,whenAskedToGenerateGCodeFile_PointsPrintedInFile)
-//{
-//    Gcode newGcode;
-//    Shape newShape;
-//    std::string fileName = "testForPoints";
-//    newGcode.generate_file(newShape, fileName);
-//    // read some lines from file
+TEST(Gcode,whenAskedToGenerateGCodeFile_PointsPrintedInFile)
+{
+    Gcode newGcode;
+    Shape newShape;
+    std::string fileName = "testForPoints";
+    newGcode.generate_file(newShape, fileName);
+    // read some lines from file
 //    newGcode.delete_file();
-//}
+}
 
-//TEST(Gcode,whenAskedForInitialExtrusionAmount_getZeroExtrusionAmount)
-//{
-//    Gcode newGcode;
-//    Shape newShape;
-//    double displacementA = newGcode.get_extruder_displacement()[0];
-//    double displacementB = newGcode.get_extruder_displacement()[1];
-//    double totalDisplacement = displacementA + displacementB;
-//    double expectedDisplacement = 0;
-//    EXPECT_DOUBLE_EQ(totalDisplacement,expectedDisplacement);
-//}
+TEST(Gcode,whenAskedForInitialExtrusionAmount_getZeroExtrusionAmount)
+{
+    Gcode newGcode;
+    Shape newShape;
+    double displacementA = newGcode.get_extruder_displacement()[0];
+    double displacementB = newGcode.get_extruder_displacement()[1];
+    double totalDisplacement = displacementA + displacementB;
+    double expectedDisplacement = 0;
+    EXPECT_DOUBLE_EQ(totalDisplacement,expectedDisplacement);
+}
 
 //TEST(Extrusion,whenAskedForShapeExtrusionAmount_getCorrectShapeExtrusionAmount)
 //{
@@ -783,7 +783,7 @@ TEST(SetAngle,givenAngleLessThanZero_getAdjustedAngle)
     EXPECT_DOUBLE_EQ(adjustedAngle,expectedAngle);
 }
 
-TEST(A,B_c)
+TEST(PrintOut,PrintOutPerimeterPoints)
 {
 //        Layer layer;
 //        layer.set_number(0);

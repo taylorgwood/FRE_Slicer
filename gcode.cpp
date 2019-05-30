@@ -23,6 +23,7 @@ void Gcode::write_gcode(std::ofstream& fout, Shape& shape)
         Layer* layer = shape.get_layer(layerNumber);
         write_layer_gcode(fout, layer);
     }
+    write_end_gcode(fout);
 }
 
 std::ofstream Gcode::create_empty_file()
@@ -41,7 +42,8 @@ std::ofstream Gcode::get_fout()
     std::string suffix = ".txt";
     std::string completeFileName = fileName + suffix;
     std::ofstream fout{completeFileName};
-    if (fout.fail())
+    bool failedToWrite = fout.fail();
+    if (failedToWrite)
     {
         std::cout << "Failed to write to file." << std::endl;
     }
@@ -54,7 +56,8 @@ std::string Gcode::make_file_name_unique()
     std::string uniqueFileName = fileName;
     int incrementCount{1};
     std::string suffix = ".txt";
-    while(does_file_exist(uniqueFileName + suffix))
+    bool fileExists = does_file_exist(uniqueFileName + suffix);
+    while(fileExists)
     {
         std::string incrementText = std::to_string(incrementCount);
         uniqueFileName = fileName + incrementText;
@@ -66,7 +69,7 @@ std::string Gcode::make_file_name_unique()
 bool Gcode::does_file_exist(const std::string& completeFileName)
 {
     struct stat buf;
-    if (stat(completeFileName.c_str(), &buf) != -1)
+    if (stat(completeFileName.c_str(), &buf) == 0)
     {
         return true;
     }
@@ -95,7 +98,7 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer)
 void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer)
 {
     std::vector<Path*> pathsInLayer = layer->get_path_list();
-    size_t numberOfPathsInLayer = layer->get_number_of_infill_paths();
+    int numberOfPathsInLayer = static_cast<int>(pathsInLayer.size());
     for (int i{0}; i<numberOfPathsInLayer; i++)
     {
         Path* path = pathsInLayer[i];
@@ -111,6 +114,12 @@ void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
     fout << "G28 ; home all axes" << std::endl;
     fout << "G21 ; set units to millimeters" << std::endl;
     fout << "G90 ; use absolute coordinates" << std::endl;
+    fout << std::endl;
+}
+
+void Gcode::write_end_gcode(std::ofstream& fout)
+{
+    fout << "; End of file" << std::endl;
     fout << std::endl;
 }
 
