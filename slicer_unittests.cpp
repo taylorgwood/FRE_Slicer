@@ -216,7 +216,7 @@ TEST(LayerList,whenAskedForPointsInFirstLayer_getCorrectNumberOfPointsInFirstLay
     int firstLayer{0};
     std::vector<Point> pointList = shape.get_points_in_layer(firstLayer);
     size_t numberOfPointsInLayer = pointList.size();
-    int expectedNumberOfPointsInLayer{(38*10)+(37*2)};
+    int expectedNumberOfPointsInLayer{(38*10)+(38-2)/2};
     EXPECT_EQ(numberOfPointsInLayer,expectedNumberOfPointsInLayer);
 }
 
@@ -226,7 +226,7 @@ TEST(LayerList,whenAskedForPointsInSecondLayer_getCorrectNumberOfPointsInSecondL
     int secondLayer{1};
     std::vector<Point> pointList = shape.get_points_in_layer(secondLayer);
     size_t numberOfPointsInLayer = pointList.size();
-    int expectedNumberOfPointsInLayer{(38*10)+(37*2)};
+    int expectedNumberOfPointsInLayer{(38*10)+(38-2)/2};
     EXPECT_EQ(numberOfPointsInLayer,expectedNumberOfPointsInLayer);
 }
 
@@ -235,7 +235,7 @@ TEST(ShapeList,whenAskedForPointsInShape_getCorrectNumberOfPointsInShape)
     Shape shape;
     std::vector<Point> pointList = shape.get_points();
     size_t numberOfPoints = pointList.size();
-    int expectedNumberOfPoints{(38*((38*10)+(37*2)))};
+    int expectedNumberOfPoints{(38*((38*10)+(38-2)/2))};
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
 }
 

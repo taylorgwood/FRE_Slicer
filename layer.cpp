@@ -260,16 +260,33 @@ void Layer::set_width(double const width)
 std::vector<Point> Layer::get_points()
 {
     std::vector<Point> pointList;
-    size_t numberOfPaths = mPathList->size();
+    int numberOfPaths = static_cast<int>(mPathList->size());
+    Point* lastPoint = new Point;
     for (int i{0}; i<numberOfPaths; i++)
     {
         Path* path = get_path_list()[i];
         std::vector<Point*> points = path->get_point_list();
-        size_t numberOfPoints = points.size();
+        int numberOfPoints = static_cast<int>(points.size());
         for (int j{0}; j<numberOfPoints; j++)
         {
             Point* point = points[j];
-            pointList.push_back(*point);
+            bool duplicate{false};
+
+                if (lastPoint->get_x() == point->get_x())
+                {
+                    if (lastPoint->get_y() == point->get_y())
+                    {
+                        if (lastPoint->get_z() == point->get_z())
+                        {
+                            duplicate = true;
+                        }
+                    }
+                }
+            if (duplicate == false)
+            {
+                pointList.push_back(*point);
+            }
+            lastPoint = point;
         }
     }
     return pointList;
@@ -768,7 +785,7 @@ std::vector <Point> Layer::get_perimeter_points()
                         }
                         else
                         {
-//                            perimeterPointList.push_back(cornerC);
+                            //                            perimeterPointList.push_back(cornerC);
                         }
                     }
 

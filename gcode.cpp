@@ -62,6 +62,7 @@ std::string Gcode::make_file_name_unique()
         std::string incrementText = std::to_string(incrementCount);
         uniqueFileName = fileName + incrementText;
         incrementCount++;
+        fileExists = does_file_exist(uniqueFileName + suffix);
     }
     return uniqueFileName;
 }
@@ -86,6 +87,23 @@ void Gcode::set_file_name(std::string const fileName)
     mFileName = fileName;
 }
 
+void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
+{
+    write_file_creation_information(fout);
+    write_basic_settings(fout, shape);
+
+    fout << "G28 ; home all axes" << std::endl;
+    fout << "G21 ; set units to millimeters" << std::endl;
+    fout << "G90 ; use absolute coordinates" << std::endl;
+    fout << std::endl;
+}
+
+std::string Gcode::get_begin_layer_gcode(int layerNumber)
+{
+    std::string beginLayerGcode = "; Beginning layer: " + layerNumber;
+    return beginLayerGcode;
+}
+
 void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer)
 {
     double zLocation = layer->get_location();
@@ -97,25 +115,40 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer)
 
 void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer)
 {
-    std::vector<Path*> pathsInLayer = layer->get_path_list();
-    int numberOfPathsInLayer = static_cast<int>(pathsInLayer.size());
-    for (int i{0}; i<numberOfPathsInLayer; i++)
+    std::vector<Point> pointsInLayer = layer->get_points();
+    int numberOfPointsInLayer = static_cast<int>(pointsInLayer.size());
+    for (int i{0}; i<numberOfPointsInLayer; i++)
     {
-        Path* path = pathsInLayer[i];
-        write_points_in_path(fout, path);
+//        Path* path = pathsInLayer[i];
+//        write_points_in_path(fout, path);
+        int pointNumber{i};
+        Point point = pointsInLayer[i];
+        fout << "G1 ";
+        fout << " X" << point.get_x();
+        fout << " Y" << point.get_y();
+        double materialRatio = point.get_material();
+        double extrusionDistance = get_extrusion_distance(point);
+        if (pointNumber == 0)
+        {
+            extrusionDistance = 0;
+        }
+        increment_extruder_displacement(materialRatio,extrusionDistance);
+        fout << " A" << get_extruder_displacement()[0];
+        fout << " B" << get_extruder_displacement()[1];
+        fout << std::endl;
+        mPointCount += 1;
+        mLastPoint = point;
     }
 }
 
-void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
-{
-    write_file_creation_information(fout);
-    write_basic_settings(fout, shape);
-
-    fout << "G28 ; home all axes" << std::endl;
-    fout << "G21 ; set units to millimeters" << std::endl;
-    fout << "G90 ; use absolute coordinates" << std::endl;
-    fout << std::endl;
-}
+//void Gcode::write_points_in_path(std::ofstream& fout, Path* path)
+//{
+//    std::vector<Point*> pointsInPath = path->get_point_list();
+//    int numberOfPointsInPath = static_cast<int>(pointsInPath.size());
+//    for (int i{0}; i<numberOfPointsInPath; i++)
+//    {
+//    }
+//}
 
 void Gcode::write_end_gcode(std::ofstream& fout)
 {
@@ -132,33 +165,6 @@ std::string Gcode::get_time_string()
     oss << std::put_time(&localTime, "%m-%d-%Y at %H:%M:%S");
     auto timeString = oss.str();
     return timeString;
-}
-
-void Gcode::write_points_in_path(std::ofstream& fout, Path* path)
-{
-    std::vector<Point*> pointsInPath = path->get_point_list();
-    size_t numberOfPointsInPath = path->get_number_of_points();
-    for (int i{0}; i<numberOfPointsInPath; i++)
-    {
-        int pointNumber{i};
-        Point* point = pointsInPath[i];
-        fout << "G1 ";
-        fout << " X" << point->get_x();
-        fout << " Y" << point->get_y();
-        double materialRatio = point->get_material();
-        double extrusionDistance = get_extrusion_distance(*point);
-        int pathNumber = path->get_path_number();
-        if (pointNumber == 0 && pathNumber == 0)
-        {
-            extrusionDistance = 0;
-        }
-        increment_extruder_displacement(materialRatio,extrusionDistance);
-        fout << " A" << get_extruder_displacement()[0];
-        fout << " B" << get_extruder_displacement()[1];
-        fout << std::endl;
-        mPointCount += 1;
-        mLastPoint = *point;
-    }
 }
 
 double Gcode::get_extrusion_distance(Point currentPoint)
@@ -208,12 +214,6 @@ void Gcode::delete_file()
             std::cout << "Error deleting file" << std::endl;
         }
     }
-}
-
-std::string Gcode::get_begin_layer_gcode(int layerNumber)
-{
-    std::string beginLayerGcode = "; Beginning layer: " + layerNumber;
-    return beginLayerGcode;
 }
 
 void Gcode::write_file_creation_information(std::ofstream& fout)

@@ -23,7 +23,7 @@ public:
     void   write_points_in_layer(std::ofstream& fout, Layer* layer);
     void   write_initial_gcode(std::ofstream& fout, Shape &shape);
     void   write_end_gcode(std::ofstream& fout);
-    void   write_points_in_path(std::ofstream &fout, Path* path);
+//    void   write_points_in_path(std::ofstream &fout, Path* path);
     double get_extrusion_distance(Point currentPoint);
     void   increment_extruder_displacement(double materialRatio, double extrusionDistance);
     std::vector<double> get_extruder_displacement() const;
