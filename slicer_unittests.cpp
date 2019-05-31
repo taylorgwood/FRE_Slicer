@@ -804,8 +804,69 @@ TEST(LayerSize,givenTopSize_getCorrectlySizedTopLayer)
     double extrusionWidth = topLayer->get_modified_extrusion_width();
     double expectedTopLayerWidth = shape.get_top_width(); //+extrusionWidth/2;
     EXPECT_DOUBLE_EQ(topLayerWidth,expectedTopLayerWidth);
+//    Gcode gcode;
+//    gcode.generate_file(shape,"trapezoid_test");
+}
+
+TEST(InsideTrapezoid,givenPointInsideTrapezoidXYZ_getTrue)
+{
+    Point point(1,0,1);
+    Point cornerA(0,0,0);
+    Point cornerB(2,0,0);
+    Point cornerC(2,0,2);
+    Point cornerD(0,0,2);
+    std::vector <Point> trapezoid{4};
+    trapezoid.at(0) = cornerA;
+    trapezoid.at(1) = cornerB;
+    trapezoid.at(2) = cornerC;
+    trapezoid.at(3) = cornerD;
+    bool isInside = point.is_inside_XZtrapezoid(trapezoid);
+    EXPECT_TRUE(isInside);
+}
+
+TEST(InsideTrapezoid,givenPointInsideTrapezoidXZ_getTrue)
+{
+    Point point(1,1,1);
+    Point cornerA(0,0,0);
+    Point cornerB(2,0,0);
+    Point cornerC(2,0,2);
+    Point cornerD(0,0,2);
+    std::vector <Point> trapezoid{4};
+    trapezoid.at(0) = cornerA;
+    trapezoid.at(1) = cornerB;
+    trapezoid.at(2) = cornerC;
+    trapezoid.at(3) = cornerD;
+    bool isInside = point.is_inside_XZtrapezoid(trapezoid);
+    EXPECT_TRUE(isInside);
+}
+
+TEST(InsideTrapezoid,givenPointOutsideTrapezoidXY_getFalse)
+{
+    Point point(3,0,1);
+    Point cornerA(0,0,0);
+    Point cornerB(2,0,0);
+    Point cornerC(2,0,2);
+    Point cornerD(0,0,2);
+    std::vector <Point> trapezoid{4};
+    trapezoid.at(0) = cornerA;
+    trapezoid.at(1) = cornerB;
+    trapezoid.at(2) = cornerC;
+    trapezoid.at(3) = cornerD;
+    bool isInside = point.is_inside_XZtrapezoid(trapezoid);
+    EXPECT_FALSE(isInside);
+}
+
+TEST(A,B_c)
+{
     Gcode gcode;
-    gcode.generate_file(shape,"trapezoid_test");
+    Shape shape;
+    shape.set_width(10.75);
+    shape.set_length(14);
+    shape.set_top_width(3);
+    double infillAngle{45};
+    shape.set_infill_angle(infillAngle);
+    gcode.generate_file(shape,"InfillTest45Degrees");
+
 }
 
 TEST(PrintOut,PrintOutPerimeterPoints)

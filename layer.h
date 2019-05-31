@@ -12,6 +12,7 @@ public:
     Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution);
     Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height);
     Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight);
+    Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight, double infillAngle);
     double get_height() const;
     void   set_height(const double height);
     double get_infill_percentage() const;
@@ -47,16 +48,16 @@ public:
     void   set_resolution(double const resolution);
     void   set_shape_height(double shapeHeight);
     double get_perimeter();
-    Point get_intersection(Point lineStart, Point lineEnd, Point rayOrigin, double theta);
+    Point  get_intersection(Point lineStart, Point lineEnd, Point rayOrigin, double theta);
     std::vector<Point> create_angled_ray_origin_list();
-    void set_infill_angle(double infillAngle);
+    void   set_infill_angle(double infillAngle);
     double get_infill_angle();
     std::vector <Point> get_intersection_points_list(Path path);
     std::vector <Point> get_perimeter_points();
     std::vector <Point> get_side_points(Path side);
-    void set_corners();
+    void   set_corners();
     std::vector <Point> get_corners();
-    void set_infill_size();
+    void   set_infill_size();
 
 
 protected:

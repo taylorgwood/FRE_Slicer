@@ -87,6 +87,7 @@ void Shape::create_layers()
     double infillPercentage = get_infill_percentage();
     double resolution = get_resolution();
     double shapeHeight = get_height();
+    double infillAngle = get_infill_angle();
 //    bool   adjustPath = get_auto_adjust_path();
     if (mAutoAdjustLayer == true)
     {
@@ -99,7 +100,7 @@ void Shape::create_layers()
         int layerNumber{i};
         double layerWidth = get_layer_width(layerNumber);
         layerLocation += layerHeight;
-        Layer* newLayer = new Layer(layerNumber,layerLocation,layerLength,layerWidth, extrustionMultiplier, extrusionWidth, infillPercentage, resolution, layerHeight, shapeHeight);
+        Layer* newLayer = new Layer(layerNumber,layerLocation,layerLength,layerWidth, extrustionMultiplier, extrusionWidth, infillPercentage, resolution, layerHeight, shapeHeight, infillAngle);
         mLayerList->push_back(newLayer);
     }
 }
@@ -297,4 +298,15 @@ double Shape::get_layer_width(int layerNumber)
     double heightDifference = shapeHeight-layerHeight;
     double layerWidth = topWidth + heightDifference/std::tan(theta);
     return layerWidth;
+}
+
+void Shape::set_infill_angle(double thetaInDegrees)
+{
+    mInfillAngle = thetaInDegrees;
+    create_layers();
+}
+
+double Shape::get_infill_angle() const
+{
+    return mInfillAngle;
 }

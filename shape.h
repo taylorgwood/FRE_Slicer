@@ -34,14 +34,16 @@ public:
     double get_length();
     void   set_length(double layerLength);
     void   set_auto_adjust_layer(bool adjustLayer);
-//    void   set_auto_adjust_path(bool adjustPath);
+    //    void   set_auto_adjust_path(bool adjustPath);
     double get_resolution();
     void   set_resolution(double resolution);
-//    bool   get_auto_adjust_path();
+    //    bool   get_auto_adjust_path();
     std::vector<Path> *get_path_list();
     void   set_top_width(double topWidth);
     double get_top_width() const;
     double get_layer_width(int layerNumber);
+    void set_infill_angle(double thetaInDegrees);
+    double get_infill_angle() const;
 
 protected:
 
@@ -51,13 +53,14 @@ private:
     double mLength{10};
     double mLayerHeight{0.26};
     bool   mAutoAdjustLayer{true};
-//    bool   mAutoAdjustPath{true};
+    //    bool   mAutoAdjustPath{true};
     std::vector<Layer*> *mLayerList;
     double mExtrusionMultiplier{1.0};
     double mExtrusionWidth{0.26};
     double mInfillPercentage{100};
     double mResolution{1.0};
     double mTopWidth{10};
+    double mInfillAngle{0};
 };
 
 #endif // SHAPE_H
