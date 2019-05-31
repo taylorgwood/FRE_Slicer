@@ -165,6 +165,16 @@ Point  Point::cross(Point secondPoint)
     return crossProduct;
 }
 
+//double Point::crossXZ(Point secondPoint)
+//{
+//    double Ax = this->get_x();
+//    double Az = this-> get_z();
+//    double Bx = secondPoint.get_x();
+//    double Bz = secondPoint.get_z();
+//    double crossXZ = Ax*Bz-Az*Bx;
+//    return crossXZ;
+//}
+
 double Point::dot(Point secondPoint)
 {
     double x = this->get_x()*secondPoint.get_x();
@@ -173,3 +183,59 @@ double Point::dot(Point secondPoint)
     double dotProduct = (x+y+z);
     return dotProduct;
 }
+
+bool   Point::is_inside_XZtrapezoid(std::vector <Point> corners)
+{
+    Point A = corners.at(0);
+    Point B = corners.at(1);
+    Point C = corners.at(2);
+    Point D = corners.at(3);
+    Point P(get_x(),get_y(),get_z());
+    A.set_y(0);
+    B.set_y(0);
+    C.set_y(0);
+    D.set_y(0);
+    P.set_y(0);
+    bool isInside{false};
+    //    double height = C.get_z()-B.get_z();
+    //    double base = (C.get_x()-D.get_x());
+    //    double top = (B.get_x()-A.get_x());
+    //    double trapezoidArea = ((top+base)/2*(height));
+    //    double areaABP = get_area_of_XZtriangle(A,B,P);
+    //    double areaBCP = get_area_of_XZtriangle(B,C,P);
+    //    double areaCDP = get_area_of_XZtriangle(C,D,P);
+    //    double areaDAP = get_area_of_XZtriangle(D,A,P);
+    //    double trianglesArea = areaABP+areaBCP+areaCDP+areaDAP;
+
+    //    if ((trianglesArea-trapezoidArea)<0.0001)
+    //    {
+    //        isInside = true;
+    //    }
+
+    Point vectorsPAcrossBA = (P-A).cross(B-A);
+    Point vectorsPDcrossCD = (P-D).cross(C-D);
+    double horizontalDistanceOutside = vectorsPAcrossBA.dot(vectorsPDcrossCD);
+    Point vectorsPAcrossDA = (P-A).cross(D-A);
+    Point vectorsPBcrossCB = (P-B).cross(C-B);
+    double verticalDistanceOutside = vectorsPAcrossDA.dot(vectorsPBcrossCB);
+    if (horizontalDistanceOutside < 0)
+    {
+        if (verticalDistanceOutside < 0)
+        {
+            isInside = true;
+        }
+    }
+    return isInside;
+}
+
+//double Point::get_area_of_XZtriangle(Point corner1, Point corner2, Point corner3)
+//{
+//    double x1 = corner1.get_x();
+//    double x2 = corner2.get_x();
+//    double x3 = corner3.get_x();
+//    double z1 = corner1.get_z();
+//    double z2 = corner2.get_z();
+//    double z3 = corner3.get_z();
+//    double area = (x1*z2 +x2*z3 +x3*z1 -z1*x2 -z2*x3 -z3*x1)/2;
+//    return area;
+//}

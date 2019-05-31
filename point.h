@@ -29,7 +29,10 @@ public:
     void   set_diameter(const double diameter);
     double get_diameter() const;
     Point  cross(Point secondPoint);
+//    double crossXZ(Point secondPoint);
     double dot(Point secondPoint);
+    bool   is_inside_XZtrapezoid(std::vector <Point> corners);
+//    double get_area_of_XZtriangle(Point corner1, Point corner2, Point corner3);
 
 protected:
 
