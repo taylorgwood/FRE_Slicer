@@ -459,7 +459,7 @@ TEST(Gcode,whenAskedToGenerateGCodeFile_PointsPrintedInFile)
     std::string fileName = "testForPoints";
     newGcode.generate_file(newShape, fileName);
     // read some lines from file
-//    newGcode.delete_file();
+    newGcode.delete_file();
 }
 
 TEST(Gcode,whenAskedForInitialExtrusionAmount_getZeroExtrusionAmount)
@@ -865,8 +865,14 @@ TEST(A,B_c)
     shape.set_top_width(3);
     double infillAngle{45};
     shape.set_infill_angle(infillAngle);
-    gcode.generate_file(shape,"InfillTest45Degrees");
+//    gcode.generate_file(shape,"InfillTest45Degrees");
+}
 
+TEST(makeGcode,notReallyATest)
+{
+    Gcode gcode;
+    Shape shape;
+    gcode.generate_file(shape,"DefaultSettings");
 }
 
 TEST(PrintOut,PrintOutPerimeterPoints)

@@ -12,6 +12,7 @@ public:
     Path(Point start, Point end, double diameter, int pathNumber);
     Path(Point start, Point end, double diameter, int pathNumber, double resolution);
     Path(Point start, Point end, double diameter, int pathNumber, double resolution, double shapeWidth, double shapeLength, double shapeHeight);
+    Path(Point start, Point end, double diameter, int pathNumber, double resolution, double shapeWidth, double shapeLength, double shapeHeight, int layerNumber);
     Point  get_start() const;
     void   set_start(Point const startPoint);
     Point  get_end() const;
@@ -25,14 +26,15 @@ public:
     void   adjust_point_spacing();
     void   create_points();
     std::vector<Point*> get_point_list();
-    double get_material(int pointNumber, Point pointInfo) const;
+    double get_material(Point pointInfo) const;
     Point* create_new_point(int pointNumber, int numberOfPointsInPath) const;
     void   set_path_number(int const pathNumber);
     int    get_path_number() const;
     void   set_shape_width(double shapeWidth);
     void   set_shape_length(double shapeLength);
     void   set_shape_height(double shapeHeight);
-
+    void   set_layer_number(int const layerNumber);
+    int    get_layer_number() const;
 protected:
 
 private:
@@ -45,6 +47,7 @@ private:
     double mShapeWidth{10};
     double mShapeLength{10};
     double mShapeHeight{10};
+    int    mLayerNumber{0};
 };
 
 #endif // PATH_H

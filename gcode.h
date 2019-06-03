@@ -19,8 +19,8 @@ public:
     std::ofstream get_fout();
     std::string get_file_name() const;
     void   set_file_name(std::string const fileName);
-    void   write_layer_gcode(std::ofstream& fout, Layer* layer);
-    void   write_points_in_layer(std::ofstream& fout, Layer* layer);
+    void   write_layer_gcode(std::ofstream& fout, Layer* layer, int numberOfLayers);
+    void   write_points_in_layer(std::ofstream& fout, Layer* layer, int numberOfLayers);
     void   write_initial_gcode(std::ofstream& fout, Shape &shape);
     void   write_end_gcode(std::ofstream& fout);
 //    void   write_points_in_path(std::ofstream &fout, Path* path);
@@ -45,7 +45,7 @@ private:
     double mSyringeDiameter{14.9};
     double mSyringeCrossSectionalArea{174.366246256};
     double const pi{3.14159265359};
-    double mPointCount{0};
+    int mPointCount{0};
     std::vector<double> mExtruderDisplacement{0,0};
     Point mLastPoint{0,0,0};
 };

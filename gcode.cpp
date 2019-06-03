@@ -22,7 +22,7 @@ void Gcode::write_gcode(std::ofstream& fout, Shape& shape)
         fout << std::endl;
         fout << get_begin_layer_gcode(layerNumber, numberOfLayers) << std::endl;
         Layer* layer = shape.get_layer(layerNumber);
-        write_layer_gcode(fout, layer);
+        write_layer_gcode(fout, layer, numberOfLayers);
     }
     write_end_gcode(fout);
 }
@@ -108,16 +108,16 @@ std::string Gcode::get_begin_layer_gcode(int layerNumber, int totalLayers)
     return beginLayerGcode;
 }
 
-void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer)
+void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, int numberOfLayers)
 {
     double zLocation = layer->get_location();
     fout << "G1 " << " Z" << zLocation;
     fout << " F720.00" << std::endl;
 
-    write_points_in_layer(fout, layer);
+    write_points_in_layer(fout, layer, numberOfLayers);
 }
 
-void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer)
+void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, int numberOfLayers)
 {
     std::vector<Point> pointsInLayer = layer->get_points();
     int numberOfPointsInLayer = static_cast<int>(pointsInLayer.size());
@@ -139,6 +139,10 @@ void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer)
         increment_extruder_displacement(materialRatio,extrusionDistance);
         fout << " A" << get_extruder_displacement()[0];
         fout << " B" << get_extruder_displacement()[1];
+        if (mPointCount%20 == 0)
+        {
+        fout << "  ; Layer " << std::to_string(layer->get_number()+1) << " of " << std::to_string(numberOfLayers);
+        }
         fout << std::endl;
         mPointCount += 1;
         mLastPoint = point;
@@ -241,12 +245,21 @@ void Gcode::write_basic_settings(std::ofstream& fout, Shape& shape)
     double extrusionWidth = bottomLayer->get_extrusion_width();
     double extrusionMultiplier = bottomLayer->get_extrusion_multiplier();
     double infillPercentage = bottomLayer->get_infill_percentage();
+    double infillAngle = bottomLayer->get_infill_angle();
     Path*  secondPath = bottomLayer->get_path(1);
-    double materialResolution = secondPath->get_resolution();
+    double materialResolution1 = secondPath->get_resolution();
+    Path*  thirdPath = bottomLayer->get_path(2);
+    double materialResolution2 = thirdPath->get_resolution();
+    double materialResolution = materialResolution1;
+    if (materialResolution2 > materialResolution1)
+    {
+        materialResolution = materialResolution2;
+    }
     fout << "; Bottom Layer Settings: " << std::endl;
     fout << "; _Extrusion Width:      " << extrusionWidth << " mm" << std::endl;
     fout << "; _Extrusion Multiplier: " << extrusionMultiplier << "x" << std::endl;
     fout << "; _Infill Percentage:    " << infillPercentage << "%" << std::endl;
+    fout << "; _Infill Angle:         " << infillAngle << "°" << std::endl;
     fout << "; _Material Resolution:  " << materialResolution << " mm" << std::endl;
     fout << std::endl;
 

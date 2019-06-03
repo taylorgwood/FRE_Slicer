@@ -246,7 +246,7 @@ void Layer::create_paths()
         }
         if (duplicate == false)
         {
-            Path* newPath = new Path(currentPoint,nextPoint,diameter,pathNumber,resolution, mWidth, mLength, mShapeHeight);
+            Path* newPath = new Path(currentPoint,nextPoint,diameter,pathNumber,resolution, mWidth, mLength, mShapeHeight,mNumber);
             mPathList->push_back(newPath);
         }
     }
