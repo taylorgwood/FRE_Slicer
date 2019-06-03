@@ -19,7 +19,8 @@ void Gcode::write_gcode(std::ofstream& fout, Shape& shape)
     for (int i{0}; i<numberOfLayers; i++)
     {
         int layerNumber{i};
-        fout << get_begin_layer_gcode(layerNumber) << std::endl;
+        fout << std::endl;
+        fout << get_begin_layer_gcode(layerNumber, numberOfLayers) << std::endl;
         Layer* layer = shape.get_layer(layerNumber);
         write_layer_gcode(fout, layer);
     }
@@ -29,7 +30,7 @@ void Gcode::write_gcode(std::ofstream& fout, Shape& shape)
 std::ofstream Gcode::create_empty_file()
 {
     std::string uniqueFileName = make_file_name_unique();
-    std::string suffix = ".txt";
+    std::string suffix = ".gcode";
 
     set_file_name(uniqueFileName);
     std::ofstream fout = get_fout();
@@ -39,7 +40,7 @@ std::ofstream Gcode::create_empty_file()
 std::ofstream Gcode::get_fout()
 {
     std::string fileName = get_file_name();
-    std::string suffix = ".txt";
+    std::string suffix = ".gcode";
     std::string completeFileName = fileName + suffix;
     std::ofstream fout{completeFileName};
     bool failedToWrite = fout.fail();
@@ -55,7 +56,7 @@ std::string Gcode::make_file_name_unique()
     std::string fileName = get_file_name();
     std::string uniqueFileName = fileName;
     int incrementCount{1};
-    std::string suffix = ".txt";
+    std::string suffix = ".gcode";
     bool fileExists = does_file_exist(uniqueFileName + suffix);
     while(fileExists)
     {
@@ -92,15 +93,18 @@ void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
     write_file_creation_information(fout);
     write_basic_settings(fout, shape);
 
-    fout << "G28 ; home all axes" << std::endl;
     fout << "G21 ; set units to millimeters" << std::endl;
     fout << "G90 ; use absolute coordinates" << std::endl;
+    Point firstLocation = shape.get_layer(0)->get_points().at(0);
+    fout << std::endl;
+    fout << "; Reset all axes:" << std::endl;
+    fout << "G92 " << "X" << firstLocation.get_x() << " Y" << firstLocation.get_y() << " Z" << firstLocation.get_z() << " A0 " << "B0 " << std::endl;
     fout << std::endl;
 }
 
-std::string Gcode::get_begin_layer_gcode(int layerNumber)
+std::string Gcode::get_begin_layer_gcode(int layerNumber, int totalLayers)
 {
-    std::string beginLayerGcode = "; Beginning layer: " + layerNumber;
+    std::string beginLayerGcode = "; Beginning layer " + std::to_string(layerNumber + 1) + " of " + std::to_string(totalLayers) + " ----------------------------";
     return beginLayerGcode;
 }
 
@@ -108,7 +112,7 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer)
 {
     double zLocation = layer->get_location();
     fout << "G1 " << " Z" << zLocation;
-    fout << " F1200.000" << std::endl;
+    fout << " F720.00" << std::endl;
 
     write_points_in_layer(fout, layer);
 }
@@ -204,7 +208,7 @@ double Gcode::calculate_length(Point currentPoint)
 void Gcode::delete_file()
 {
     std::string fileName = get_file_name();
-    std::string suffix = ".txt";
+    std::string suffix = ".gcode";
     std::string completeFileName = fileName + suffix;
     if(does_file_exist(completeFileName))
     {
@@ -232,26 +236,31 @@ void Gcode::write_basic_settings(std::ofstream& fout, Shape& shape)
     fout << "; Number Of Layers:      " << numberOfLayers << std::endl;
     fout << std::endl;
 
-    Layer* firstLayer = shape.get_layer(0);
-    double extrusionWidth = firstLayer->get_extrusion_width();
-    double extrusionMultiplier = firstLayer->get_extrusion_multiplier();
-    double infillPercentage = firstLayer->get_infill_percentage();
-    Path*  firstPath = firstLayer->get_path(0);
-    double materialResolution = firstPath->get_resolution();
-    fout << "; First Layer Settings:  " << std::endl;
-    fout << ";  Extrusion Width:      " << extrusionWidth << " mm" << std::endl;
-    fout << ";  Extrusion Multiplier: " << extrusionMultiplier << std::endl;
-    fout << ";  Infill Percentage:    " << infillPercentage << std::endl;
-    fout << ";  Material Resolution:  " << materialResolution << " mm" << std::endl;
+    Layer* bottomLayer = shape.get_layer(0);
+    Layer* topLayer = shape.get_layer(shape.get_number_of_layers()-1);
+    double extrusionWidth = bottomLayer->get_extrusion_width();
+    double extrusionMultiplier = bottomLayer->get_extrusion_multiplier();
+    double infillPercentage = bottomLayer->get_infill_percentage();
+    Path*  secondPath = bottomLayer->get_path(1);
+    double materialResolution = secondPath->get_resolution();
+    fout << "; Bottom Layer Settings: " << std::endl;
+    fout << "; _Extrusion Width:      " << extrusionWidth << " mm" << std::endl;
+    fout << "; _Extrusion Multiplier: " << extrusionMultiplier << "x" << std::endl;
+    fout << "; _Infill Percentage:    " << infillPercentage << "%" << std::endl;
+    fout << "; _Material Resolution:  " << materialResolution << " mm" << std::endl;
     fout << std::endl;
 
     double shapeHeight = shape.get_height();
-    double firstLayerWidth = firstLayer->get_width();
-    double firstLayerLength = firstLayer->get_length();
+    double firstLayerWidth = bottomLayer->get_width();
+    double firstLayerLength = bottomLayer->get_length();
+    double topLayerWidth = bottomLayer->get_width();
+    double topLayerLength = bottomLayer->get_length();
     fout << "; Shape Settings:        " << std::endl;
-    fout << ";  Shape Height:         " << shapeHeight << " mm" << std::endl;
-    fout << ";  First Layer Width:    " << firstLayerWidth << " mm" << std::endl;
-    fout << ";  First Layer Length:   " << firstLayerLength << " mm" << std::endl;
+    fout << "; _Shape Height:         " << shapeHeight << " mm" << std::endl;
+    fout << "; _Bottom Layer Width:   " << firstLayerWidth << " mm" << std::endl;
+    fout << "; _Bottom Layer Length:  " << firstLayerLength << " mm" << std::endl;
+    fout << "; _Top Layer Width:      " << topLayerWidth << " mm" << std::endl;
+    fout << "; _Top Layer Length:     " << topLayerLength << " mm" << std::endl;
     fout << std::endl;
 }
 

@@ -31,7 +31,7 @@ public:
     bool   does_file_exist(const std::string& completeFileName);
     void   delete_file();
     std::string get_time_string();
-    std::string get_begin_layer_gcode(int layerNumber);
+    std::string get_begin_layer_gcode(int layerNumber, int totalLayers);
     void   write_file_creation_information(std::ofstream &fout);
     void   write_basic_settings(std::ofstream& fout, Shape &shape);
     double get_syringe_diameter() const;
