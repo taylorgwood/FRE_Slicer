@@ -26,7 +26,7 @@ public:
     void   set_extrusion_width(double extrusionWidth);
     double get_adjusted_extrusion_width();
     double get_perpendicular_to_path_distance();
-    double get_modified_extrusion_width() const;
+    double get_modified_extrusion_width();
     void   set_area(const double area);
     int    get_number_of_infill_paths();
     std::vector<Path*> get_path_list();
@@ -66,6 +66,7 @@ private:
     double const pi{3.14159265359};
     double mHeight{0.26};
     double mExtrusionWidth{0.26};
+    bool   mExtrusionModificationApplied{0};
     double mInfillPercentage{100};
     double mExtrusionMultiplier{1.0};
     double mLength{10};

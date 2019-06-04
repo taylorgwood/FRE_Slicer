@@ -28,7 +28,7 @@ Layer::Layer(int number, double location, double length, double width):mPathList
     set_location(location);
     set_length(length);
     set_width(width);
-    //    set_infill_size();
+    //        set_infill_size();
     create_paths();
 }
 
@@ -38,10 +38,10 @@ Layer::Layer(int number, double location, double length, double width, double ex
     set_location(location);
     set_length(length);
     set_width(width);
-    //    set_infill_size();
+    set_infill_percentage(infillPercentage);
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
-    set_infill_percentage(infillPercentage);
+    //    set_infill_size();
     set_resolution(resolution);
     create_paths();
 }
@@ -52,12 +52,12 @@ Layer::Layer(int number, double location, double length, double width, double ex
     set_location(location);
     set_length(length);
     set_width(width);
-    //    set_infill_size();
-    //    set_corners();
+    set_infill_percentage(infillPercentage);
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
-    set_infill_percentage(infillPercentage);
     set_resolution(resolution);
+    //        set_infill_size();
+    //        set_corners();
     set_height(height);
     create_paths();
 }
@@ -68,12 +68,12 @@ Layer::Layer(int number, double location, double length, double width, double ex
     set_location(location);
     set_length(length);
     set_width(width);
-    //    set_infill_size();
-    //    set_corners();
+    set_infill_percentage(infillPercentage);
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
-    set_infill_percentage(infillPercentage);
     set_resolution(resolution);
+    //        set_infill_size();
+    //        set_corners();
     set_height(height);
     set_shape_height(shapeHeight);
     create_paths();
@@ -85,12 +85,12 @@ Layer::Layer(int number, double location, double length, double width, double ex
     set_location(location);
     set_length(length);
     set_width(width);
-    //    set_infill_size();
-    //    set_corners();
+    set_infill_percentage(infillPercentage);
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
-    set_infill_percentage(infillPercentage);
     set_resolution(resolution);
+    //    set_infill_size();
+    //    set_corners();
     set_height(height);
     set_shape_height(shapeHeight);
     set_infill_angle(infillAngle);
@@ -130,10 +130,11 @@ void Layer::set_extrusion_multiplier(const double extrusionMultiplier)
 double Layer::get_diameter_of_print()
 {
     //    double volume = get_volume();
-    double modifiedExtrusionWidth = get_modified_extrusion_width();
+    double extrusionWidth = get_extrusion_width();
     //    double area = mLength*mWidth;
     double height = get_height();
-    double diameterOfPrint = sqrt(height*4*modifiedExtrusionWidth/(pi));
+    double extrusionMultiplier = get_extrusion_multiplier();
+    double diameterOfPrint = extrusionMultiplier*sqrt(height*4*extrusionWidth/(pi));
     return diameterOfPrint;
 }
 
@@ -192,10 +193,15 @@ double Layer::get_perpendicular_to_path_distance()
     return perpendicularToPathDistance;
 }
 
-double Layer::get_modified_extrusion_width() const
+double Layer::get_modified_extrusion_width()
 {
-    double infillRatio = mInfillPercentage/100;
-    double modifiedExtrusionWidth = mExtrusionWidth/infillRatio;
+    double modifiedExtrusionWidth = get_extrusion_width();
+    if (mExtrusionModificationApplied == false)
+    {
+        double infillRatio = mInfillPercentage/100;
+        modifiedExtrusionWidth = mExtrusionWidth/infillRatio;
+        mExtrusionModificationApplied = true;
+    }
     return modifiedExtrusionWidth;
 }
 
@@ -223,7 +229,7 @@ std::vector<Path*> Layer::get_path_list()
 void Layer::create_paths()
 {
     mPathList->clear();
-    set_extrusion_width(mExtrusionWidth);
+    //    set_extrusion_width(mExtrusionWidth);
     set_infill_size();
     std::vector <Point> perimeterPointList = get_perimeter_points();
     int numberOfPaths = static_cast<int>(perimeterPointList.size())-1;
@@ -260,8 +266,8 @@ double Layer::get_length() const
 void Layer::set_length(double const length)
 {
     mLength = length;
-    mInfillLength = length-get_modified_extrusion_width();
-    set_corners();
+    //    mInfillLength = length-get_modified_extrusion_width();
+    //    set_corners();
 }
 
 double Layer::get_width() const
@@ -272,8 +278,8 @@ double Layer::get_width() const
 void Layer::set_width(double const width)
 {
     mWidth = width;
-    mInfillWidth = width-get_modified_extrusion_width();
-    set_corners();
+    //    mInfillWidth = width-get_modified_extrusion_width();
+    //    set_corners();
 }
 
 std::vector<Point> Layer::get_points()
@@ -291,16 +297,16 @@ std::vector<Point> Layer::get_points()
             Point* point = points[j];
             bool duplicate{false};
 
-                if (lastPoint->get_x() == point->get_x())
+            if (lastPoint->get_x() == point->get_x())
+            {
+                if (lastPoint->get_y() == point->get_y())
                 {
-                    if (lastPoint->get_y() == point->get_y())
+                    if (lastPoint->get_z() == point->get_z())
                     {
-                        if (lastPoint->get_z() == point->get_z())
-                        {
-                            duplicate = true;
-                        }
+                        duplicate = true;
                     }
                 }
+            }
             if (duplicate == false)
             {
                 pointList.push_back(*point);
@@ -396,7 +402,6 @@ void Layer::set_infill_angle(double infillAngle)
         infillAngle += 90;
     }
     mInfillAngle = infillAngle;
-    create_paths();
 }
 
 double Layer::get_infill_angle()
@@ -422,7 +427,6 @@ std::vector <Point> Layer::create_angled_ray_origin_list()
     Point cornerD = corners.at(3);
 
     double modifiedEW = get_modified_extrusion_width();
-
 
     double theta = get_infill_angle()/180*pi;
     double angleWidth = modifiedEW/(std::cos(theta));

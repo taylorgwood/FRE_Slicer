@@ -82,11 +82,15 @@ TEST(LayerExtrusionWidth,givenDefaultParameters_getExtrusionWidth)
 
 TEST(LayerExtrusionWidth,givenChangedParameters_getCorrectExtrusionWidth)
 {
-    Layer layer;
-    layer.set_infill_percentage(50);
-    layer.set_auto_adjust_path(0);
-    double calculatedExtrusionWidth = layer.get_modified_extrusion_width();
-    double expectedExtrusionWidth = layer.get_extrusion_width()*2;
+    Shape shape;
+    Layer* layer;
+    layer = shape.get_layer(0);
+    double expectedExtrusionWidth = layer->get_extrusion_width()*2;
+    shape.set_infill_percentage(50);
+//    layer.set_auto_adjust_path(0);
+//    layer.create_paths();
+    layer = shape.get_layer(0);
+    double calculatedExtrusionWidth = layer->get_modified_extrusion_width();
     EXPECT_DOUBLE_EQ(calculatedExtrusionWidth,expectedExtrusionWidth);
 }
 
@@ -242,7 +246,7 @@ TEST(ShapeList,whenAskedForPointsInShape_getCorrectNumberOfPointsInShape)
 TEST(PrintOut,whenGivenPoint_printPointToConsole)
 {
     Point point{1,2,3};
-//        point.print();
+    //        point.print();
 }
 
 TEST(PrintOut,whenGivenPointList_printPointsToConsole)
@@ -310,29 +314,29 @@ TEST(LayerNumber,whenConstructingShape_layerNumbersSet)
 
 TEST(PointLocations,whenConstructingShape_pointLocationsConstructed)
 {
-//        Shape shape;
-//        std::vector<Layer*> layerList = shape.get_layer_list();
-//        Layer* firstLayer = layerList[0];
-//        std::vector<Path*> pathList = firstLayer->get_path_list();
-//        Path* secondPath = pathList[1];
-//        std::vector<Point*> pointList = secondPath->get_point_list();
-//        std::vector<Point> expectedPointList;
-//        double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
-//        double layerHeight = shape.get_layer_height();
-//        double diameter = secondPath->get_diameter();
-//        double pointLength = (10-modifiedExtrusionWidth)/((secondPath->get_number_of_points())-1);
-//        for (int i{0}; i<11; i++)
-//        {
-//            double x = 10-(modifiedExtrusionWidth/2)-i*pointLength;
-//            double y = modifiedExtrusionWidth*3/2;
-//            double z = layerHeight/2;
-//            Point point;
-//            point.set_x(x);
-//            point.set_y(y);
-//            point.set_z(z);
-//            expectedPointList.push_back(point);
-//        }
-//        EXPECT_POINT_LIST_EQ(pointList,expectedPointList);
+    //        Shape shape;
+    //        std::vector<Layer*> layerList = shape.get_layer_list();
+    //        Layer* firstLayer = layerList[0];
+    //        std::vector<Path*> pathList = firstLayer->get_path_list();
+    //        Path* secondPath = pathList[1];
+    //        std::vector<Point*> pointList = secondPath->get_point_list();
+    //        std::vector<Point> expectedPointList;
+    //        double modifiedExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
+    //        double layerHeight = shape.get_layer_height();
+    //        double diameter = secondPath->get_diameter();
+    //        double pointLength = (10-modifiedExtrusionWidth)/((secondPath->get_number_of_points())-1);
+    //        for (int i{0}; i<11; i++)
+    //        {
+    //            double x = 10-(modifiedExtrusionWidth/2)-i*pointLength;
+    //            double y = modifiedExtrusionWidth*3/2;
+    //            double z = layerHeight/2;
+    //            Point point;
+    //            point.set_x(x);
+    //            point.set_y(y);
+    //            point.set_z(z);
+    //            expectedPointList.push_back(point);
+    //        }
+    //        EXPECT_POINT_LIST_EQ(pointList,expectedPointList);
 }
 
 TEST(PointMath,whenAskedForNormalizedPoint_getNormalizedPoint)
@@ -410,56 +414,56 @@ TEST(PointLocations,whenConstructingShape_pointLocationsFollowSwitchbackPattern)
 
 TEST(Gcode,whenAskedToCreateEmptyFile_newEmptyFileCreated)
 {
-//    Gcode gcode;
-//    gcode.create_empty_file();
-//    std::string suffix = ".txt";
-//    std::string fileName = gcode.get_file_name();
-//    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
-//    gcode.delete_file();
+    //    Gcode gcode;
+    //    gcode.create_empty_file();
+    //    std::string suffix = ".txt";
+    //    std::string fileName = gcode.get_file_name();
+    //    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
+    //    gcode.delete_file();
 }
 
 TEST(Gcode,whenAskedToCreateFileWithName_namedFileCreated)
 {
-//    Gcode gcode;
-//    Shape newShape;
-//    std::string fileName = "testFileName";
-//    gcode.generate_file(newShape,fileName);
-//    std::string suffix = ".txt";
-//    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
-//    gcode.delete_file();
+    //    Gcode gcode;
+    //    Shape newShape;
+    //    std::string fileName = "testFileName";
+    //    gcode.generate_file(newShape,fileName);
+    //    std::string suffix = ".txt";
+    //    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
+    //    gcode.delete_file();
 }
 
 TEST(Gcode,whenAskedToDeleteFile_fileDeleted)
 {
-//    Gcode gcode;
-//    Shape shape;
-//    std::string fileName = "deleteThisFile";
-//    gcode.generate_file(shape, fileName);
-//    std::string updatedFileName = gcode.get_file_name();
-//    std::string suffix = ".txt";
-//    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
-//    gcode.delete_file();
-//    EXPECT_FALSE(gcode.does_file_exist(updatedFileName + suffix));
+    //    Gcode gcode;
+    //    Shape shape;
+    //    std::string fileName = "deleteThisFile";
+    //    gcode.generate_file(shape, fileName);
+    //    std::string updatedFileName = gcode.get_file_name();
+    //    std::string suffix = ".txt";
+    //    EXPECT_TRUE(gcode.does_file_exist(fileName + suffix));
+    //    gcode.delete_file();
+    //    EXPECT_FALSE(gcode.does_file_exist(updatedFileName + suffix));
 }
 
 TEST(Gcode,whenAskedToGenerateGCodeFile_LayersPrintedInFile)
 {
-//    Gcode newGcode;
-//    Shape newShape;
-//    std::string fileName = "testForLayers";
-//    newGcode.generate_file(newShape, fileName);
-//    // read some line from file
-//    newGcode.delete_file();
+    //    Gcode newGcode;
+    //    Shape newShape;
+    //    std::string fileName = "testForLayers";
+    //    newGcode.generate_file(newShape, fileName);
+    //    // read some line from file
+    //    newGcode.delete_file();
 }
 
 TEST(Gcode,whenAskedToGenerateGCodeFile_PointsPrintedInFile)
 {
-    Gcode newGcode;
-    Shape newShape;
-    std::string fileName = "testForPoints";
-    newGcode.generate_file(newShape, fileName);
-    // read some lines from file
-    newGcode.delete_file();
+//    Gcode newGcode;
+//    Shape newShape;
+//    std::string fileName = "testForPoints";
+//    newGcode.generate_file(newShape, fileName);
+//    // read some lines from file
+//    newGcode.delete_file();
 }
 
 TEST(Gcode,whenAskedForInitialExtrusionAmount_getZeroExtrusionAmount)
@@ -753,13 +757,15 @@ TEST(IntersectPoint,whenGivenRayAndReversedLine_getIntersectionPoint)
 
 TEST(AngledPaths,whenGivenThetaOf45Degrees_getCorrectNumberOfPaths)
 {
-    Layer layer;
-    layer.set_width(4);
-    layer.set_length(4);
-    layer.set_infill_angle(45);
-    std::vector <Point> angledRayOriginList = layer.create_angled_ray_origin_list();
+    Shape shape;
+    Layer* layer;
+    shape.set_width(4);
+    shape.set_length(4);
+    shape.set_infill_angle(45);
+    layer = shape.get_layer(0);
+    std::vector <Point> angledRayOriginList = layer->create_angled_ray_origin_list();
     int numberOfPaths = angledRayOriginList.size();
-    int expectedNumberOfPaths{20};
+    int expectedNumberOfPaths{21};
     EXPECT_EQ(numberOfPaths,expectedNumberOfPaths);
 }
 
@@ -804,8 +810,8 @@ TEST(LayerSize,givenTopSize_getCorrectlySizedTopLayer)
     double extrusionWidth = topLayer->get_modified_extrusion_width();
     double expectedTopLayerWidth = shape.get_top_width(); //+extrusionWidth/2;
     EXPECT_DOUBLE_EQ(topLayerWidth,expectedTopLayerWidth);
-//    Gcode gcode;
-//    gcode.generate_file(shape,"trapezoid_test");
+    //    Gcode gcode;
+    //    gcode.generate_file(shape,"trapezoid_test");
 }
 
 TEST(InsideTrapezoid,givenPointInsideTrapezoidXYZ_getTrue)
@@ -856,6 +862,26 @@ TEST(InsideTrapezoid,givenPointOutsideTrapezoidXY_getFalse)
     EXPECT_FALSE(isInside);
 }
 
+TEST(ExtrusionWidth,givenExtrusionMultiplier_getCorrectExtrusionWidth)
+{
+    Shape shape;
+    double originalEW = shape.get_extrusion_width();
+    shape.set_extrusion_multiplier(0.5);
+    double newEW = shape.get_extrusion_width();
+    EXPECT_DOUBLE_EQ(originalEW,newEW);
+}
+
+TEST(ExtrusionWidth,givenInfillPercentage_getCorrectExtrusionWidth)
+{
+    Shape shape;
+    double originalEW = shape.get_extrusion_width();
+    double newPercentage{80};
+    shape.set_infill_percentage(newPercentage);
+    double newEW = shape.get_layer(0)->get_modified_extrusion_width();
+    EXPECT_NEAR(0.322581,newEW,0.00001);
+
+}
+
 TEST(A,B_c)
 {
     Gcode gcode;
@@ -865,52 +891,52 @@ TEST(A,B_c)
     shape.set_top_width(3);
     double infillAngle{45};
     shape.set_infill_angle(infillAngle);
-//    gcode.generate_file(shape,"InfillTest45Degrees");
+    //    gcode.generate_file(shape,"InfillTest45Degrees");
 }
 
 TEST(makeGcode,notReallyATest)
 {
     Gcode gcode;
     Shape shape;
-    gcode.generate_file(shape,"DefaultSettings");
+//    gcode.generate_file(shape,"DefaultSettings");
 }
 
 TEST(PrintOut,PrintOutPerimeterPoints)
 {
-//        Layer layer;
-//        layer.set_number(0);
-//    //    layer.set_width(10);
-//        layer.set_infill_angle(0);
-//        layer.set_infill_percentage(100);
-//        std::vector <Point> perimeterPoints = layer.get_perimeter_points();
-//        EXPECT_EQ(1,1);
-//        int numberOfPoints = static_cast<int>(perimeterPoints.size());
+    //        Layer layer;
+    //        layer.set_number(0);
+    //    //    layer.set_width(10);
+    //        layer.set_infill_angle(0);
+    //        layer.set_infill_percentage(100);
+    //        std::vector <Point> perimeterPoints = layer.get_perimeter_points();
+    //        EXPECT_EQ(1,1);
+    //        int numberOfPoints = static_cast<int>(perimeterPoints.size());
 
-//            for (int i{0}; i<numberOfPoints; i++)
-//            {
-//                Point point = perimeterPoints.at(i);
-//                std::cout << i << " X " << point.get_x() << std::endl;
-//                std::cout << "  Y " << point.get_y() << std::endl;
-//                std::cout << std::endl;
-//            }
+    //            for (int i{0}; i<numberOfPoints; i++)
+    //            {
+    //                Point point = perimeterPoints.at(i);
+    //                std::cout << i << " X " << point.get_x() << std::endl;
+    //                std::cout << "  Y " << point.get_y() << std::endl;
+    //                std::cout << std::endl;
+    //            }
 
-//            std::cout << " X " << std::endl;
-//            std::cout << std::endl;
-//            for (int i{0}; i<numberOfPoints; i++)
-//            {
-//                Point point = perimeterPoints.at(i);
-//                std::cout << point.get_x() << std::endl;
-//            }
-//            std::cout << std::endl;
-//            std::cout << std::endl;
-//            std::cout << " Y " << std::endl;
-//            std::cout << std::endl;
+    //            std::cout << " X " << std::endl;
+    //            std::cout << std::endl;
+    //            for (int i{0}; i<numberOfPoints; i++)
+    //            {
+    //                Point point = perimeterPoints.at(i);
+    //                std::cout << point.get_x() << std::endl;
+    //            }
+    //            std::cout << std::endl;
+    //            std::cout << std::endl;
+    //            std::cout << " Y " << std::endl;
+    //            std::cout << std::endl;
 
-//            for (int i{0}; i<numberOfPoints; i++)
-//            {
-//                Point point = perimeterPoints.at(i);
-//                std::cout << point.get_y() << std::endl;
-//            }
+    //            for (int i{0}; i<numberOfPoints; i++)
+    //            {
+    //                Point point = perimeterPoints.at(i);
+    //                std::cout << point.get_y() << std::endl;
+    //            }
 }
 
 

@@ -165,7 +165,7 @@ Layer* Shape::get_layer(int layerNumber)
 void Shape::set_extrusion_width(double extrusionWidth)
 {
     mExtrusionWidth = extrusionWidth;
-    mLayerList->clear();
+//    mLayerList->clear();
     create_layers();
 }
 
@@ -177,7 +177,7 @@ double Shape::get_infill_percentage()
 void Shape::set_infill_percentage(double infillPercentage)
 {
     mInfillPercentage = infillPercentage;
-    mLayerList->clear();
+//    mLayerList->clear();
     create_layers();
 }
 
@@ -189,7 +189,7 @@ double Shape::get_extrusion_multiplier()
 void Shape::set_extrusion_multiplier(double extrusionMultiplier)
 {
     mExtrusionMultiplier = extrusionMultiplier;
-    mLayerList->clear();
+//    mLayerList->clear();
     create_layers();
 }
 
@@ -201,7 +201,7 @@ double Shape::get_width()
 void Shape::set_width(double layerWidth)
 {
     mWidth = layerWidth;
-    mLayerList->clear();
+//    mLayerList->clear();
     create_layers();
 }
 
@@ -213,14 +213,14 @@ double Shape::get_length()
 void Shape::set_length(double layerLength)
 {
     mLength = layerLength;
-    mLayerList->clear();
+//    mLayerList->clear();
     create_layers();
 }
 
 void Shape::set_auto_adjust_layer(bool adjustLayer)
 {
     mAutoAdjustLayer = adjustLayer;
-    mLayerList->clear();
+//    mLayerList->clear();
     create_layers();
 }
 
@@ -239,7 +239,7 @@ double Shape::get_resolution()
 void Shape::set_resolution(double resolution)
 {
     mResolution = resolution;
-    mLayerList->clear();
+//    mLayerList->clear();
     create_layers();
 }
 
