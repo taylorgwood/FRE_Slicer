@@ -150,20 +150,28 @@ void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, int numberO
         }
         increment_extruder_displacement(materialRatio,extrusionDistance);
 
-        //        if (mLastPoint.get_material() != point.get_material())
-        //        {
-        //            double lastMaterial = mLastPoint.get_material();
-        //            double retractionDistance = get_material_switch_retraction_distance();
-        //            double differenceA = lastMaterial - (point.get_material());
-        //            double differenceB = lastMaterial - (1-point.get_material());
-        //            fout << " A" << get_extruder_displacement()[0] - differenceA*retractionDistance;
-        //            fout << " B" << get_extruder_displacement()[1] - differenceB*retractionDistance;
-        //        }
-        //        else
-        //        {
-        fout << " A" << get_extruder_displacement()[0];
-        fout << " B" << get_extruder_displacement()[1];
-        //        }
+        if (mLastPoint.get_material() != materialRatio)
+        {
+            double lastMaterialRatio = mLastPoint.get_material();
+            double retractionDistance = get_material_switch_retraction_distance();
+            double differenceA = lastMaterialRatio - (materialRatio);
+            double differenceB = (-differenceA);
+            if (differenceA > 0)
+            {
+                differenceA = 0;
+            }
+            if (differenceB > 0)
+            {
+                differenceB = 0;
+            }
+            fout << " A" << get_extruder_displacement()[0] + differenceA*retractionDistance;
+            fout << " B" << get_extruder_displacement()[1] + differenceB*retractionDistance;
+        }
+        else
+        {
+            fout << " A" << get_extruder_displacement()[0];
+            fout << " B" << get_extruder_displacement()[1];
+        }
         if (mPointCount%20 == 0)
         {
             fout << "  ; Layer " << std::to_string(layer->get_number()+1) << " of " << std::to_string(numberOfLayers);
