@@ -110,21 +110,32 @@ std::string Gcode::get_begin_layer_gcode(int layerNumber, int totalLayers)
 
 void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, int numberOfLayers)
 {
-    double zLocation = layer->get_location();
-    fout << "G1 " << " Z" << zLocation;
-    fout << " F720.00" << std::endl;
+    if (layer->get_number() > 0)
+    {
+        fout << "G1  F" << get_translation_speed() << " ; Translation speed: " << get_translation_speed() << std::endl;
+        double layerJump = get_layer_jump();
+        double zLocation = layer->get_location();
+        fout << "G1 " << " Z" << zLocation + layerJump << " ; Layer jump distance: " << layerJump << std::endl;
+
+        fout << "G1 ";
+        fout << " A" << get_extruder_displacement()[0] - get_layer_retraction_distance();
+        fout << " B" << get_extruder_displacement()[1] - get_layer_retraction_distance();
+        fout << " ; Layer retraction distance: " << get_layer_retraction_distance() << " mm" << std::endl;
+
+        Point firstPoint = layer->get_points().at(0);
+        fout << "G1 " << " X" << firstPoint.get_x() << " Y" << firstPoint.get_y() << " Z" << firstPoint.get_z() + layerJump << std::endl;
+    }
 
     write_points_in_layer(fout, layer, numberOfLayers);
 }
 
 void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, int numberOfLayers)
 {
+    fout << "G1  F" << get_print_speed() << " ; Print speed: " << get_print_speed() << std::endl;
     std::vector<Point> pointsInLayer = layer->get_points();
     int numberOfPointsInLayer = static_cast<int>(pointsInLayer.size());
     for (int i{0}; i<numberOfPointsInLayer; i++)
     {
-//        Path* path = pathsInLayer[i];
-//        write_points_in_path(fout, path);
         int pointNumber{i};
         Point point = pointsInLayer[i];
         fout << "G1 ";
@@ -135,28 +146,33 @@ void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, int numberO
         if (pointNumber == 0)
         {
             extrusionDistance = 0;
+            fout << " Z" << point.get_z();
         }
         increment_extruder_displacement(materialRatio,extrusionDistance);
+
+        //        if (mLastPoint.get_material() != point.get_material())
+        //        {
+        //            double lastMaterial = mLastPoint.get_material();
+        //            double retractionDistance = get_material_switch_retraction_distance();
+        //            double differenceA = lastMaterial - (point.get_material());
+        //            double differenceB = lastMaterial - (1-point.get_material());
+        //            fout << " A" << get_extruder_displacement()[0] - differenceA*retractionDistance;
+        //            fout << " B" << get_extruder_displacement()[1] - differenceB*retractionDistance;
+        //        }
+        //        else
+        //        {
         fout << " A" << get_extruder_displacement()[0];
         fout << " B" << get_extruder_displacement()[1];
+        //        }
         if (mPointCount%20 == 0)
         {
-        fout << "  ; Layer " << std::to_string(layer->get_number()+1) << " of " << std::to_string(numberOfLayers);
+            fout << "  ; Layer " << std::to_string(layer->get_number()+1) << " of " << std::to_string(numberOfLayers);
         }
         fout << std::endl;
         mPointCount += 1;
         mLastPoint = point;
     }
 }
-
-//void Gcode::write_points_in_path(std::ofstream& fout, Path* path)
-//{
-//    std::vector<Point*> pointsInPath = path->get_point_list();
-//    int numberOfPointsInPath = static_cast<int>(pointsInPath.size());
-//    for (int i{0}; i<numberOfPointsInPath; i++)
-//    {
-//    }
-//}
 
 void Gcode::write_end_gcode(std::ofstream& fout)
 {
@@ -204,7 +220,7 @@ double Gcode::calculate_length(Point currentPoint)
     Point lengthVector = mLastPoint - currentPoint;
     if (lengthVector.get_z() == 0)
     {
-    length = lengthVector.get_magnitude();
+        length = lengthVector.get_magnitude();
     }
     return length;
 }
@@ -286,3 +302,54 @@ void Gcode::set_syringe_diameter(double syringeDiameter)
 {
     mSyringeDiameter = syringeDiameter;
 }
+
+void Gcode::set_layer_jump(const double layerJump)
+{
+    mLayerJump = layerJump;
+}
+
+double Gcode::get_layer_jump() const
+{
+    return  mLayerJump;
+}
+
+void   Gcode::set_translation_speed(double const translationSpeed)
+{
+    mTranslationSpeed = translationSpeed;
+}
+
+double Gcode::get_translation_speed() const
+{
+    return mTranslationSpeed;
+}
+
+void   Gcode::set_print_speed(double const printSpeed)
+{
+    mPrintSpeed = printSpeed;
+}
+
+double Gcode::get_print_speed() const
+{
+    return mPrintSpeed;
+}
+
+void   Gcode::set_layer_retraction_distance(double layerRetractionDistance)
+{
+    mLayerRetractionDistance = layerRetractionDistance;
+}
+
+double Gcode::get_layer_retraction_distance() const
+{
+    return mLayerRetractionDistance;
+}
+
+void   Gcode::set_material_switch_retraction_distance(double materialSwitchRetractionDistance)
+{
+    mMaterialSwitchRetractionDistance = materialSwitchRetractionDistance;
+}
+
+double Gcode::get_material_switch_retraction_distance() const
+{
+    return mMaterialSwitchRetractionDistance;
+}
+

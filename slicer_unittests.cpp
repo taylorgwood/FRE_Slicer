@@ -898,7 +898,7 @@ TEST(makeGcode,notReallyATest)
 {
     Gcode gcode;
     Shape shape;
-//    gcode.generate_file(shape,"DefaultSettings");
+    gcode.generate_file(shape,"Testing");
 }
 
 TEST(PrintOut,PrintOutPerimeterPoints)

@@ -23,7 +23,6 @@ public:
     void   write_points_in_layer(std::ofstream& fout, Layer* layer, int numberOfLayers);
     void   write_initial_gcode(std::ofstream& fout, Shape &shape);
     void   write_end_gcode(std::ofstream& fout);
-//    void   write_points_in_path(std::ofstream &fout, Path* path);
     double get_extrusion_distance(Point currentPoint);
     void   increment_extruder_displacement(double materialRatio, double extrusionDistance);
     std::vector<double> get_extruder_displacement() const;
@@ -36,6 +35,16 @@ public:
     void   write_basic_settings(std::ofstream& fout, Shape &shape);
     double get_syringe_diameter() const;
     void   set_syringe_diameter(double syringeDiameter);
+    void   set_layer_jump(double const layerJump);
+    double get_layer_jump() const;
+    void   set_translation_speed(double const translationSpeed);
+    double get_translation_speed() const;
+    void   set_print_speed(double const printSpeed);
+    double get_print_speed() const;
+    void   set_layer_retraction_distance(double layerRetractionDistance);
+    double get_layer_retraction_distance() const;
+    void   set_material_switch_retraction_distance(double materialSwitchRetractionDistance);
+    double get_material_switch_retraction_distance() const;
 
 protected:
 
@@ -45,9 +54,14 @@ private:
     double mSyringeDiameter{14.9};
     double mSyringeCrossSectionalArea{174.366246256};
     double const pi{3.14159265359};
-    int mPointCount{0};
+    int    mPointCount{0};
     std::vector<double> mExtruderDisplacement{0,0};
-    Point mLastPoint{0,0,0};
+    Point  mLastPoint{0,0,0};
+    double mLayerJump{0};
+    double mTranslationSpeed{720};
+    double mPrintSpeed{720};
+    double mLayerRetractionDistance{0};
+    double mMaterialSwitchRetractionDistance{0};
 };
 
 #endif // GCODE_H
