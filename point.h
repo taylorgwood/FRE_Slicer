@@ -33,6 +33,8 @@ public:
     double dot(Point secondPoint);
     bool   is_inside_XZtrapezoid(std::vector <Point> corners);
 //    double get_area_of_XZtriangle(Point corner1, Point corner2, Point corner3);
+    void   set_travel(bool const isTravel);
+    bool   get_travel() const;
 
 protected:
 
@@ -42,6 +44,7 @@ private:
     double mZ{0};
     double mMaterial{0};
     double mDiameter{0.26};
+    bool   mTravel{false};
 };
 
 #endif // POINT_H

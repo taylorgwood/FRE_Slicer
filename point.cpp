@@ -239,3 +239,13 @@ bool   Point::is_inside_XZtrapezoid(std::vector <Point> corners)
 //    double area = (x1*z2 +x2*z3 +x3*z1 -z1*x2 -z2*x3 -z3*x1)/2;
 //    return area;
 //}
+
+void   Point::set_travel(bool const isTravel)
+{
+    mTravel = isTravel;
+}
+
+bool   Point::get_travel() const
+{
+    return mTravel;
+}
