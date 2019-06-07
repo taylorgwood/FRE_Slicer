@@ -19,8 +19,8 @@ public:
     std::ofstream get_fout();
     std::string get_file_name() const;
     void   set_file_name(std::string const fileName);
-    void   write_layer_gcode(std::ofstream& fout, Layer* layer, int numberOfLayers);
-    void   write_points_in_layer(std::ofstream& fout, Layer* layer, int numberOfLayers);
+    void   write_layer_gcode(std::ofstream& fout, Layer* layer, unsigned int numberOfLayers);
+    void   write_points_in_layer(std::ofstream& fout, Layer* layer, unsigned int numberOfLayers);
     void   write_initial_gcode(std::ofstream& fout, Shape &shape);
     void   write_end_gcode(std::ofstream& fout);
     double get_extrusion_distance(Point currentPoint);
@@ -30,7 +30,7 @@ public:
     bool   does_file_exist(const std::string& completeFileName);
     void   delete_file();
     std::string get_time_string();
-    std::string get_begin_layer_gcode(int layerNumber, int totalLayers);
+    std::string get_begin_layer_gcode(unsigned int layerNumber, unsigned int totalLayers);
     void   write_file_creation_information(std::ofstream &fout);
     void   write_basic_settings(std::ofstream& fout, Shape &shape);
     double get_syringe_diameter() const;
@@ -55,7 +55,7 @@ private:
     double mSyringeDiameter{14.9};
     double mSyringeCrossSectionalArea{174.366246256};
     double const pi{3.14159265359};
-    int    mPointCount{0};
+    unsigned int mPointCount{0};
     std::vector<double> mExtruderDisplacement{0,0};
     Point  mLastPoint{0,0,0};
     double mTravelJump{0};

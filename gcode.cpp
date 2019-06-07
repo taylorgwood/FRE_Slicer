@@ -15,10 +15,10 @@ void Gcode::generate_file(Shape& shape, std::string fileName)
 void Gcode::write_gcode(std::ofstream& fout, Shape& shape)
 {
     write_initial_gcode(fout, shape);
-    int numberOfLayers = shape.get_number_of_layers();
-    for (int i{0}; i<numberOfLayers; i++)
+    unsigned int numberOfLayers = shape.get_number_of_layers();
+    for (unsigned int i{0}; i<numberOfLayers; i++)
     {
-        int layerNumber{i};
+        unsigned int layerNumber{i};
         fout << std::endl;
         fout << get_begin_layer_gcode(layerNumber, numberOfLayers) << std::endl;
         Layer* layer = shape.get_layer(layerNumber);
@@ -102,13 +102,13 @@ void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
     fout << std::endl;
 }
 
-std::string Gcode::get_begin_layer_gcode(int layerNumber, int totalLayers)
+std::string Gcode::get_begin_layer_gcode(unsigned int layerNumber, unsigned int totalLayers)
 {
     std::string beginLayerGcode = "; Beginning layer " + std::to_string(layerNumber + 1) + " of " + std::to_string(totalLayers) + " ----------------------------";
     return beginLayerGcode;
 }
 
-void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, int numberOfLayers)
+void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, unsigned  int numberOfLayers)
 {
     if (layer->get_number() > 0)
     {
@@ -129,14 +129,14 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, int numberOfLa
     write_points_in_layer(fout, layer, numberOfLayers);
 }
 
-void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, int numberOfLayers)
+void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, unsigned int numberOfLayers)
 {
     fout << "G1  F" << get_print_speed() << " ; Print speed: " << get_print_speed() << std::endl;
-    std::vector<Point> pointsInLayer = layer->get_points();
-    int numberOfPointsInLayer = static_cast<int>(pointsInLayer.size());
-    for (int i{0}; i<numberOfPointsInLayer; i++)
+    std::vector<Point> pointsInLayer = layer->get_simplified_point_list();
+    unsigned int numberOfPointsInLayer = static_cast<unsigned int>(pointsInLayer.size());
+    for (unsigned int i{0}; i<numberOfPointsInLayer; i++)
     {
-        int pointNumber{i};
+        unsigned int pointNumber{i};
         Point point = pointsInLayer[i];
         fout << "G1 ";
         fout << " X" << point.get_x();
@@ -150,7 +150,7 @@ void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, int numberO
         }
         increment_extruder_displacement(materialRatio,extrusionDistance);
 
-        if (mLastPoint.get_material() != materialRatio)
+        if ((mLastPoint.get_material() - materialRatio) < 0.0001)
         {
             double lastMaterialRatio = mLastPoint.get_material();
             double retractionDistance = get_material_switch_retraction_distance();
@@ -226,7 +226,7 @@ double Gcode::calculate_length(Point currentPoint)
 {
     double length{0};
     Point lengthVector = mLastPoint - currentPoint;
-    if (lengthVector.get_z() == 0)
+    if (lengthVector.get_z() < 0.001)
     {
         length = lengthVector.get_magnitude();
     }
@@ -259,7 +259,7 @@ void Gcode::write_file_creation_information(std::ofstream& fout)
 void Gcode::write_basic_settings(std::ofstream& fout, Shape& shape)
 {
     double layerHeight = shape.get_layer_height();
-    int    numberOfLayers = shape.get_number_of_layers();
+    unsigned int numberOfLayers = shape.get_number_of_layers();
     fout << "; Layer Height:          " << layerHeight << " mm" << std::endl;
     fout << "; Number Of Layers:      " << numberOfLayers << std::endl;
     fout << std::endl;
@@ -290,8 +290,8 @@ void Gcode::write_basic_settings(std::ofstream& fout, Shape& shape)
     double shapeHeight = shape.get_height();
     double firstLayerWidth = bottomLayer->get_width();
     double firstLayerLength = bottomLayer->get_length();
-    double topLayerWidth = bottomLayer->get_width();
-    double topLayerLength = bottomLayer->get_length();
+    double topLayerWidth = topLayer->get_width();
+    double topLayerLength = topLayer->get_length();
     fout << "; Shape Settings:        " << std::endl;
     fout << "; _Shape Height:         " << shapeHeight << " mm" << std::endl;
     fout << "; _Bottom Layer Width:   " << firstLayerWidth << " mm" << std::endl;

@@ -232,6 +232,7 @@ void Layer::create_paths()
     mPathList->clear();
     set_infill_size();
     std::vector <Point> perimeterPointList = get_perimeter_points();
+    perimeterPointList.at(0).set_travel(true);
     unsigned int numberOfPaths = static_cast<unsigned int>(perimeterPointList.size())-1;
 
     for (unsigned int i{0}; i<numberOfPaths; i++)
@@ -500,16 +501,6 @@ std::vector <Point> Layer::get_perimeter_points()
     Point cornerB = corners.at(1);
     Point cornerC = corners.at(2);
     Point cornerD = corners.at(3);
-
-    Point cornerATravel = cornerA;
-    cornerATravel.set_travel(true);
-    Point cornerBTravel = cornerB;
-    cornerBTravel.set_travel(true);
-    Point cornerCTravel = cornerC;
-    cornerCTravel.set_travel(true);
-    Point cornerDTravel = cornerD;
-    cornerDTravel.set_travel(true);
-
     Path bottom(cornerA,cornerB);
     Path right(cornerB,cornerC);
     Path top(cornerC,cornerD);
@@ -553,7 +544,7 @@ std::vector <Point> Layer::get_perimeter_points()
                 {
                     if (leftSize != 0)
                     {
-                        perimeterPointList.push_back(cornerDTravel);
+                        perimeterPointList.push_back(cornerD);
                     }
                 }
                 perimeterPointList.push_back(leftSidePoints.at(leftPoint));
@@ -634,7 +625,7 @@ std::vector <Point> Layer::get_perimeter_points()
                     Point lastPoint = perimeterPointList.at(pointCount-1);
                     if ((lastPoint.get_x() - cornerA.get_x()) > 0.001)
                     {
-                        perimeterPointList.push_back(cornerBTravel);
+                        perimeterPointList.push_back(cornerB);
                     }
                 }
             }
@@ -671,7 +662,7 @@ std::vector <Point> Layer::get_perimeter_points()
                 {
                     if (bottomSize != 0)
                     {
-                        perimeterPointList.push_back(cornerATravel);
+                        perimeterPointList.push_back(cornerA);
                     }
                 }
                 perimeterPointList.push_back(bottomSidePoints.at(bottomPoint));
@@ -751,7 +742,7 @@ std::vector <Point> Layer::get_perimeter_points()
                     Point lastPoint = perimeterPointList.at(pointCount-1);
                     if ((lastPoint.get_y() - cornerC.get_y()) > 0.001)
                     {
-                        perimeterPointList.push_back(cornerBTravel);
+                        perimeterPointList.push_back(cornerB);
                     }
                 }
             }
@@ -824,13 +815,10 @@ std::vector <Point> Layer::get_corners()
 
 void Layer::set_infill_size()
 {
-    //    double diameter = get_diameter_of_print();
     double modifiedExtrusionWidth = get_modified_extrusion_width();
     mInfillLength = mLength-modifiedExtrusionWidth;
     mInfillWidth = mWidth-modifiedExtrusionWidth;
 }
-
-
 
 std::vector <Point> Layer::get_simplified_point_list()
 {
@@ -860,10 +848,14 @@ std::vector <Point> Layer::get_simplified_point_list()
                 {
                     cleanPointList.push_back(*point);
                 }
+                else if (j == numberOfPoints-1)
+                {
+                    cleanPointList.push_back(*point);
+                }
                 else
                 {
-                    Point* previousPoint = pointList.at(i-1);
-                    double previousMaterial = previousPoint->get_material();
+//                    Point* previousPoint = pointList.at(i-1);
+                    double previousMaterial = lastPoint->get_material();
                     double currentMaterial = point->get_material();
                     if (abs(previousMaterial - currentMaterial) > 0.0001)
                     {
