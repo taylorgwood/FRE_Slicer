@@ -238,7 +238,7 @@ TEST(LayerList,whenAskedForPointsInSecondLayer_getCorrectNumberOfPointsInSecondL
 TEST(ShapeList,whenAskedForPointsInShape_getCorrectNumberOfPointsInShape)
 {
     Shape shape;
-    std::vector<Point> pointList = shape.get_points();
+    std::vector<Point> pointList = shape.get_point_list();
     size_t numberOfPoints = pointList.size();
     unsigned int expectedNumberOfPoints{38*(38*10)};
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
