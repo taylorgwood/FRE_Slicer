@@ -25,7 +25,7 @@ Path::Path(Point start, Point end, double diameter):mPointList{new std::vector<P
     create_points();
 }
 
-Path::Path(Point start, Point end, double diameter, int pathNumber):mPointList{new std::vector<Point*>}
+Path::Path(Point start, Point end, double diameter, unsigned int pathNumber):mPointList{new std::vector<Point*>}
 {
     set_start(start);
     set_end(end);
@@ -34,7 +34,7 @@ Path::Path(Point start, Point end, double diameter, int pathNumber):mPointList{n
     create_points();
 }
 
-Path::Path(Point start, Point end, double diameter, int pathNumber, double resolution):mPointList{new std::vector<Point*>}
+Path::Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolution):mPointList{new std::vector<Point*>}
 {
     set_start(start);
     set_end(end);
@@ -44,7 +44,7 @@ Path::Path(Point start, Point end, double diameter, int pathNumber, double resol
     create_points();
 }
 
-Path::Path(Point start, Point end, double diameter, int pathNumber, double resolution, double shapeWidth, double shapeLength, double shapeHeight):mPointList{new std::vector<Point*>}
+Path::Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolution, double shapeWidth, double shapeLength, double shapeHeight):mPointList{new std::vector<Point*>}
 {
     set_start(start);
     set_end(end);
@@ -57,7 +57,7 @@ Path::Path(Point start, Point end, double diameter, int pathNumber, double resol
     create_points();
 }
 
-Path::Path(Point start, Point end, double diameter, int pathNumber, double resolution, double shapeWidth, double shapeLength, double shapeHeight, int layerNumber):mPointList{new std::vector<Point*>}
+Path::Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolution, double shapeWidth, double shapeLength, double shapeHeight, unsigned int layerNumber):mPointList{new std::vector<Point*>}
 {
     set_start(start);
     set_end(end);
@@ -101,12 +101,12 @@ void Path::set_diameter(double const diameter)
     mDiameter = diameter;
 }
 
-int Path::get_number_of_points() const
+unsigned int Path::get_number_of_points() const
 {
     double length = get_length();
     double exactNumberOfSegments = length/mResolution;
-    int flooredNumberOfSegments = int(floor(exactNumberOfSegments));
-    int numberOfPoints{flooredNumberOfSegments+1};
+    unsigned int flooredNumberOfSegments = static_cast<unsigned int>(floor(exactNumberOfSegments));
+    unsigned int numberOfPoints{flooredNumberOfSegments+1};
     return numberOfPoints;
 }
 
@@ -144,8 +144,8 @@ void Path::adjust_point_spacing()
 void Path::create_points()
 {
     adjust_point_spacing();
-    int numberOfPoints = get_number_of_points();
-    for (int i{0}; i<numberOfPoints; i++)
+    unsigned int numberOfPoints = get_number_of_points();
+    for (unsigned int i{0}; i<numberOfPoints; i++)
     {
         Point* newPoint = create_new_point(i,numberOfPoints);
         mPointList->push_back(newPoint);
@@ -157,7 +157,7 @@ std::vector<Point*> Path::get_point_list()
     return *mPointList;
 }
 
-Point* Path::create_new_point(int pointNumber, int numberOfPointsInPath) const
+Point* Path::create_new_point(unsigned int pointNumber, unsigned int numberOfPointsInPath) const
 {
     Point pathVector = mEnd-mStart;
     double pathLength = pathVector.get_magnitude();
@@ -187,7 +187,7 @@ double Path::get_material(Point pointInfo) const
     double xLocation = pointInfo.get_x();
     double yLocation = pointInfo.get_y();
     double zLocation = pointInfo.get_z();
-    int layerNumber = get_layer_number();
+    unsigned int layerNumber = get_layer_number();
     //    if (layerNumber%2 == 0)
     //    {
     //        material = 1;
@@ -209,12 +209,12 @@ double Path::get_material(Point pointInfo) const
     return material;
 }
 
-void Path::set_path_number(int const pathNumber)
+void Path::set_path_number(unsigned int const pathNumber)
 {
     mPathNumber = pathNumber;
 }
 
-int Path::get_path_number() const
+unsigned int Path::get_path_number() const
 {
     return mPathNumber;
 }
@@ -234,12 +234,12 @@ void Path::set_shape_height(double const shapeHeight)
     mShapeHeight = shapeHeight;
 }
 
-void Path::set_layer_number(int const layerNumber)
+void Path::set_layer_number(unsigned int const layerNumber)
 {
     mLayerNumber = layerNumber;
 }
 
-int Path::get_layer_number() const
+unsigned int Path::get_layer_number() const
 {
     return mLayerNumber;
 }

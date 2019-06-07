@@ -7,12 +7,12 @@ class Layer
 public:
     ~Layer();
     Layer();
-    Layer(int number, double location);
-    Layer(int number, double location, double length, double width);
-    Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution);
-    Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height);
-    Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight);
-    Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight, double infillAngle);
+    Layer(unsigned int number, double location);
+    Layer(unsigned int number, double location, double length, double width);
+    Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution);
+    Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height);
+    Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight);
+    Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight, double infillAngle);
     double get_height() const;
     void   set_height(const double height);
     double get_infill_percentage() const;
@@ -28,7 +28,7 @@ public:
     double get_perpendicular_to_path_distance();
     double get_modified_extrusion_width();
     void   set_area(const double area);
-    int    get_number_of_infill_paths();
+    unsigned int get_number_of_infill_paths();
     std::vector<Path*> get_path_list();
     void   create_paths();
     double get_length() const;
@@ -38,11 +38,11 @@ public:
     double get_infill_width() const;
     double get_infill_length() const;
     std::vector<Point> get_points();
-    int    get_number() const;
-    void   set_number(int const number);
+    unsigned int get_number() const;
+    void   set_number(unsigned int const number);
     double get_location() const;
     void   set_location(double const location);
-    Path*  get_path(int pathNumber);
+    Path*  get_path(unsigned int pathNumber);
     void   set_auto_adjust_path(bool adjustPaths);
     double get_resolution() const;
     void   set_resolution(double const resolution);
@@ -76,7 +76,7 @@ private:
     double mInfillLength;
     double mInfillWidth;
     std::vector<Path*> *mPathList{nullptr};
-    int    mNumber{0};
+    unsigned int mNumber{0};
     double mLocation{0};
     bool   mAutoAdjustPaths{true};
     double mResolution{1};

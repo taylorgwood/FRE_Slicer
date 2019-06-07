@@ -13,7 +13,7 @@ Layer::Layer():mPathList{new std::vector<Path*>}
     create_paths();
 }
 
-Layer::Layer(int number, double location):mPathList{new std::vector<Path*>}
+Layer::Layer(unsigned int number, double location):mPathList{new std::vector<Path*>}
 {
     set_number(number);
     set_location(location);
@@ -22,7 +22,7 @@ Layer::Layer(int number, double location):mPathList{new std::vector<Path*>}
     create_paths();
 }
 
-Layer::Layer(int number, double location, double length, double width):mPathList{new std::vector<Path*>}
+Layer::Layer(unsigned int number, double location, double length, double width):mPathList{new std::vector<Path*>}
 {
     set_number(number);
     set_location(location);
@@ -32,7 +32,7 @@ Layer::Layer(int number, double location, double length, double width):mPathList
     create_paths();
 }
 
-Layer::Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution):mPathList{new std::vector<Path*>}
+Layer::Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution):mPathList{new std::vector<Path*>}
 {
     set_number(number);
     set_location(location);
@@ -46,7 +46,7 @@ Layer::Layer(int number, double location, double length, double width, double ex
     create_paths();
 }
 
-Layer::Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height):mPathList{new std::vector<Path*>}
+Layer::Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height):mPathList{new std::vector<Path*>}
 {
     set_number(number);
     set_location(location);
@@ -62,7 +62,7 @@ Layer::Layer(int number, double location, double length, double width, double ex
     create_paths();
 }
 
-Layer::Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight):mPathList{new std::vector<Path*>}
+Layer::Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight):mPathList{new std::vector<Path*>}
 {
     set_number(number);
     set_location(location);
@@ -79,7 +79,7 @@ Layer::Layer(int number, double location, double length, double width, double ex
     create_paths();
 }
 
-Layer::Layer(int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight, double infillAngle):mPathList{new std::vector<Path*>}
+Layer::Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight, double infillAngle):mPathList{new std::vector<Path*>}
 {
     set_number(number);
     set_location(location);
@@ -158,6 +158,7 @@ double Layer::get_extrusion_width()
 
 void Layer::set_extrusion_width(double extrusionWidth)
 {
+    mExtrusionWidth = extrusionWidth;
     if (mAutoAdjustPaths == true)
     {
         extrusionWidth = get_adjusted_extrusion_width();
@@ -170,7 +171,7 @@ void Layer::set_extrusion_width(double extrusionWidth)
 double Layer::get_adjusted_extrusion_width()
 {
     double adjustedExtrusionWidth{0};
-    int numberOfPaths = get_number_of_infill_paths();
+    unsigned int numberOfPaths = get_number_of_infill_paths();
     double perpendicularToPathDistance = get_perpendicular_to_path_distance();
     adjustedExtrusionWidth = (perpendicularToPathDistance)/(numberOfPaths);
 
@@ -205,14 +206,14 @@ double Layer::get_modified_extrusion_width()
     return modifiedExtrusionWidth;
 }
 
-int Layer::get_number_of_infill_paths()
+unsigned int Layer::get_number_of_infill_paths()
 {
-    int numberOfInfillPaths{0};
+    unsigned int numberOfInfillPaths{0};
     double perpendicularToPathDistance = get_perpendicular_to_path_distance();
     double modifiedExtrusionWidth = get_modified_extrusion_width();
     double exactNumberOfPaths = (perpendicularToPathDistance/modifiedExtrusionWidth);
     double flooredNumberOfPaths = floor(exactNumberOfPaths);
-    numberOfInfillPaths = int(flooredNumberOfPaths);
+    numberOfInfillPaths = static_cast<unsigned int>(flooredNumberOfPaths);
     if ((exactNumberOfPaths-flooredNumberOfPaths) >= 0.5)
     {
         numberOfInfillPaths = flooredNumberOfPaths+1;
@@ -231,11 +232,11 @@ void Layer::create_paths()
     mPathList->clear();
     set_infill_size();
     std::vector <Point> perimeterPointList = get_perimeter_points();
-    int numberOfPaths = static_cast<int>(perimeterPointList.size())-1;
+    unsigned int numberOfPaths = static_cast<unsigned int>(perimeterPointList.size())-1;
 
-    for (int i{0}; i<numberOfPaths; i++)
+    for (unsigned int i{0}; i<numberOfPaths; i++)
     {
-        int pathNumber = i;
+        unsigned int pathNumber = i;
         bool duplicate{false};
         double diameter = get_diameter_of_print();
         double resolution = get_resolution();
@@ -313,12 +314,12 @@ std::vector<Point> Layer::get_points()
     return pointList;
 }
 
-int Layer::get_number() const
+unsigned int Layer::get_number() const
 {
     return mNumber;
 }
 
-void Layer::set_number(int const number)
+void Layer::set_number(unsigned int const number)
 {
     mNumber = number;
 }
@@ -333,7 +334,7 @@ void Layer::set_location(double const location)
     mLocation = location;
 }
 
-Path* Layer::get_path(int pathNumber)
+Path* Layer::get_path(unsigned int pathNumber)
 {
     std::vector<Path*> pathList = get_path_list();
     Path* path = pathList[pathNumber];
@@ -432,7 +433,7 @@ std::vector <Point> Layer::create_angled_ray_origin_list()
         theta -= pi;
     }
 
-    int k{0};
+    unsigned int k{0};
     bool bEnd{false};
     while(bEnd == false)
     {
@@ -477,9 +478,8 @@ std::vector <Point> Layer::get_intersection_points_list(Path path)
     double theta = get_infill_angle()/180*pi;
 
     std::vector <Point> angledRayOriginList = create_angled_ray_origin_list();
-    int numberOfPaths = angledRayOriginList.size();
-    int k{numberOfPaths};
-    for (int i{0}; i<numberOfPaths; i++)
+    unsigned int numberOfPaths = static_cast<unsigned int>(angledRayOriginList.size());
+    for (unsigned int i{0}; i<numberOfPaths; i++)
     {
         Point intersect = get_intersection(start,end,angledRayOriginList.at(i),theta);
         intersectionPoints.push_back(intersect);
@@ -522,7 +522,6 @@ std::vector <Point> Layer::get_perimeter_points()
     unsigned int rightSize = static_cast<unsigned int>(rightSidePoints.size());
     unsigned int topSize = static_cast<unsigned int>(topSidePoints.size());
     unsigned int leftSize = static_cast<unsigned int>(leftSidePoints.size());
-    double theta = get_infill_angle()/180*pi;
 
     if (mNumber%2==0)
     {
@@ -668,7 +667,7 @@ std::vector <Point> Layer::get_perimeter_points()
             // Along bottom
             if (bottomPoint < bottomSize) // Bottom
             {
-                if (bottomPoint == 0)
+                if (bottomPoint == 0) // start at corner A
                 {
                     if (bottomSize != 0)
                     {
@@ -768,8 +767,8 @@ std::vector <Point> Layer::get_side_points(Path side)
     std::vector <Point> intersectionList = get_intersection_points_list(side);
     Point noIntersection(-1,-1,-1);
     Point intersection;
-    int numberOfPoints = static_cast<int>(intersectionList.size());
-    for (int i{0}; i<numberOfPoints; i++)
+    unsigned int numberOfPoints = static_cast<unsigned int>(intersectionList.size());
+    for (unsigned int i{0}; i<numberOfPoints; i++)
     {
         intersection = intersectionList.at(i);
         if (intersection.get_z() == noIntersection.get_z())
@@ -796,7 +795,6 @@ double Layer::get_infill_length() const
 
 void Layer::set_corners()
 {
-    double diameter = get_diameter_of_print();
     double zLocation = get_location();
     double infillWidth = get_infill_width();
     double infillLength = get_infill_length();
