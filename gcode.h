@@ -35,16 +35,17 @@ public:
     void   write_basic_settings(std::ofstream& fout, Shape &shape);
     double get_syringe_diameter() const;
     void   set_syringe_diameter(double syringeDiameter);
-    void   set_layer_jump(double const layerJump);
-    double get_layer_jump() const;
-    void   set_translation_speed(double const translationSpeed);
-    double get_translation_speed() const;
+    void   set_travel_jump(double const travelJump);
+    double get_travel_jump() const;
+    void   set_travel_speed(double const travelSpeed);
+    double get_travel_speed() const;
     void   set_print_speed(double const printSpeed);
     double get_print_speed() const;
-    void   set_layer_retraction_distance(double layerRetractionDistance);
-    double get_layer_retraction_distance() const;
+    void   set_travel_retraction_distance(double travelRetractionDistance);
+    double get_travel_retraction_distance() const;
     void   set_material_switch_retraction_distance(double materialSwitchRetractionDistance);
     double get_material_switch_retraction_distance() const;
+
 
 protected:
 
@@ -57,10 +58,10 @@ private:
     int    mPointCount{0};
     std::vector<double> mExtruderDisplacement{0,0};
     Point  mLastPoint{0,0,0};
-    double mLayerJump{0};
-    double mTranslationSpeed{720};
+    double mTravelJump{0};
+    double mTravelSpeed{720};
     double mPrintSpeed{720};
-    double mLayerRetractionDistance{0};
+    double mTravelRetractionDistance{0};
     double mMaterialSwitchRetractionDistance{0};
 };
 

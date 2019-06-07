@@ -112,15 +112,15 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, int numberOfLa
 {
     if (layer->get_number() > 0)
     {
-        fout << "G1  F" << get_translation_speed() << " ; Translation speed: " << get_translation_speed() << std::endl;
-        double layerJump = get_layer_jump();
+        fout << "G1  F" << get_travel_speed() << " ; Translation speed: " << get_travel_speed() << std::endl;
+        double layerJump = get_travel_jump();
         double zLocation = layer->get_location();
         fout << "G1 " << " Z" << zLocation + layerJump << " ; Layer jump distance: " << layerJump << std::endl;
 
         fout << "G1 ";
-        fout << " A" << get_extruder_displacement()[0] - get_layer_retraction_distance();
-        fout << " B" << get_extruder_displacement()[1] - get_layer_retraction_distance();
-        fout << " ; Layer retraction distance: " << get_layer_retraction_distance() << " mm" << std::endl;
+        fout << " A" << get_extruder_displacement()[0] - get_travel_retraction_distance();
+        fout << " B" << get_extruder_displacement()[1] - get_travel_retraction_distance();
+        fout << " ; Layer retraction distance: " << get_travel_retraction_distance() << " mm" << std::endl;
 
         Point firstPoint = layer->get_points().at(0);
         fout << "G1 " << " X" << firstPoint.get_x() << " Y" << firstPoint.get_y() << " Z" << firstPoint.get_z() + layerJump << std::endl;
@@ -311,24 +311,24 @@ void Gcode::set_syringe_diameter(double syringeDiameter)
     mSyringeDiameter = syringeDiameter;
 }
 
-void Gcode::set_layer_jump(const double layerJump)
+void Gcode::set_travel_jump(const double travelJump)
 {
-    mLayerJump = layerJump;
+    mTravelJump = travelJump;
 }
 
-double Gcode::get_layer_jump() const
+double Gcode::get_travel_jump() const
 {
-    return  mLayerJump;
+    return  mTravelJump;
 }
 
-void   Gcode::set_translation_speed(double const translationSpeed)
+void   Gcode::set_travel_speed(double const travelSpeed)
 {
-    mTranslationSpeed = translationSpeed;
+    mTravelSpeed = travelSpeed;
 }
 
-double Gcode::get_translation_speed() const
+double Gcode::get_travel_speed() const
 {
-    return mTranslationSpeed;
+    return mTravelSpeed;
 }
 
 void   Gcode::set_print_speed(double const printSpeed)
@@ -341,14 +341,14 @@ double Gcode::get_print_speed() const
     return mPrintSpeed;
 }
 
-void   Gcode::set_layer_retraction_distance(double layerRetractionDistance)
+void   Gcode::set_travel_retraction_distance(double travelRetractionDistance)
 {
-    mLayerRetractionDistance = layerRetractionDistance;
+    mTravelRetractionDistance = travelRetractionDistance;
 }
 
-double Gcode::get_layer_retraction_distance() const
+double Gcode::get_travel_retraction_distance() const
 {
-    return mLayerRetractionDistance;
+    return mTravelRetractionDistance;
 }
 
 void   Gcode::set_material_switch_retraction_distance(double materialSwitchRetractionDistance)
@@ -360,4 +360,3 @@ double Gcode::get_material_switch_retraction_distance() const
 {
     return mMaterialSwitchRetractionDistance;
 }
-
