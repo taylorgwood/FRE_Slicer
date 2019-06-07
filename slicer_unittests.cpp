@@ -909,7 +909,10 @@ TEST(A,B_c)
     //    shape.set_top_width(3);
     double infillAngle{45};
     shape.set_infill_angle(infillAngle);
-    //    gcode.generate_file(shape,"InfillTest45Degrees");
+    shape.refresh();
+    gcode.set_simplify_point_list(true);
+    gcode.set_travel_jump(0.5);
+    gcode.generate_file(shape,"InfillTest45Degrees");
 }
 
 TEST(makeGcode,notReallyATest)
@@ -917,7 +920,8 @@ TEST(makeGcode,notReallyATest)
     Gcode gcode;
     Shape shape;
     gcode.set_travel_jump(0.5);
-    //    gcode.generate_file(shape,"Testing");
+    gcode.set_simplify_point_list(true);
+    gcode.generate_file(shape,"Testing");
 }
 
 //TEST(PrintOutPerimeter,PrintOutPerimeterPoints)

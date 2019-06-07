@@ -37,7 +37,7 @@ public:
     void   set_width(double const width);
     double get_infill_width() const;
     double get_infill_length() const;
-    std::vector<Point> get_points();
+    std::vector<Point> get_point_list();
     unsigned int get_number() const;
     void   set_number(unsigned int const number);
     double get_location() const;

@@ -45,7 +45,8 @@ public:
     double get_travel_retraction_distance() const;
     void   set_material_switch_retraction_distance(double materialSwitchRetractionDistance);
     double get_material_switch_retraction_distance() const;
-
+    void   set_simplify_point_list(bool const isTrue);
+    bool   get_simplify_point_list() const;
 
 protected:
 
@@ -63,6 +64,7 @@ private:
     double mPrintSpeed{720};
     double mTravelRetractionDistance{0};
     double mMaterialSwitchRetractionDistance{0};
+    bool   mSimplifyPointList{false};
 };
 
 #endif // GCODE_H

@@ -283,7 +283,7 @@ void Layer::set_width(double const width)
     //    set_corners();
 }
 
-std::vector<Point> Layer::get_points()
+std::vector<Point> Layer::get_point_list()
 {
     std::vector<Point> pointList;
     unsigned int numberOfPaths = static_cast<unsigned int>(mPathList->size());

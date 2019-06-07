@@ -118,7 +118,7 @@ std::vector<Point> Shape::get_points_in_layer(unsigned int layerNumber)
 {
     std::vector<Layer*> layerList = get_layer_list();
     Layer* layer = layerList[layerNumber];
-    std::vector<Point> pointsInLayer = layer->get_points();
+    std::vector<Point> pointsInLayer = layer->get_point_list();
     return pointsInLayer;
 }
 
@@ -130,7 +130,7 @@ std::vector<Point> Shape::get_points()
     for (unsigned int i{0}; i<numberOfLayers; i++)
     {
         Layer *layer = layerList[i];
-        std::vector<Point> pointsInLayer = layer->get_points();
+        std::vector<Point> pointsInLayer = layer->get_point_list();
         unsigned int numberOfPointsInLayer = static_cast<unsigned int>(pointsInLayer.size());
         for (unsigned int j{0}; j<numberOfPointsInLayer; j++)
         {

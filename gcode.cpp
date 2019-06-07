@@ -95,7 +95,7 @@ void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
 
     fout << "G21 ; set units to millimeters" << std::endl;
     fout << "G90 ; use absolute coordinates" << std::endl;
-    Point firstLocation = shape.get_layer(0)->get_points().at(0);
+    Point firstLocation = shape.get_layer(0)->get_point_list().at(0);
     fout << std::endl;
     fout << "; Reset all axes:" << std::endl;
     fout << "G92 " << "X" << firstLocation.get_x() << " Y" << firstLocation.get_y() << " Z" << firstLocation.get_z() << " A0 " << "B0 " << std::endl;
@@ -113,17 +113,17 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, unsigned  int 
     if (layer->get_number() > 0)
     {
         fout << "G1  F" << get_travel_speed() << " ; Translation speed: " << get_travel_speed() << std::endl;
-        double layerJump = get_travel_jump();
+        double travelJump = get_travel_jump();
         double zLocation = layer->get_location();
-        fout << "G1 " << " Z" << zLocation + layerJump << " ; Layer jump distance: " << layerJump << std::endl;
+        fout << "G1 " << " Z" << zLocation + travelJump << " ; Layer jump distance: " << travelJump << std::endl;
 
         fout << "G1 ";
         fout << " A" << get_extruder_displacement()[0] - get_travel_retraction_distance();
         fout << " B" << get_extruder_displacement()[1] - get_travel_retraction_distance();
-        fout << " ; Layer retraction distance: " << get_travel_retraction_distance() << " mm" << std::endl;
+        fout << " ; Travel retraction distance: " << get_travel_retraction_distance() << " mm" << std::endl;
 
-        Point firstPoint = layer->get_points().at(0);
-        fout << "G1 " << " X" << firstPoint.get_x() << " Y" << firstPoint.get_y() << " Z" << firstPoint.get_z() + layerJump << std::endl;
+        Point firstPoint = layer->get_point_list().at(0);
+        fout << "G1 " << " X" << firstPoint.get_x() << " Y" << firstPoint.get_y() << " Z" << firstPoint.get_z() + travelJump << std::endl;
     }
 
     write_points_in_layer(fout, layer, numberOfLayers);
@@ -132,7 +132,11 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, unsigned  int 
 void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, unsigned int numberOfLayers)
 {
     fout << "G1  F" << get_print_speed() << " ; Print speed: " << get_print_speed() << std::endl;
-    std::vector<Point> pointsInLayer = layer->get_simplified_point_list();
+    std::vector<Point> pointsInLayer = layer->get_point_list();
+    if (mSimplifyPointList == true)
+    {
+        pointsInLayer = layer->get_simplified_point_list();
+    }
     unsigned int numberOfPointsInLayer = static_cast<unsigned int>(pointsInLayer.size());
     for (unsigned int i{0}; i<numberOfPointsInLayer; i++)
     {
@@ -359,4 +363,14 @@ void   Gcode::set_material_switch_retraction_distance(double materialSwitchRetra
 double Gcode::get_material_switch_retraction_distance() const
 {
     return mMaterialSwitchRetractionDistance;
+}
+
+void Gcode::set_simplify_point_list(bool const isTrue)
+{
+    mSimplifyPointList = isTrue;
+}
+
+bool Gcode::get_simplify_point_list() const
+{
+    return mSimplifyPointList;
 }
