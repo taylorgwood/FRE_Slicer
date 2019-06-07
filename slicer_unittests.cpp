@@ -87,8 +87,8 @@ TEST(LayerExtrusionWidth,givenChangedParameters_getCorrectExtrusionWidth)
     layer = shape.get_layer(0);
     double expectedExtrusionWidth = layer->get_extrusion_width()*2;
     shape.set_infill_percentage(50);
-//    layer.set_auto_adjust_path(0);
-//    layer.create_paths();
+    //    layer.set_auto_adjust_path(0);
+    //    layer.create_paths();
     layer = shape.get_layer(0);
     double calculatedExtrusionWidth = layer->get_modified_extrusion_width();
     EXPECT_DOUBLE_EQ(calculatedExtrusionWidth,expectedExtrusionWidth);
@@ -458,12 +458,12 @@ TEST(Gcode,whenAskedToGenerateGCodeFile_LayersPrintedInFile)
 
 TEST(Gcode,whenAskedToGenerateGCodeFile_PointsPrintedInFile)
 {
-//    Gcode newGcode;
-//    Shape newShape;
-//    std::string fileName = "testForPoints";
-//    newGcode.generate_file(newShape, fileName);
-//    // read some lines from file
-//    newGcode.delete_file();
+    //    Gcode newGcode;
+    //    Shape newShape;
+    //    std::string fileName = "testForPoints";
+    //    newGcode.generate_file(newShape, fileName);
+    //    // read some lines from file
+    //    newGcode.delete_file();
 }
 
 TEST(Gcode,whenAskedForInitialExtrusionAmount_getZeroExtrusionAmount)
@@ -882,61 +882,74 @@ TEST(ExtrusionWidth,givenInfillPercentage_getCorrectExtrusionWidth)
 
 }
 
+TEST(ExtrusionWidth,givenExtrusionWidth_getAdjustedExtrusionWidth)
+{
+    Shape shape;
+    Layer* firstLayer = shape.get_layer(0);
+    double originalExtrusionWidth = firstLayer->get_extrusion_width();
+    double newExtrusionWidth = 0.5;
+    shape.set_extrusion_width(newExtrusionWidth);
+    double actualExtrusionWidth = firstLayer->get_extrusion_width();
+    EXPECT_NEAR(actualExtrusionWidth,newExtrusionWidth, 0.0001);
+}
+
 TEST(A,B_c)
 {
     Gcode gcode;
     Shape shape;
-    shape.set_width(10.75);
-    shape.set_length(14);
-    shape.set_top_width(3);
+    //    shape.set_width(10.75);
+    //    shape.set_length(14);
+    //    shape.set_top_width(3);
     double infillAngle{45};
     shape.set_infill_angle(infillAngle);
-    //    gcode.generate_file(shape,"InfillTest45Degrees");
+//    gcode.generate_file(shape,"InfillTest45Degrees");
 }
 
 TEST(makeGcode,notReallyATest)
 {
     Gcode gcode;
     Shape shape;
-    gcode.generate_file(shape,"Testing");
+    gcode.set_travel_jump(0.5);
+//    gcode.generate_file(shape,"Testing");
 }
 
-TEST(PrintOut,PrintOutPerimeterPoints)
+TEST(PrintOutPerimeter,PrintOutPerimeterPoints)
 {
-    //        Layer layer;
-    //        layer.set_number(0);
-    //    //    layer.set_width(10);
-    //        layer.set_infill_angle(0);
-    //        layer.set_infill_percentage(100);
-    //        std::vector <Point> perimeterPoints = layer.get_perimeter_points();
-    //        EXPECT_EQ(1,1);
-    //        int numberOfPoints = static_cast<int>(perimeterPoints.size());
+    Layer layer;
+    layer.set_number(0);
+    //    layer.set_width(10);
+    layer.set_infill_angle(43);
+    layer.set_infill_percentage(40);
+    layer.refresh();
+    std::vector <Point> perimeterPoints = layer.get_perimeter_points();
+    EXPECT_EQ(1,1);
+    unsigned int numberOfPoints = static_cast<unsigned int>(perimeterPoints.size());
 
-    //            for (int i{0}; i<numberOfPoints; i++)
-    //            {
-    //                Point point = perimeterPoints.at(i);
-    //                std::cout << i << " X " << point.get_x() << std::endl;
-    //                std::cout << "  Y " << point.get_y() << std::endl;
-    //                std::cout << std::endl;
-    //            }
+    for (unsigned int i{0}; i<numberOfPoints; i++)
+    {
+        Point point = perimeterPoints.at(i);
+        std::cout << i << " X " << point.get_x() << std::endl;
+        std::cout << "  Y " << point.get_y() << std::endl;
+        std::cout << std::endl;
+    }
 
-    //            std::cout << " X " << std::endl;
-    //            std::cout << std::endl;
-    //            for (int i{0}; i<numberOfPoints; i++)
-    //            {
-    //                Point point = perimeterPoints.at(i);
-    //                std::cout << point.get_x() << std::endl;
-    //            }
-    //            std::cout << std::endl;
-    //            std::cout << std::endl;
-    //            std::cout << " Y " << std::endl;
-    //            std::cout << std::endl;
+    std::cout << " X " << std::endl;
+    std::cout << std::endl;
+    for (int i{0}; i<numberOfPoints; i++)
+    {
+        Point point = perimeterPoints.at(i);
+        std::cout << point.get_x() << std::endl;
+    }
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << " Y " << std::endl;
+    std::cout << std::endl;
 
-    //            for (int i{0}; i<numberOfPoints; i++)
-    //            {
-    //                Point point = perimeterPoints.at(i);
-    //                std::cout << point.get_y() << std::endl;
-    //            }
+    for (int i{0}; i<numberOfPoints; i++)
+    {
+        Point point = perimeterPoints.at(i);
+        std::cout << point.get_y() << std::endl;
+    }
 }
 
 

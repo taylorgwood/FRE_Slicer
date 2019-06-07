@@ -58,6 +58,8 @@ public:
     void   set_corners();
     std::vector <Point> get_corners();
     void   set_infill_size();
+    std::vector <Point> get_simplified_point_list();
+    void   refresh();
 
 
 protected:

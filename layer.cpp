@@ -86,6 +86,7 @@ Layer::Layer(int number, double location, double length, double width, double ex
     set_length(length);
     set_width(width);
     set_infill_percentage(infillPercentage);
+    set_infill_angle(infillAngle);
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
     set_resolution(resolution);
@@ -93,7 +94,6 @@ Layer::Layer(int number, double location, double length, double width, double ex
     //    set_corners();
     set_height(height);
     set_shape_height(shapeHeight);
-    set_infill_angle(infillAngle);
     create_paths();
 }
 
@@ -229,7 +229,6 @@ std::vector<Path*> Layer::get_path_list()
 void Layer::create_paths()
 {
     mPathList->clear();
-    //    set_extrusion_width(mExtrusionWidth);
     set_infill_size();
     std::vector <Point> perimeterPointList = get_perimeter_points();
     int numberOfPaths = static_cast<int>(perimeterPointList.size())-1;
@@ -285,26 +284,23 @@ void Layer::set_width(double const width)
 std::vector<Point> Layer::get_points()
 {
     std::vector<Point> pointList;
-    int numberOfPaths = static_cast<int>(mPathList->size());
+    unsigned int numberOfPaths = static_cast<unsigned int>(mPathList->size());
     Point* lastPoint = new Point;
-    for (int i{0}; i<numberOfPaths; i++)
+    for (unsigned int i{0}; i<numberOfPaths; i++)
     {
         Path* path = get_path_list()[i];
         std::vector<Point*> points = path->get_point_list();
-        int numberOfPoints = static_cast<int>(points.size());
-        for (int j{0}; j<numberOfPoints; j++)
+        unsigned int numberOfPoints = static_cast<unsigned int>(points.size());
+        for (unsigned int j{0}; j<numberOfPoints; j++)
         {
             Point* point = points[j];
             bool duplicate{false};
 
-            if (lastPoint->get_x() == point->get_x())
+            if (abs(lastPoint->get_x() - point->get_x()) < 0.00001)
             {
-                if (lastPoint->get_y() == point->get_y())
+                if (abs(lastPoint->get_y() - point->get_y()) < 0.00001)
                 {
-                    if (lastPoint->get_z() == point->get_z())
-                    {
-                        duplicate = true;
-                    }
+                    duplicate = true;
                 }
             }
             if (duplicate == false)
@@ -497,10 +493,23 @@ std::vector <Point> Layer::get_perimeter_points()
     std::vector <Point> perimeterPointList;
 
     std::vector <Point> corners = get_corners();
+    //  D---C
+    //  |   |
+    //  A---B
     Point cornerA = corners.at(0);
     Point cornerB = corners.at(1);
     Point cornerC = corners.at(2);
     Point cornerD = corners.at(3);
+
+    Point cornerATravel = cornerA;
+    cornerATravel.set_travel(true);
+    Point cornerBTravel = cornerB;
+    cornerBTravel.set_travel(true);
+    Point cornerCTravel = cornerC;
+    cornerCTravel.set_travel(true);
+    Point cornerDTravel = cornerD;
+    cornerDTravel.set_travel(true);
+
     Path bottom(cornerA,cornerB);
     Path right(cornerB,cornerC);
     Path top(cornerC,cornerD);
@@ -509,49 +518,54 @@ std::vector <Point> Layer::get_perimeter_points()
     std::vector <Point> rightSidePoints = get_side_points(right);
     std::vector <Point> topSidePoints = get_side_points(top);
     std::vector <Point> leftSidePoints = get_side_points(left);
-    int bottomSize = static_cast<int>(bottomSidePoints.size());
-    int rightSize = static_cast<int>(rightSidePoints.size());
-    int topSize = static_cast<int>(topSidePoints.size());
-    int leftSize = static_cast<int>(leftSidePoints.size());
+    unsigned int bottomSize = static_cast<unsigned int>(bottomSidePoints.size());
+    unsigned int rightSize = static_cast<unsigned int>(rightSidePoints.size());
+    unsigned int topSize = static_cast<unsigned int>(topSidePoints.size());
+    unsigned int leftSize = static_cast<unsigned int>(leftSidePoints.size());
     double theta = get_infill_angle()/180*pi;
 
     if (mNumber%2==0)
     {
         // for Even:---------------------------------------------------------------------------------
+        //
+        //  D__2_3_7__8__C    A->D = start -> 1, 2, 3, etc.
+        //   |/ /  /  / |
+        //  1| /  /  /  |11
+        //   |/  /  /  /|
+        //  4|__/0_/__/_|     0 = theta
+        //  A5 6  9  10 B,12
 
-        perimeterPointList.push_back(cornerD); // first point is D
-        int pointCount{0};
-        int leftPoint{0};
-        int bottomPoint{0};
-        int topPoint{0};
-        int rightPoint{0};
+        //        perimeterPointList.push_back(cornerDTravel); // first point is D
+        unsigned int pointCount{0};
+        unsigned int leftPoint{0};
+        unsigned int bottomPoint{0};
+        unsigned int topPoint{0};
+        unsigned int rightPoint{0};
         bool finish{false};
         while (finish == false)
         {
             // 1---------------------------------------------------------------------------------
+            // Left and bottom are paired, top and right are paired.
+            //
+            // Along left
             if (leftPoint < leftSize) // Left
             {
-                perimeterPointList.push_back(leftSidePoints.at(leftPoint));
-                leftPoint++;
-                if (rightSize > 0)
+                if (leftPoint == 0) // start at point D
                 {
-                }
-                else
-                {
-                    if (rightPoint == 0)
+                    if (leftSize != 0)
                     {
-                        perimeterPointList.push_back(cornerB);
+                        perimeterPointList.push_back(cornerDTravel);
                     }
                 }
+                perimeterPointList.push_back(leftSidePoints.at(leftPoint));
+                leftPoint++;
             }
-            else // Bottom
+            // Or along bottom
+            else
             {
-                if (bottomSize > 0)
+                if (bottomPoint==0) // if going from left to bottom, get corner A
                 {
-                }
-                else
-                {
-                    if (bottomPoint==0)
+                    if (bottomSize != 0)
                     {
                         perimeterPointList.push_back(cornerA);
                     }
@@ -570,17 +584,13 @@ std::vector <Point> Layer::get_perimeter_points()
             }
             else // Right
             {
-                if (rightSize > 0)
-                {
-                }
-                else
-                {
-                    if (rightPoint==0)
-                    {
-                        perimeterPointList.push_back(cornerC);
-                    }
-                }
-
+                //                if (rightPoint==0) // first point on right is C because top is empty, when theta ~ 0deg
+                //                {
+                //                    if (topSize == 0)
+                //                    {
+                //                        perimeterPointList.push_back(cornerC);
+                //                    }
+                //                }
                 if (rightPoint < rightSize)
                 {
                     perimeterPointList.push_back(rightSidePoints.at(rightPoint));
@@ -595,12 +605,9 @@ std::vector <Point> Layer::get_perimeter_points()
             }
             else // Right
             {
-                if (rightSize > 0)
+                if (rightPoint==0) // going from top to right, get corner C
                 {
-                }
-                else
-                {
-                    if (rightPoint==0)
+                    if (rightSize != 0)
                     {
                         perimeterPointList.push_back(cornerC);
                     }
@@ -619,19 +626,13 @@ std::vector <Point> Layer::get_perimeter_points()
             }
             else // Bottom
             {
-                if (bottomSize > 0)
-                {
-                }
-                else
-                {
-                    if (bottomPoint == 0)
-                    {
-                    }
-                    else
-                    {
-                        perimeterPointList.push_back(cornerB);
-                    }
-                }
+                //                if (bottomPoint == 0)
+                //                {
+                //                    if (bottomSize != 0)
+                //                    {
+                //                        perimeterPointList.push_back(cornerB);
+                //                    }
+                //                }
                 if (bottomPoint < bottomSize)
                 {
                     perimeterPointList.push_back(bottomSidePoints.at(bottomPoint));
@@ -639,22 +640,16 @@ std::vector <Point> Layer::get_perimeter_points()
                 }
             }
 
-            pointCount = static_cast<int> (perimeterPointList.size());
+            pointCount = static_cast<unsigned int> (perimeterPointList.size());
             if (rightPoint == rightSize)
             {
                 if (bottomPoint == bottomSize)
                 {
                     finish = true;
-                    if ((theta) < 0.001)
+                    Point lastPoint = perimeterPointList.at(pointCount-1);
+                    if ((lastPoint.get_x() - cornerA.get_x()) > 0.001)
                     {
-                        if (get_number_of_infill_paths()%2 == 0)
-                        {
-                            perimeterPointList.push_back(cornerA);
-                        }
-                        else
-                        {
-                            //                            perimeterPointList.push_back(cornerB);
-                        }
+                        perimeterPointList.push_back(cornerBTravel);
                     }
                 }
             }
@@ -664,13 +659,20 @@ std::vector <Point> Layer::get_perimeter_points()
     else
     {
         // for Odd:---------------------------------------------------------------------------------
+        //
+        // 3,D_4__7__811_C,12    A = start -> 1, 2, 3, etc.
+        //   | \  \  \ \|10
+        //  2|  \  \  \ |
+        //   |\  \  \  \|9
+        //   |_\__\0_\__|     0 = theta > 90
+        //   A  1  5  6  B
 
         perimeterPointList.push_back(cornerA); // first point is A
-        int pointCount{0};
-        int bottomPoint{0};
-        int rightPoint{0};
-        int leftPoint{0};
-        int topPoint{0};
+        unsigned int pointCount{0};
+        unsigned int bottomPoint{0};
+        unsigned int rightPoint{0};
+        unsigned int leftPoint{0};
+        unsigned int topPoint{0};
         bool finish{false};
         while (finish == false)
         {
@@ -679,10 +681,7 @@ std::vector <Point> Layer::get_perimeter_points()
             {
                 perimeterPointList.push_back(bottomSidePoints.at(bottomPoint));
                 bottomPoint++;
-                if (topSize > 0)
-                {
-                }
-                else
+                if (topSize == 1)
                 {
                     if (topPoint==0)
                     {
@@ -692,10 +691,7 @@ std::vector <Point> Layer::get_perimeter_points()
             }
             else // Right
             {
-                if (rightSize > 0)
-                {
-                }
-                else
+                if (rightSize == 0)
                 {
                     if (rightPoint == 0)
                     {
@@ -711,10 +707,7 @@ std::vector <Point> Layer::get_perimeter_points()
             // 2---------------------------------------------------------------------------------
             if (leftPoint < leftSize) // Left
             {
-                if (leftSize == 1)
-                {
-                }
-                else
+                if (leftSize > 1)
                 {
                     perimeterPointList.push_back(leftSidePoints.at(leftPoint));
                 }
@@ -722,10 +715,7 @@ std::vector <Point> Layer::get_perimeter_points()
             }
             else // Top
             {
-                if (topSize > 0)
-                {
-                }
-                else
+                if (topSize == 0)
                 {
                     if (topPoint==0)
                     {
@@ -747,11 +737,7 @@ std::vector <Point> Layer::get_perimeter_points()
             }
             else // Top
             {
-                if (topSize > 0)
-                {
-
-                }
-                else
+                if (topSize == 0)
                 {
                     if (topPoint==0)
                     {
@@ -772,16 +758,9 @@ std::vector <Point> Layer::get_perimeter_points()
             }
             else // Right
             {
-                if (rightSize > 0)
+                if (rightSize == 0)
                 {
-
-                }
-                else
-                {
-                    if (rightPoint ==0 )
-                    {
-                    }
-                    else
+                    if (rightPoint != 0)
                     {
                         perimeterPointList.push_back(cornerC);
                     }
@@ -792,7 +771,7 @@ std::vector <Point> Layer::get_perimeter_points()
                     rightPoint++;
                 }
             }
-            pointCount = static_cast<int> (perimeterPointList.size());
+            pointCount = static_cast<unsigned int> (perimeterPointList.size());
             if (topPoint == topSize)
             {
                 if (rightPoint == rightSize)
@@ -871,6 +850,9 @@ void Layer::set_corners()
 
 std::vector <Point> Layer::get_corners()
 {
+    //  D---C
+    //  |   |
+    //  A---B
     std::vector <Point> corners;
     corners.push_back(mPointA);
     corners.push_back(mPointB);
@@ -885,4 +867,68 @@ void Layer::set_infill_size()
     double modifiedExtrusionWidth = get_modified_extrusion_width();
     mInfillLength = mLength-modifiedExtrusionWidth;
     mInfillWidth = mWidth-modifiedExtrusionWidth;
+}
+
+
+
+std::vector <Point> Layer::get_simplified_point_list()
+{
+    std::vector<Point> cleanPointList;
+    unsigned int numberOfPaths = static_cast<unsigned int>(mPathList->size());
+    Point* lastPoint = new Point;
+    for (unsigned int i{0}; i<numberOfPaths; i++)
+    {
+        Path* path = get_path_list()[i];
+        std::vector<Point*> pointList = path->get_point_list();
+        unsigned int numberOfPoints = static_cast<unsigned int>(pointList.size());
+        for (unsigned int j{0}; j<numberOfPoints; j++)
+        {
+            Point* point = pointList[j];
+            bool duplicate{false};
+
+            if (abs(lastPoint->get_x() - point->get_x()) < 0.00001)
+            {
+                if (abs(lastPoint->get_y() - point->get_y()) < 0.00001)
+                {
+                    duplicate = true;
+                }
+            }
+            if (duplicate == false)
+            {
+                if (j == 0)
+                {
+                    cleanPointList.push_back(*point);
+                }
+                else
+                {
+                    Point* previousPoint = pointList.at(i-1);
+                    double previousMaterial = previousPoint->get_material();
+                    double currentMaterial = point->get_material();
+                    if (abs(previousMaterial - currentMaterial) > 0.0001)
+                    {
+                        cleanPointList.push_back(*point);
+                    }
+                }
+            }
+            lastPoint = point;
+        }
+    }
+    return  cleanPointList;
+}
+
+void Layer::refresh()
+{
+    mExtrusionModificationApplied = false;
+    set_number(mNumber);
+    set_location(mLocation);
+    set_length(mLength);
+    set_width(mWidth);
+    set_infill_percentage(mInfillPercentage);
+    set_infill_angle(mInfillAngle);
+    set_extrusion_multiplier(mExtrusionMultiplier);
+    set_extrusion_width(mExtrusionWidth);
+    set_resolution(mResolution);
+    set_height(mHeight);
+    set_shape_height(mShapeHeight);
+    create_paths();
 }
