@@ -584,13 +584,6 @@ std::vector <Point> Layer::get_perimeter_points()
             }
             else // Right
             {
-                //                if (rightPoint==0) // first point on right is C because top is empty, when theta ~ 0deg
-                //                {
-                //                    if (topSize == 0)
-                //                    {
-                //                        perimeterPointList.push_back(cornerC);
-                //                    }
-                //                }
                 if (rightPoint < rightSize)
                 {
                     perimeterPointList.push_back(rightSidePoints.at(rightPoint));
@@ -626,13 +619,6 @@ std::vector <Point> Layer::get_perimeter_points()
             }
             else // Bottom
             {
-                //                if (bottomPoint == 0)
-                //                {
-                //                    if (bottomSize != 0)
-                //                    {
-                //                        perimeterPointList.push_back(cornerB);
-                //                    }
-                //                }
                 if (bottomPoint < bottomSize)
                 {
                     perimeterPointList.push_back(bottomSidePoints.at(bottomPoint));
@@ -667,7 +653,7 @@ std::vector <Point> Layer::get_perimeter_points()
         //   |_\__\0_\__|     0 = theta > 90
         //   A  1  5  6  B
 
-        perimeterPointList.push_back(cornerA); // first point is A
+//        perimeterPointList.push_back(cornerA); // first point is A
         unsigned int pointCount{0};
         unsigned int bottomPoint{0};
         unsigned int rightPoint{0};
@@ -677,25 +663,29 @@ std::vector <Point> Layer::get_perimeter_points()
         while (finish == false)
         {
             // 1---------------------------------------------------------------------------------
+            // Bottom and right are paired, left and top are paired.
+            //
+            // Along bottom
             if (bottomPoint < bottomSize) // Bottom
             {
-                perimeterPointList.push_back(bottomSidePoints.at(bottomPoint));
-                bottomPoint++;
-                if (topSize == 1)
+                if (bottomPoint == 0)
                 {
-                    if (topPoint==0)
+                    if (bottomSize != 0)
                     {
-                        perimeterPointList.push_back(cornerD);
+                        perimeterPointList.push_back(cornerATravel);
                     }
                 }
+                perimeterPointList.push_back(bottomSidePoints.at(bottomPoint));
+                bottomPoint++;
             }
-            else // Right
+            // Or along right
+            else
             {
-                if (rightSize == 0)
+                if (rightPoint == 0) // if going from bottom to right, get corner B
                 {
-                    if (rightPoint == 0)
+                    if (rightSize != 0)
                     {
-                        perimeterPointList.push_back(cornerD); // not sure about this
+                        perimeterPointList.push_back(cornerB);
                     }
                 }
                 if (rightPoint < rightSize)
@@ -707,22 +697,11 @@ std::vector <Point> Layer::get_perimeter_points()
             // 2---------------------------------------------------------------------------------
             if (leftPoint < leftSize) // Left
             {
-                if (leftSize > 1)
-                {
-                    perimeterPointList.push_back(leftSidePoints.at(leftPoint));
-                }
+                perimeterPointList.push_back(leftSidePoints.at(leftPoint));
                 leftPoint++;
             }
             else // Top
             {
-                if (topSize == 0)
-                {
-                    if (topPoint==0)
-                    {
-                        perimeterPointList.push_back(cornerD);
-                    }
-                }
-
                 if (topPoint < topSize)
                 {
                     perimeterPointList.push_back(topSidePoints.at(topPoint));
@@ -737,9 +716,9 @@ std::vector <Point> Layer::get_perimeter_points()
             }
             else // Top
             {
-                if (topSize == 0)
+                if (topPoint == 0) // if going from left to top, get corner D
                 {
-                    if (topPoint==0)
+                    if (topSize != 0)
                     {
                         perimeterPointList.push_back(cornerD);
                     }
@@ -758,13 +737,6 @@ std::vector <Point> Layer::get_perimeter_points()
             }
             else // Right
             {
-                if (rightSize == 0)
-                {
-                    if (rightPoint != 0)
-                    {
-                        perimeterPointList.push_back(cornerC);
-                    }
-                }
                 if (rightPoint < rightSize)
                 {
                     perimeterPointList.push_back(rightSidePoints.at(rightPoint));
@@ -777,20 +749,11 @@ std::vector <Point> Layer::get_perimeter_points()
                 if (rightPoint == rightSize)
                 {
                     finish = true;
-                    if ((theta - pi) < 0.001)
+                    Point lastPoint = perimeterPointList.at(pointCount-1);
+                    if ((lastPoint.get_y() - cornerC.get_y()) > 0.001)
                     {
-                        perimeterPointList.at(1) = cornerD;
-                        int num = get_number_of_infill_paths();
-                        if (num%2 == 0)
-                        {
-                            perimeterPointList.push_back(cornerB);
-                        }
-                        else
-                        {
-                            //                            perimeterPointList.push_back(cornerC);
-                        }
+                        perimeterPointList.push_back(cornerBTravel);
                     }
-
                 }
             }
         }
