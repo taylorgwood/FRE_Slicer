@@ -21,7 +21,7 @@ public:
     void   create_layers();
     std::vector<Layer*> get_layer_list();
     std::vector<Point>  get_points_in_layer(unsigned int layerNumber);
-    std::vector<Point>  get_points();
+    std::vector<Point>  get_point_list();
     std::vector<double> get_layer_locations();
     Layer  *get_layer(unsigned int layerNumber);
     double get_extrusion_width();
@@ -44,6 +44,7 @@ public:
     void   set_infill_angle(double thetaInDegrees);
     double get_infill_angle() const;
     void   refresh();
+    std::vector<Point> get_simplified_point_list();
 
 protected:
 
