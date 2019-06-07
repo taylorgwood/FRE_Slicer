@@ -24,8 +24,8 @@ void EXPECT_POINT_EQ(Point* firstPoint, Point* secondPoint)
 
 void EXPECT_POINT_LIST_EQ(std::vector<Point*> firstVector, std::vector<Point> secondVector)
 {
-    size_t numberOfPoints = firstVector.size();
-    for (int i{0}; i<numberOfPoints; i++)
+    unsigned int numberOfPoints = static_cast<unsigned int>(firstVector.size());
+    for (unsigned int i{0}; i<numberOfPoints; i++)
     {
         EXPECT_POINT_EQ(*firstVector[i],secondVector[i]);
     }
@@ -33,8 +33,8 @@ void EXPECT_POINT_LIST_EQ(std::vector<Point*> firstVector, std::vector<Point> se
 
 void EXPECT_VECTOR_EQ(std::vector<double> firstVector, std::vector<double> secondVector)
 {
-    size_t vectorSize = firstVector.size();
-    for (int i{0}; i<vectorSize; i++)
+    unsigned int vectorSize = static_cast<unsigned int>(firstVector.size());
+    for (unsigned int i{0}; i<vectorSize; i++)
     {
         EXPECT_NEAR(firstVector[i],secondVector[i],0.00001);
     }
@@ -87,6 +87,7 @@ TEST(LayerExtrusionWidth,givenChangedParameters_getCorrectExtrusionWidth)
     layer = shape.get_layer(0);
     double expectedExtrusionWidth = layer->get_extrusion_width()*2;
     shape.set_infill_percentage(50);
+    shape.refresh();
     //    layer.set_auto_adjust_path(0);
     //    layer.create_paths();
     layer = shape.get_layer(0);
@@ -123,8 +124,8 @@ TEST(ShapeFormation,givenShapeHeight_getCorrectNumberOfLayers)
     shape.set_height(10);
     double adjustedLayerHeight = shape.get_adjusted_layer_height();
     shape.set_layer_height(adjustedLayerHeight);
-    int adjustedNumberOfLayers{shape.get_number_of_layers()};
-    int expectedNumberOfLayers{20};
+    unsigned int adjustedNumberOfLayers{shape.get_number_of_layers()};
+    unsigned int expectedNumberOfLayers{20};
     double expectedLayerHeight{0.5};
     EXPECT_EQ(adjustedNumberOfLayers,expectedNumberOfLayers);
     EXPECT_DOUBLE_EQ(shape.get_layer_height(),expectedLayerHeight);
@@ -133,8 +134,8 @@ TEST(ShapeFormation,givenShapeHeight_getCorrectNumberOfLayers)
 TEST(PathNumber,givenLayerWidthAndPathWidth_getNumberOfPaths)
 {
     Layer layer;
-    int calculatedNumberOfPaths = layer.get_number_of_infill_paths();
-    int expectedNumberOfPaths{38};
+    unsigned int calculatedNumberOfPaths = layer.get_number_of_infill_paths();
+    unsigned int expectedNumberOfPaths{38};
     EXPECT_EQ(calculatedNumberOfPaths,expectedNumberOfPaths);
 }
 
@@ -144,7 +145,7 @@ TEST(PathNumber,givenLayerWidthAndPathWidth_getAdjustedNumberOfPaths)
     double adjustedExtrusionWidth = layer.get_adjusted_extrusion_width();
     layer.set_extrusion_width(adjustedExtrusionWidth);
     double expectedExtrusionWidth = 0.263157895;
-    int expectedNumberOfPaths{38};
+    unsigned int expectedNumberOfPaths{38};
     EXPECT_NEAR(adjustedExtrusionWidth,expectedExtrusionWidth,0.00001);
     EXPECT_EQ(layer.get_number_of_infill_paths(),expectedNumberOfPaths);
 }
@@ -167,8 +168,8 @@ TEST(LayerList,givenShape_getCorrectNumberOfPathsInFirstLayer)
     shape.set_layer_height(0.26);
     std::vector<Layer*> layerList = shape.get_layer_list();
     Layer* firstLayer = layerList[0];
-    int numberOfPaths = firstLayer->get_number_of_infill_paths();
-    int expectedNumberOfPaths{38};
+    unsigned int numberOfPaths = firstLayer->get_number_of_infill_paths();
+    unsigned int expectedNumberOfPaths{38};
     EXPECT_EQ(numberOfPaths,expectedNumberOfPaths);
 }
 
@@ -194,8 +195,8 @@ TEST(PathList,givenShape_getCorrectNumberOfPointsInSecondPath)
     Layer* firstLayer = layerList[0];
     std::vector<Path*> pathList = firstLayer->get_path_list();
     Path* secondPath = pathList[0];
-    int numberOfPoints = secondPath->get_number_of_points();
-    int expectedNumberOfPoints{10};
+    unsigned int numberOfPoints = secondPath->get_number_of_points();
+    unsigned int expectedNumberOfPoints{10};
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
 }
 
@@ -210,27 +211,27 @@ TEST(PathList,givenShape_getCorrectNumberOfPointsInSecondPathList)
     Path* firstPath = pathList[0];
     std::vector<Point*> pointList = firstPath->get_point_list();
     size_t numberOfPoints = pointList.size();
-    int expectedNumberOfPoints{10};
+    unsigned int expectedNumberOfPoints{10};
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
 }
 
 TEST(LayerList,whenAskedForPointsInFirstLayer_getCorrectNumberOfPointsInFirstLayer)
 {
     Shape shape;
-    int firstLayer{0};
+    unsigned int firstLayer{0};
     std::vector<Point> pointList = shape.get_points_in_layer(firstLayer);
     size_t numberOfPointsInLayer = pointList.size();
-    int expectedNumberOfPointsInLayer{(38*10)+(38-2)/2};
+    unsigned int expectedNumberOfPointsInLayer{(38*10)};
     EXPECT_EQ(numberOfPointsInLayer,expectedNumberOfPointsInLayer);
 }
 
 TEST(LayerList,whenAskedForPointsInSecondLayer_getCorrectNumberOfPointsInSecondLayer)
 {
     Shape shape;
-    int secondLayer{1};
+    unsigned int secondLayer{1};
     std::vector<Point> pointList = shape.get_points_in_layer(secondLayer);
     size_t numberOfPointsInLayer = pointList.size();
-    int expectedNumberOfPointsInLayer{(38*10)+(38-2)/2};
+    unsigned int expectedNumberOfPointsInLayer{(38*10)};
     EXPECT_EQ(numberOfPointsInLayer,expectedNumberOfPointsInLayer);
 }
 
@@ -239,7 +240,7 @@ TEST(ShapeList,whenAskedForPointsInShape_getCorrectNumberOfPointsInShape)
     Shape shape;
     std::vector<Point> pointList = shape.get_points();
     size_t numberOfPoints = pointList.size();
-    int expectedNumberOfPoints{(38*((38*10)+(38-2)/2))};
+    unsigned int expectedNumberOfPoints{38*(38*10)};
     EXPECT_EQ(numberOfPoints,expectedNumberOfPoints);
 }
 
@@ -261,13 +262,12 @@ TEST(PrintOut,whenGivenPointList_printPointsToConsole)
 TEST(LayerLocations,whenAskedForLayerLocations_getLayerLocations)
 {
     Shape shape;
-    int firstLayer{0};
     std::vector<double> layerLocationVector = shape.get_layer_locations();
-    size_t vectorLength = layerLocationVector.size();
+    unsigned int vectorLength = static_cast<unsigned int> (layerLocationVector.size());
     double layerHeight{0.26315789473};
     double height{0};
     std::vector<double> expectedLayerHeights;
-    for (int i{0}; i<vectorLength; i++)
+    for (unsigned int i{0}; i<vectorLength; i++)
     {
         height += layerHeight;
         expectedLayerHeights.push_back(height);
@@ -280,11 +280,11 @@ TEST(LayerLocations,whenConstructingShape_layerLocationsSet)
     Shape shape;
     std::vector<Layer*> layerList = shape.get_layer_list();
     std::vector<double> layerLocationVector;
-    size_t vectorLength = layerLocationVector.size();
+    unsigned int vectorLength = static_cast<unsigned int> (layerLocationVector.size());
     double layerHeight{0.26};
     double expectedLocation{0};
     std::vector<double> expectedLayerHeights;
-    for (int i{0}; i<vectorLength; i++)
+    for (unsigned int i{0}; i<vectorLength; i++)
     {
         expectedLocation += layerHeight;
         expectedLayerHeights.push_back(expectedLocation);
@@ -300,9 +300,9 @@ TEST(LayerNumber,whenConstructingShape_layerNumbersSet)
     Shape shape;
     std::vector<Layer*> layerList = shape.get_layer_list();
     std::vector<double> layerNumberVector;
-    size_t vectorLength = layerNumberVector.size();
+    unsigned int vectorLength = static_cast<unsigned int>(layerNumberVector.size());
     std::vector<double> expectedLayerNumbers;
-    for (int i{0}; i<vectorLength; i++)
+    for (unsigned int i{0}; i<vectorLength; i++)
     {
         expectedLayerNumbers.push_back(i);
         Layer* layer = layerList[i];
@@ -505,7 +505,7 @@ TEST(Extrusion,whenCreatingShape_getCorrectLayerVolume)
     double layerHeight = newShape.get_layer_height();
     double print_diameter = firstLayer->get_diameter_of_print();
     double layerVolume = extrusionMultiplier*extrusionWidth*infillPercentage/100;
-    int numberOfLayers = newShape.get_number_of_layers();
+    unsigned int numberOfLayers = newShape.get_number_of_layers();
 }
 
 TEST(ShapeSize,whenResettingLayerSize_getNewShapeSize)
@@ -513,6 +513,7 @@ TEST(ShapeSize,whenResettingLayerSize_getNewShapeSize)
     Shape shape;
     double newShapeWidth = 8;
     shape.set_width(newShapeWidth);
+    shape.refresh();
     double actualShapeWidth = shape.get_width();
     EXPECT_DOUBLE_EQ(newShapeWidth,actualShapeWidth);
 }
@@ -522,7 +523,8 @@ TEST(ShapeSize,whenResettingLayerSize_getNewLayerSize)
     Shape shape;
     double newShapeLength = 5;
     shape.set_length(newShapeLength);
-    int firstLayer{0};
+    shape.refresh();
+    unsigned int firstLayer{0};
     double actualLayerLength = shape.get_layer(firstLayer)->get_length();
     EXPECT_DOUBLE_EQ(newShapeLength,actualLayerLength);
 }
@@ -534,9 +536,9 @@ TEST(PathNumber,whenChangingShapeSize_getDifferentNumberOfPathsDependingOnOrient
     double shapeLength{10};
     Shape shape(shapeHeight,shapeWidth,shapeLength);
     Layer* firstLayer = shape.get_layer(0);
-    int numberOfPathsInFirstLayer = firstLayer->get_number_of_infill_paths();
+    unsigned int numberOfPathsInFirstLayer = firstLayer->get_number_of_infill_paths();
     Layer* secondLayer = shape.get_layer(1);
-    int numberOfPathsInSecondLayer = secondLayer->get_number_of_infill_paths();
+    unsigned int numberOfPathsInSecondLayer = secondLayer->get_number_of_infill_paths();
     EXPECT_EQ(numberOfPathsInFirstLayer,19);
     EXPECT_EQ(numberOfPathsInSecondLayer,38);
 }
@@ -548,9 +550,9 @@ TEST(PointNumber,whenChangingShapeSize_getDifferentNumberOfPointsDependingOnPath
     double shapeLength{10};
     Shape shape(shapeHeight,shapeWidth,shapeLength);
     Layer* firstLayer = shape.get_layer(0);
-    int numberOfPointsInFirstLayerPath = firstLayer->get_path(0)->get_number_of_points();
+    unsigned int numberOfPointsInFirstLayerPath = firstLayer->get_path(0)->get_number_of_points();
     Layer* secondLayer = shape.get_layer(1);
-    int numberOfPointsInSecondLayerPath = secondLayer->get_path(0)->get_number_of_points();
+    unsigned int numberOfPointsInSecondLayerPath = secondLayer->get_path(0)->get_number_of_points();
     EXPECT_EQ(numberOfPointsInFirstLayerPath,shapeWidth);
     EXPECT_EQ(numberOfPointsInSecondLayerPath,shapeLength);
 }
@@ -560,6 +562,7 @@ TEST(Infill,whenChangingInfill_getCorrectlySizedLayer)
     Shape shape;
     double newInfillPercentage{50};
     shape.set_infill_percentage(newInfillPercentage);
+    shape.refresh();
     Layer* firstLayer = shape.get_layer(0);
     double layerWidth = firstLayer->get_width();
     double layerLength = firstLayer->get_length();
@@ -589,7 +592,7 @@ TEST(PathList,whenRequestingPathList_getCorrectLengthPathsInPathList)
     double firstPathLength = firstPath.get_length();
     double firstLayerExtrusionWidth = shape.get_layer(0)->get_modified_extrusion_width();
     double expectedFirstPathLength = shape.get_length()-firstLayerExtrusionWidth;
-    int numberOfPathsInFirstLayer = 75;
+    unsigned int numberOfPathsInFirstLayer = 75;
     EXPECT_EQ(firstPathLength,expectedFirstPathLength);
     Path secondLayerPath = pathList->at(numberOfPathsInFirstLayer);
     double secondLayerPathLength = secondLayerPath.get_length();
@@ -628,7 +631,7 @@ TEST(PathList,whenRequestingPathList_getCorrectLastPathLocation)
     Shape shape;
     Layer* firstLayer = shape.get_layer(0);
     std::vector<Path*> pathList = firstLayer->get_path_list();
-    int lastPathNumber = static_cast<int>(pathList.size())-1;
+    unsigned int lastPathNumber = static_cast<unsigned int>(pathList.size())-1;
     Path* lastPath = pathList.at(lastPathNumber);
     Point lastPathLocation = lastPath->get_start();
     double firstLayerZLocation = firstLayer->get_location();
@@ -645,7 +648,7 @@ TEST(Infill,whenChangingInfill_getCorrectNumberOfPaths)
     double newInfillPercentage{100};
     shape.set_infill_percentage(newInfillPercentage);
     Layer* firstLayer = shape.get_layer(0);
-    int numberOfPathsInList = firstLayer->get_number_of_infill_paths();
+    unsigned int numberOfPathsInList = firstLayer->get_number_of_infill_paths();
     double modifiedExtrusionWidth = firstLayer->get_modified_extrusion_width();
     int expectedNumberOfPaths = firstLayer->get_width()/modifiedExtrusionWidth;
     EXPECT_EQ(numberOfPathsInList,expectedNumberOfPaths);
@@ -762,10 +765,11 @@ TEST(AngledPaths,whenGivenThetaOf45Degrees_getCorrectNumberOfPaths)
     shape.set_width(4);
     shape.set_length(4);
     shape.set_infill_angle(45);
+    shape.refresh();
     layer = shape.get_layer(0);
     std::vector <Point> angledRayOriginList = layer->create_angled_ray_origin_list();
-    int numberOfPaths = angledRayOriginList.size();
-    int expectedNumberOfPaths{21};
+    unsigned int numberOfPaths = angledRayOriginList.size();
+    unsigned int expectedNumberOfPaths{21};
     EXPECT_EQ(numberOfPaths,expectedNumberOfPaths);
 }
 
@@ -804,6 +808,7 @@ TEST(LayerSize,givenTopSize_getCorrectlySizedTopLayer)
     Shape shape;
     double newTopWidth{4};
     shape.set_top_width(newTopWidth);
+    shape.refresh();
     int numberOfLayers = shape.get_number_of_layers();
     Layer* topLayer = shape.get_layer(numberOfLayers-1);
     double topLayerWidth = topLayer->get_width();
@@ -867,6 +872,7 @@ TEST(ExtrusionWidth,givenExtrusionMultiplier_getCorrectExtrusionWidth)
     Shape shape;
     double originalEW = shape.get_extrusion_width();
     shape.set_extrusion_multiplier(0.5);
+    shape.refresh();
     double newEW = shape.get_extrusion_width();
     EXPECT_DOUBLE_EQ(originalEW,newEW);
 }
@@ -877,6 +883,7 @@ TEST(ExtrusionWidth,givenInfillPercentage_getCorrectExtrusionWidth)
     double originalEW = shape.get_extrusion_width();
     double newPercentage{80};
     shape.set_infill_percentage(newPercentage);
+    shape.refresh();
     double newEW = shape.get_layer(0)->get_modified_extrusion_width();
     EXPECT_NEAR(0.322581,newEW,0.00001);
 
@@ -885,10 +892,10 @@ TEST(ExtrusionWidth,givenInfillPercentage_getCorrectExtrusionWidth)
 TEST(ExtrusionWidth,givenExtrusionWidth_getAdjustedExtrusionWidth)
 {
     Shape shape;
-    Layer* firstLayer = shape.get_layer(0);
-    double originalExtrusionWidth = firstLayer->get_extrusion_width();
     double newExtrusionWidth = 0.5;
     shape.set_extrusion_width(newExtrusionWidth);
+    shape.refresh();
+    Layer* firstLayer = shape.get_layer(0);
     double actualExtrusionWidth = firstLayer->get_extrusion_width();
     EXPECT_NEAR(actualExtrusionWidth,newExtrusionWidth, 0.0001);
 }
@@ -902,7 +909,7 @@ TEST(A,B_c)
     //    shape.set_top_width(3);
     double infillAngle{45};
     shape.set_infill_angle(infillAngle);
-//    gcode.generate_file(shape,"InfillTest45Degrees");
+    //    gcode.generate_file(shape,"InfillTest45Degrees");
 }
 
 TEST(makeGcode,notReallyATest)
@@ -910,46 +917,46 @@ TEST(makeGcode,notReallyATest)
     Gcode gcode;
     Shape shape;
     gcode.set_travel_jump(0.5);
-//    gcode.generate_file(shape,"Testing");
+    //    gcode.generate_file(shape,"Testing");
 }
 
-TEST(PrintOutPerimeter,PrintOutPerimeterPoints)
-{
-    Layer layer;
-    layer.set_number(0);
-    //    layer.set_width(10);
-    layer.set_infill_angle(43);
-    layer.set_infill_percentage(40);
-    layer.refresh();
-    std::vector <Point> perimeterPoints = layer.get_perimeter_points();
-    EXPECT_EQ(1,1);
-    unsigned int numberOfPoints = static_cast<unsigned int>(perimeterPoints.size());
+//TEST(PrintOutPerimeter,PrintOutPerimeterPoints)
+//{
+//    Layer layer;
+//    layer.set_number(1);
+//    //    layer.set_width(10);
+//    layer.set_infill_angle(17);
+//    layer.set_infill_percentage(97);
+//    layer.refresh();
+//    std::vector <Point> perimeterPoints = layer.get_perimeter_points();
+//    EXPECT_EQ(1,1);
+//    unsigned int numberOfPoints = static_cast<unsigned int>(perimeterPoints.size());
 
-    for (unsigned int i{0}; i<numberOfPoints; i++)
-    {
-        Point point = perimeterPoints.at(i);
-        std::cout << i << " X " << point.get_x() << std::endl;
-        std::cout << "  Y " << point.get_y() << std::endl;
-        std::cout << std::endl;
-    }
+//    for (unsigned int i{0}; i<numberOfPoints; i++)
+//    {
+//        Point point = perimeterPoints.at(i);
+//        std::cout << i << " X " << point.get_x() << std::endl;
+//        std::cout << "  Y " << point.get_y() << std::endl;
+//        std::cout << std::endl;
+//    }
 
-    std::cout << " X " << std::endl;
-    std::cout << std::endl;
-    for (int i{0}; i<numberOfPoints; i++)
-    {
-        Point point = perimeterPoints.at(i);
-        std::cout << point.get_x() << std::endl;
-    }
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << " Y " << std::endl;
-    std::cout << std::endl;
+//    std::cout << " X " << std::endl;
+//    std::cout << std::endl;
+//    for (int i{0}; i<numberOfPoints; i++)
+//    {
+//        Point point = perimeterPoints.at(i);
+//        std::cout << point.get_x() << std::endl;
+//    }
+//    std::cout << std::endl;
+//    std::cout << std::endl;
+//    std::cout << " Y " << std::endl;
+//    std::cout << std::endl;
 
-    for (int i{0}; i<numberOfPoints; i++)
-    {
-        Point point = perimeterPoints.at(i);
-        std::cout << point.get_y() << std::endl;
-    }
-}
+//    for (int i{0}; i<numberOfPoints; i++)
+//    {
+//        Point point = perimeterPoints.at(i);
+//        std::cout << point.get_y() << std::endl;
+//    }
+//}
 
 

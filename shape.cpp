@@ -11,17 +11,26 @@ Shape::Shape():mLayerList{new std::vector<Layer*>}
 
 Shape::Shape(double height, double width, double length):mLayerList{new std::vector<Layer*>}
 {
-    mHeight = height;
-    mWidth = width;
-    mLength = length;
+    set_height(height);
+    set_width(width);
+    set_length(length);
     create_layers();
 }
 
-int Shape::get_number_of_layers()
+Shape::Shape(double height, double width, double topWidth, double length):mLayerList{new std::vector<Layer*>}
+{
+    set_height(height);
+    set_width(width);
+    set_top_width(topWidth);
+    set_length(length);
+    create_layers();
+}
+
+unsigned int Shape::get_number_of_layers()
 {
     double exactNumberOfLayers = mHeight/mLayerHeight;
-    int flooredNumberOfLayers = int(floor(mHeight/mLayerHeight));
-    int numberOfLayers{flooredNumberOfLayers};
+    unsigned int flooredNumberOfLayers = static_cast<unsigned int>((floor(mHeight/mLayerHeight)));
+    unsigned int numberOfLayers{flooredNumberOfLayers};
     if ((exactNumberOfLayers-flooredNumberOfLayers)>=0.5)
     {
         numberOfLayers = flooredNumberOfLayers+1;
@@ -31,7 +40,7 @@ int Shape::get_number_of_layers()
 
 double Shape::get_adjusted_layer_height()
 {
-    int numberOfLayers = get_number_of_layers();
+    unsigned int numberOfLayers = get_number_of_layers();
     double adjustedLayerHeight = mHeight/numberOfLayers;
     return adjustedLayerHeight;
 }
@@ -54,7 +63,6 @@ void Shape::reset_layer_height(double layerHeight)
         layerHeight = get_adjusted_layer_height();
     }
     mLayerHeight = layerHeight;
-    mLayerList->clear();
     create_layers();
 }
 
@@ -66,8 +74,6 @@ void Shape::set_height(const double height)
 void Shape::reset_height(double height)
 {
     mHeight = height;
-    mLayerList->clear();
-    create_layers();
 }
 
 double Shape::get_height() const
@@ -78,26 +84,24 @@ double Shape::get_height() const
 void Shape::create_layers()
 {
     mLayerList->clear();
-    int numberOfLayers = get_number_of_layers();
+    unsigned int numberOfLayers = get_number_of_layers();
     double layerHeight = get_layer_height();
     double layerLength = get_length();
-//    double layerWidth  = get_width();
     double extrustionMultiplier = get_extrusion_multiplier();
     double extrusionWidth = get_extrusion_width();
     double infillPercentage = get_infill_percentage();
     double resolution = get_resolution();
     double shapeHeight = get_height();
     double infillAngle = get_infill_angle();
-//    bool   adjustPath = get_auto_adjust_path();
     if (mAutoAdjustLayer == true)
     {
         layerHeight = get_adjusted_layer_height();
     }
     set_layer_height(layerHeight);
     double layerLocation = -layerHeight/2;
-    for (int i{0}; i<numberOfLayers; i++)
+    for (unsigned int i{0}; i<numberOfLayers; i++)
     {
-        int layerNumber{i};
+        unsigned int layerNumber{i};
         double layerWidth = get_layer_width(layerNumber);
         layerLocation += layerHeight;
         Layer* newLayer = new Layer(layerNumber,layerLocation,layerLength,layerWidth, extrustionMultiplier, extrusionWidth, infillPercentage, resolution, layerHeight, shapeHeight, infillAngle);
@@ -110,7 +114,7 @@ std::vector<Layer*> Shape::get_layer_list()
     return *mLayerList;
 }
 
-std::vector<Point> Shape::get_points_in_layer(int layerNumber)
+std::vector<Point> Shape::get_points_in_layer(unsigned int layerNumber)
 {
     std::vector<Layer*> layerList = get_layer_list();
     Layer* layer = layerList[layerNumber];
@@ -122,15 +126,13 @@ std::vector<Point> Shape::get_points()
 {
     std::vector<Point> pointList;
     std::vector<Layer*> layerList = get_layer_list();
-    size_t numberOfLayers = layerList.size();
-    //    int numberOfLayers = get_number_of_layers();
-    for (int i{0}; i<numberOfLayers; i++)
+    unsigned int numberOfLayers = static_cast<unsigned int>(layerList.size());
+    for (unsigned int i{0}; i<numberOfLayers; i++)
     {
-//        std::vector<Layer*> layerList = get_layer_list();
         Layer *layer = layerList[i];
         std::vector<Point> pointsInLayer = layer->get_points();
-        size_t numberOfPointsInLayer = pointsInLayer.size();
-        for (int j{0}; j<numberOfPointsInLayer; j++)
+        unsigned int numberOfPointsInLayer = static_cast<unsigned int>(pointsInLayer.size());
+        for (unsigned int j{0}; j<numberOfPointsInLayer; j++)
         {
             Point point = pointsInLayer[j];
             pointList.push_back(point);
@@ -144,8 +146,8 @@ std::vector<double> Shape::get_layer_locations()
     std::vector<double> layerLocationVector;
     double layerLocation{0};
     std::vector<Layer*> layerList = get_layer_list();
-    size_t numberOfLayers = get_number_of_layers();
-    for (int i{0}; i<numberOfLayers; i++)
+    unsigned int numberOfLayers = get_number_of_layers();
+    for (unsigned int i{0}; i<numberOfLayers; i++)
     {
         Layer *layer = layerList[i];
         double layerHeight = layer->get_height();
@@ -155,7 +157,7 @@ std::vector<double> Shape::get_layer_locations()
     return layerLocationVector;
 }
 
-Layer* Shape::get_layer(int layerNumber)
+Layer* Shape::get_layer(unsigned int layerNumber)
 {
     std::vector<Layer*> layerList = get_layer_list();
     Layer* layer = layerList[layerNumber];
@@ -165,8 +167,6 @@ Layer* Shape::get_layer(int layerNumber)
 void Shape::set_extrusion_width(double extrusionWidth)
 {
     mExtrusionWidth = extrusionWidth;
-//    mLayerList->clear();
-    create_layers();
 }
 
 double Shape::get_infill_percentage()
@@ -177,8 +177,6 @@ double Shape::get_infill_percentage()
 void Shape::set_infill_percentage(double infillPercentage)
 {
     mInfillPercentage = infillPercentage;
-//    mLayerList->clear();
-    create_layers();
 }
 
 double Shape::get_extrusion_multiplier()
@@ -189,8 +187,6 @@ double Shape::get_extrusion_multiplier()
 void Shape::set_extrusion_multiplier(double extrusionMultiplier)
 {
     mExtrusionMultiplier = extrusionMultiplier;
-//    mLayerList->clear();
-    create_layers();
 }
 
 double Shape::get_width()
@@ -201,8 +197,6 @@ double Shape::get_width()
 void Shape::set_width(double layerWidth)
 {
     mWidth = layerWidth;
-//    mLayerList->clear();
-    create_layers();
 }
 
 double Shape::get_length()
@@ -213,23 +207,12 @@ double Shape::get_length()
 void Shape::set_length(double layerLength)
 {
     mLength = layerLength;
-//    mLayerList->clear();
-    create_layers();
 }
 
 void Shape::set_auto_adjust_layer(bool adjustLayer)
 {
     mAutoAdjustLayer = adjustLayer;
-//    mLayerList->clear();
-    create_layers();
 }
-
-//void Shape::set_auto_adjust_path(bool adjustPath)
-//{
-//    mAutoAdjustPath = adjustPath;
-//    mLayerList->clear();
-//    create_layers();
-//}
 
 double Shape::get_resolution()
 {
@@ -239,8 +222,6 @@ double Shape::get_resolution()
 void Shape::set_resolution(double resolution)
 {
     mResolution = resolution;
-//    mLayerList->clear();
-    create_layers();
 }
 
 double Shape::get_extrusion_width()
@@ -248,21 +229,16 @@ double Shape::get_extrusion_width()
     return mExtrusionWidth;
 }
 
-//bool Shape::get_auto_adjust_path()
-//{
-//    return mAutoAdjustPath;
-//}
-
 std::vector<Path>* Shape::get_path_list()
 {
     std::vector<Path>* pathList = new std::vector<Path>;
-    size_t numberOfLayers = get_layer_list().size();
-    for (int i{0}; i<numberOfLayers; i++)
+    unsigned int numberOfLayers = static_cast<unsigned int>(get_layer_list().size());
+    for (unsigned int i{0}; i<numberOfLayers; i++)
     {
         Layer* layer = get_layer(i);
         std::vector<Path*> layerPathList = layer->get_path_list();
-        size_t numberOfPaths = layerPathList.size();
-        for (int j{0}; j<numberOfPaths; j++)
+        unsigned int numberOfPaths = static_cast<unsigned int>(layerPathList.size());
+        for (unsigned int j{0}; j<numberOfPaths; j++)
         {
             Path* path = layerPathList.at(j);
             pathList->push_back(*path);
@@ -279,7 +255,6 @@ void Shape::set_top_width(double topWidth)
         topWidth = minimumWidth;
     }
     mTopWidth = topWidth;
-    create_layers();
 }
 
 double Shape::get_top_width() const
@@ -287,7 +262,7 @@ double Shape::get_top_width() const
     return mTopWidth;
 }
 
-double Shape::get_layer_width(int layerNumber)
+double Shape::get_layer_width(unsigned int layerNumber)
 {
     double shapeWidth = get_width();
     double shapeHeight = get_height();
@@ -303,10 +278,25 @@ double Shape::get_layer_width(int layerNumber)
 void Shape::set_infill_angle(double thetaInDegrees)
 {
     mInfillAngle = thetaInDegrees;
-    create_layers();
 }
 
 double Shape::get_infill_angle() const
 {
     return mInfillAngle;
+}
+
+void  Shape::refresh()
+{
+    set_height(mHeight);
+    set_width(mWidth);
+    set_top_width(mTopWidth);
+    set_length(mLength);
+    reset_layer_height(mLayerHeight);
+    set_extrusion_width(mExtrusionWidth);
+    set_extrusion_multiplier(mExtrusionMultiplier);
+    set_infill_angle(mInfillAngle);
+    set_infill_percentage(mInfillPercentage);
+    set_auto_adjust_layer(mAutoAdjustLayer);
+    set_resolution(mResolution);
+    create_layers();
 }
