@@ -175,7 +175,7 @@ Point* Path::create_new_point(unsigned int pointNumber, unsigned int numberOfPoi
 
 double Path::get_material(Point pointInfo) const
 {
-    double material{0};
+    double material{1};
     // Note: Change this code to define the material throughout the print.
     //    double xLocation = pointInfo.get_x()-mShapeWidth/2;
     //    double yLocation = pointInfo.get_y()-mShapeLength/2;
@@ -184,28 +184,28 @@ double Path::get_material(Point pointInfo) const
     //    double locationMagnitude = sqrt(xLocation*xLocation + yLocation*yLocation + zLocation*zLocation);
     //    double shapeMagnitude = sqrt(mShapeHeight*mShapeHeight + mShapeLength*mShapeLength + mShapeWidth*mShapeWidth)/2;
     //    material = locationMagnitude/shapeMagnitude;
-    double xLocation = pointInfo.get_x();
-    double yLocation = pointInfo.get_y();
-    double zLocation = pointInfo.get_z();
-    unsigned int layerNumber = get_layer_number();
-    //    if (layerNumber%2 == 0)
-    //    {
-    //        material = 1;
-    //    }
-    if (layerNumber < 16)
-    {
-        if (xLocation > 5)
-        {
-            material = 1;
-        }
-    }
-    else
-    {
-        if (xLocation < 5)
-        {
-            material = 1;
-        }
-    }
+//    double xLocation = pointInfo.get_x();
+//    double yLocation = pointInfo.get_y();
+//    double zLocation = pointInfo.get_z();
+//    unsigned int layerNumber = get_layer_number();
+//    //    if (layerNumber%2 == 0)
+//    //    {
+//    //        material = 1;
+//    //    }
+//    if (layerNumber < 16)
+//    {
+//        if (xLocation > 5)
+//        {
+//            material = 1;
+//        }
+//    }
+//    else
+//    {
+//        if (xLocation < 5)
+//        {
+//            material = 1;
+//        }
+//    }
     return material;
 }
 
