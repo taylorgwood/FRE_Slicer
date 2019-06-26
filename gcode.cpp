@@ -6,6 +6,7 @@ Gcode::Gcode()
 
 void Gcode::generate_file(Shape& shape, std::string fileName)
 {
+    mExtruderDisplacement = {0,0};
     set_file_name(fileName);
     std::ofstream fout = create_empty_file();
     write_gcode(fout, shape);
@@ -30,7 +31,7 @@ void Gcode::write_gcode(std::ofstream& fout, Shape& shape)
 std::ofstream Gcode::create_empty_file()
 {
     std::string uniqueFileName = make_file_name_unique();
-    std::string suffix = ".gcode";
+    std::string suffix = ".txt";
 
     set_file_name(uniqueFileName);
     std::ofstream fout = get_fout();
@@ -40,7 +41,7 @@ std::ofstream Gcode::create_empty_file()
 std::ofstream Gcode::get_fout()
 {
     std::string fileName = get_file_name();
-    std::string suffix = ".gcode";
+    std::string suffix = ".txt";
     std::string completeFileName = fileName + suffix;
     std::ofstream fout{completeFileName};
     bool failedToWrite = fout.fail();
@@ -56,7 +57,7 @@ std::string Gcode::make_file_name_unique()
     std::string fileName = get_file_name();
     std::string uniqueFileName = fileName;
     int incrementCount{1};
-    std::string suffix = ".gcode";
+    std::string suffix = ".txt";
     bool fileExists = does_file_exist(uniqueFileName + suffix);
     while(fileExists)
     {
@@ -104,25 +105,35 @@ void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
 
 std::string Gcode::get_begin_layer_gcode(unsigned int layerNumber, unsigned int totalLayers)
 {
-    std::string beginLayerGcode = "; Beginning layer " + std::to_string(layerNumber + 1) + " of " + std::to_string(totalLayers) + " ----------------------------";
+    std::string beginLayerGcode = ";  Beginning layer " + std::to_string(layerNumber + 1) + " of " + std::to_string(totalLayers) + " ----------------------------";
     return beginLayerGcode;
 }
 
 void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, unsigned  int numberOfLayers)
 {
-    if (layer->get_number() > 0)
+    unsigned int layerNumber = layer->get_number();
+    if (layerNumber > 0)
     {
-        fout << "G1  F" << get_travel_speed() << " ; Translation speed: " << get_travel_speed() << std::endl;
+        fout << "G1  F" << get_travel_speed()*60;
+        fout << " ; Translation speed: " << get_travel_speed() << " mm/s" << std::endl;
         double travelJump = get_travel_jump();
+        double travelJog = get_travel_jog();
+        if (layerNumber%2 != 0)
+        {
+            travelJog = -travelJog;
+        }
         double zLocation = layer->get_location();
-        fout << "G1 " << " Z" << zLocation + travelJump << " ; Layer jump distance: " << travelJump << std::endl;
+        fout << "G1 " << " Z" << zLocation + travelJump;
+        fout << " ; Layer jump distance: " << travelJump << " mm" << std::endl;
 
         fout << "G1 ";
-        fout << " A" << get_extruder_displacement()[0] - get_travel_retraction_distance();
-        fout << " B" << get_extruder_displacement()[1] - get_travel_retraction_distance();
-        fout << " ; Travel retraction distance: " << get_travel_retraction_distance() << " mm" << std::endl;
+        fout << " A" << get_extruder_displacement()[0] - get_travel_retraction_distance().at(0);
+        fout << " B" << get_extruder_displacement()[1] - get_travel_retraction_distance().at(1);
+        fout << " ; Travel retraction distance: (A,B) " << get_travel_retraction_distance().at(0) << "," << get_travel_retraction_distance().at(1) << " mm" << std::endl;
 
+        fout << "G1 " << " Y" << mLastPoint.get_y()+travelJog << std::endl;
         Point firstPoint = layer->get_point_list().at(0);
+        fout << "G1 " << " X" << firstPoint.get_x() << " Y" << firstPoint.get_y()+travelJog << " Z" << firstPoint.get_z() + travelJump << std::endl;
         fout << "G1 " << " X" << firstPoint.get_x() << " Y" << firstPoint.get_y() << " Z" << firstPoint.get_z() + travelJump << std::endl;
     }
 
@@ -131,7 +142,8 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, unsigned  int 
 
 void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, unsigned int numberOfLayers)
 {
-    fout << "G1  F" << get_print_speed() << " ; Print speed: " << get_print_speed() << std::endl;
+    fout << "G1  F" << get_print_speed()*60 << " ; Print speed: " << get_print_speed() << " mm/s" << std::endl;
+    fout << std::endl;
     std::vector<Point> pointsInLayer = layer->get_point_list();
     if (mSimplifyPointList == true)
     {
@@ -240,7 +252,7 @@ double Gcode::calculate_length(Point currentPoint)
 void Gcode::delete_file()
 {
     std::string fileName = get_file_name();
-    std::string suffix = ".gcode";
+    std::string suffix = ".txt";
     std::string completeFileName = fileName + suffix;
     if(does_file_exist(completeFileName))
     {
@@ -325,6 +337,16 @@ double Gcode::get_travel_jump() const
     return  mTravelJump;
 }
 
+void Gcode::set_travel_jog(const double travelJog)
+{
+    mTravelJog = travelJog;
+}
+
+double Gcode::get_travel_jog() const
+{
+    return  mTravelJog;
+}
+
 void   Gcode::set_travel_speed(double const travelSpeed)
 {
     mTravelSpeed = travelSpeed;
@@ -345,12 +367,27 @@ double Gcode::get_print_speed() const
     return mPrintSpeed;
 }
 
-void   Gcode::set_travel_retraction_distance(double travelRetractionDistance)
+void   Gcode::set_retraction_speed(double const retractionSpeed)
 {
-    mTravelRetractionDistance = travelRetractionDistance;
+    mRetractionSpeed = retractionSpeed;
 }
 
-double Gcode::get_travel_retraction_distance() const
+double Gcode::get_retraction_speed() const
+{
+    return mRetractionSpeed;
+}
+
+void   Gcode::set_travel_A_retraction_distance(double travelARetractionDistance)
+{
+    mTravelRetractionDistance.at(0) = travelARetractionDistance;
+}
+
+void   Gcode::set_travel_B_retraction_distance(double travelBRetractionDistance)
+{
+    mTravelRetractionDistance.at(1) = travelBRetractionDistance;
+}
+
+std::vector<double> Gcode::get_travel_retraction_distance() const
 {
     return mTravelRetractionDistance;
 }

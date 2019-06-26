@@ -912,6 +912,9 @@ TEST(A,B_c)
     shape.refresh();
     gcode.set_simplify_point_list(true);
     gcode.set_travel_jump(0.5);
+    gcode.set_travel_jog(1);
+    gcode.set_retraction_speed(2);
+    gcode.set_travel_A_retraction_distance(4);
     gcode.generate_file(shape,"InfillTest45Degrees");
 }
 
