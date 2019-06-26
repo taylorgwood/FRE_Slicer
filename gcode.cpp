@@ -6,7 +6,6 @@ Gcode::Gcode()
 
 void Gcode::generate_file(Shape& shape, std::string fileName)
 {
-    mExtruderDisplacement = {0,0};
     set_file_name(fileName);
     std::ofstream fout = create_empty_file();
     write_gcode(fout, shape);
@@ -31,7 +30,7 @@ void Gcode::write_gcode(std::ofstream& fout, Shape& shape)
 std::ofstream Gcode::create_empty_file()
 {
     std::string uniqueFileName = make_file_name_unique();
-    std::string suffix = ".txt";
+    std::string suffix = ".gcode";
 
     set_file_name(uniqueFileName);
     std::ofstream fout = get_fout();
@@ -41,7 +40,7 @@ std::ofstream Gcode::create_empty_file()
 std::ofstream Gcode::get_fout()
 {
     std::string fileName = get_file_name();
-    std::string suffix = ".txt";
+    std::string suffix = ".gcode";
     std::string completeFileName = fileName + suffix;
     std::ofstream fout{completeFileName};
     bool failedToWrite = fout.fail();
@@ -57,7 +56,7 @@ std::string Gcode::make_file_name_unique()
     std::string fileName = get_file_name();
     std::string uniqueFileName = fileName;
     int incrementCount{1};
-    std::string suffix = ".txt";
+    std::string suffix = ".gcode";
     bool fileExists = does_file_exist(uniqueFileName + suffix);
     while(fileExists)
     {
@@ -241,7 +240,7 @@ double Gcode::calculate_length(Point currentPoint)
 void Gcode::delete_file()
 {
     std::string fileName = get_file_name();
-    std::string suffix = ".txt";
+    std::string suffix = ".gcode";
     std::string completeFileName = fileName + suffix;
     if(does_file_exist(completeFileName))
     {
