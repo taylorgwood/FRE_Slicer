@@ -115,7 +115,7 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, unsigned  int 
     if (layerNumber > 0)
     {
         fout << "G1  F" << get_travel_speed()*60;
-        fout << " ; Translation speed: " << get_travel_speed() << " mm/s" << std::endl;
+        fout << " ; Travel speed: " << get_travel_speed() << " mm/s" << std::endl;
         double travelJump = get_travel_jump();
         double travelJog = get_travel_jog();
         if (layerNumber%2 != 0)
@@ -200,6 +200,19 @@ void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, unsigned in
 
 void Gcode::write_end_gcode(std::ofstream& fout)
 {
+    fout << "G1 " << " F" << get_travel_speed()*60;
+    fout << " ; Travel speed: " << get_travel_speed() << " mm/s" << std::endl;
+
+    fout << "G1 ";
+    fout << " A" << get_extruder_displacement()[0] - get_travel_retraction_distance().at(0);
+    fout << " B" << get_extruder_displacement()[1] - get_travel_retraction_distance().at(1);
+    fout << " ; Travel retraction distance: (A,B) " << get_travel_retraction_distance().at(0) << "," << get_travel_retraction_distance().at(1) << " mm" << std::endl;
+
+    fout << "G1 " << " Z" << mLastPoint.get_z() + get_finish_print_jump_distance();
+    fout << "; Jump distance: " << get_finish_print_jump_distance() << " mm" << std::endl;
+    fout << "G1 " << " X" << mLastPoint.get_x() + get_finish_print_jog_distance();
+    fout << "; Jog distance: " << get_finish_print_jog_distance() << " mm" << std::endl;
+
     fout << "; End of file" << std::endl;
     fout << std::endl;
 }
@@ -345,6 +358,26 @@ void Gcode::set_travel_jog(const double travelJog)
 double Gcode::get_travel_jog() const
 {
     return  mTravelJog;
+}
+
+void Gcode::set_finish_print_jump_distance(const double finishPrintJumpDistance)
+{
+    mFinishPrintJumpDistance = finishPrintJumpDistance;
+}
+
+double Gcode::get_finish_print_jump_distance() const
+{
+    return mFinishPrintJumpDistance;
+}
+
+void Gcode::set_finish_print_jog_distance(const double finishPrintJogDistance)
+{
+    mFinishPrintJogDistance = finishPrintJogDistance;
+}
+
+double Gcode::get_finish_print_jog_distance() const
+{
+    return mFinishPrintJogDistance;
 }
 
 void   Gcode::set_travel_speed(double const travelSpeed)
