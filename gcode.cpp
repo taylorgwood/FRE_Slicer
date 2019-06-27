@@ -124,14 +124,15 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, unsigned  int 
         }
         double zLocation = layer->get_location();
         fout << "G1 " << " Z" << zLocation + travelJump;
-        fout << " ; Layer jump distance: " << travelJump << " mm" << std::endl;
+        fout << " ; Travel jump distance: " << travelJump << " mm" << std::endl;
 
         fout << "G1 ";
         fout << " A" << get_extruder_displacement()[0] - get_travel_retraction_distance().at(0);
         fout << " B" << get_extruder_displacement()[1] - get_travel_retraction_distance().at(1);
         fout << " ; Travel retraction distance: (A,B) " << get_travel_retraction_distance().at(0) << "," << get_travel_retraction_distance().at(1) << " mm" << std::endl;
 
-        fout << "G1 " << " Y" << mLastPoint.get_y()+travelJog << std::endl;
+        fout << "G1 " << " Y" << mLastPoint.get_y()+travelJog;
+        fout << " ; Travel jog distance: " << travelJog << " mm" << std::endl;
         Point firstPoint = layer->get_point_list().at(0);
         fout << "G1 " << " X" << firstPoint.get_x() << " Y" << firstPoint.get_y()+travelJog << " Z" << firstPoint.get_z() + travelJump << std::endl;
         fout << "G1 " << " X" << firstPoint.get_x() << " Y" << firstPoint.get_y() << " Z" << firstPoint.get_z() + travelJump << std::endl;
