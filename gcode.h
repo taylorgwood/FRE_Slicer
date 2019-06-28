@@ -32,7 +32,8 @@ public:
     std::string get_time_string();
     std::string get_begin_layer_gcode(unsigned int layerNumber, unsigned int totalLayers);
     void   write_file_creation_information(std::ofstream &fout);
-    void   write_basic_settings(std::ofstream& fout, Shape &shape);
+    void   write_gcode_settings(std::ofstream& fout);
+    void   write_print_settings(std::ofstream& fout, Shape &shape);
     double get_syringe_diameter() const;
     void   set_syringe_diameter(double syringeDiameter);
     void   set_travel_jump(double const travelJump);
