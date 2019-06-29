@@ -104,7 +104,7 @@ void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
     fout << "; Reset all axes:" << std::endl;
     double startPrintPlungeDistance = get_start_print_plunge_distance();
     fout << "G92 " << "X" << firstLocation.get_x() << " Y" << firstLocation.get_y() << " Z" << firstLocation.get_z()+startPrintPlungeDistance << " A0 " << "B0 " << std::endl;
-    fout << "G90 " << "X" << firstLocation.get_x() << " Y" << firstLocation.get_y() << " Z" << firstLocation.get_z()+startPrintPlungeDistance << " A0 " << "B0 ";
+    fout << "G1  " << "X" << firstLocation.get_x() << " Y" << firstLocation.get_y() << " Z" << firstLocation.get_z()+startPrintPlungeDistance << " A0 " << "B0 ";
     fout << " ; Start print plunge distance:   " << get_start_print_plunge_distance() << " mm (-Z)" << std::endl;
 
     fout << std::endl;
