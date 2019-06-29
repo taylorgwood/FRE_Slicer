@@ -44,6 +44,8 @@ public:
     double get_finish_print_jump_distance() const;
     void   set_finish_print_jog_distance(double const finishPrintJogDistance);
     double get_finish_print_jog_distance() const;
+    void   set_start_print_plunge_distance(double const startPrintPlungeDistance);
+    double get_start_print_plunge_distance() const;
     void   set_travel_speed(double const travelSpeed);
     double get_travel_speed() const;
     void   set_print_speed(double const printSpeed);
@@ -57,6 +59,10 @@ public:
     double get_material_switch_retraction_distance() const;
     void   set_simplify_point_list(bool const isTrue);
     bool   get_simplify_point_list() const;
+    void   set_extruder_choice(std::vector<bool> extruderChoice);
+    std::vector<bool> get_extruder_choice() const;
+    void   set_multi_material(bool const multiMaterial);
+    bool   get_multi_material() const;
 
 protected:
 
@@ -73,12 +79,15 @@ private:
     double mTravelJog{0};
     double mFinishPrintJumpDistance{50};
     double mFinishPrintJogDistance{50};
+    double mStartPrintPlungeDistance{15};
     double mTravelSpeed{12};
     double mPrintSpeed{12};
     double mRetractionSpeed{3};
     std::vector<double> mTravelRetractionDistance{0,0};
     double mMaterialSwitchRetractionDistance{0};
     bool   mSimplifyPointList{false};
+    bool   mMultiMaterial{false};
+    std::vector<bool> mSingleMaterialExtruderChoice{1,0};
 };
 
 #endif // GCODE_H

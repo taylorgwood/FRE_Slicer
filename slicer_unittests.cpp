@@ -900,6 +900,46 @@ TEST(ExtrusionWidth,givenExtrusionWidth_getAdjustedExtrusionWidth)
     EXPECT_NEAR(actualExtrusionWidth,newExtrusionWidth, 0.0001);
 }
 
+TEST(ExtruderChoice,givenSingleMaterialPrint_getNoBExtrusion)
+{
+    Shape shape;
+    Gcode gcode;
+    gcode.set_multi_material(false); // this should be default
+    double materialRatio = 0.5;
+    double extrusionDistance = 1;
+    gcode.increment_extruder_displacement(materialRatio,extrusionDistance);
+    double extruderB = gcode.get_extruder_displacement().at(1);
+    EXPECT_DOUBLE_EQ(extruderB,0);
+}
+
+TEST(ExtruderChoice,givenSingleMaterialPrint_getCorrectAExtrusion)
+{
+    Shape shape;
+    Gcode gcode;
+    gcode.set_multi_material(false); // this should be default
+    double materialRatio = 0.5;
+    double extrusionDistance = 1;
+    gcode.increment_extruder_displacement(materialRatio,extrusionDistance);
+    double extruderA = gcode.get_extruder_displacement().at(0);
+    EXPECT_DOUBLE_EQ(extruderA,extrusionDistance);
+}
+
+TEST(ExtruderChoice,givenBothExtrudersEnabled_getCorrectExtrusion)
+{
+    Shape shape;
+    Gcode gcode;
+    gcode.set_multi_material(false); // this should be default
+    std::vector<bool> enabledExtruders{true,true};
+    gcode.set_extruder_choice(enabledExtruders);
+    double materialRatio = 0.5;
+    double extrusionDistance = 1;
+    gcode.increment_extruder_displacement(materialRatio,extrusionDistance);
+    double extruderA = gcode.get_extruder_displacement().at(0);
+    double extruderB = gcode.get_extruder_displacement().at(1);
+    EXPECT_DOUBLE_EQ(extruderA,extrusionDistance);
+    EXPECT_DOUBLE_EQ(extruderB,extrusionDistance);
+}
+
 TEST(A,B_c)
 {
     Gcode gcode;
