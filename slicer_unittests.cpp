@@ -904,7 +904,7 @@ TEST(ExtruderChoice,givenSingleMaterialPrint_getNoBExtrusion)
 {
     Shape shape;
     Gcode gcode;
-    gcode.set_multi_material(false); // this should be default
+    gcode.set_single_material(true); // this should be default
     double materialRatio = 0.5;
     double extrusionDistance = 1;
     gcode.increment_extruder_displacement(materialRatio,extrusionDistance);
@@ -916,7 +916,7 @@ TEST(ExtruderChoice,givenSingleMaterialPrint_getCorrectAExtrusion)
 {
     Shape shape;
     Gcode gcode;
-    gcode.set_multi_material(false); // this should be default
+    gcode.set_single_material(true); // this should be default
     double materialRatio = 0.5;
     double extrusionDistance = 1;
     gcode.increment_extruder_displacement(materialRatio,extrusionDistance);
@@ -928,7 +928,7 @@ TEST(ExtruderChoice,givenBothExtrudersEnabled_getCorrectExtrusion)
 {
     Shape shape;
     Gcode gcode;
-    gcode.set_multi_material(false); // this should be default
+    gcode.set_single_material(true); // this should be default
     std::vector<bool> enabledExtruders{true,true};
     gcode.set_extruder_choice(enabledExtruders);
     double materialRatio = 0.5;

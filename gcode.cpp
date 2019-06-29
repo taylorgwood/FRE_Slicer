@@ -92,7 +92,7 @@ void Gcode::set_file_name(std::string const fileName)
 void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
 {
     fout << std::endl;
-    fout << "; Last version update: June 27, 2019" << std::endl;
+    fout << "; Last version update: June 28, 2019" << std::endl;
     write_file_creation_information(fout);
     write_gcode_settings(fout);
     write_print_settings(fout, shape);
@@ -104,6 +104,9 @@ void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
     fout << "; Reset all axes:" << std::endl;
     double startPrintPlungeDistance = get_start_print_plunge_distance();
     fout << "G92 " << "X" << firstLocation.get_x() << " Y" << firstLocation.get_y() << " Z" << firstLocation.get_z()+startPrintPlungeDistance << " A0 " << "B0 " << std::endl;
+    fout << "G90 " << "X" << firstLocation.get_x() << " Y" << firstLocation.get_y() << " Z" << firstLocation.get_z()+startPrintPlungeDistance << " A0 " << "B0 ";
+    fout << " ; Start print plunge distance:   " << get_start_print_plunge_distance() << " mm (-Z)" << std::endl;
+
     fout << std::endl;
 }
 
@@ -131,17 +134,9 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, unsigned  int 
         fout << " ; Travel jump distance: " << travelJump << " mm" << std::endl;
 
         fout << "G1 ";
-        if (get_multi_material() == true)
-        {
-            fout << " A" << get_extruder_displacement()[0] - get_travel_retraction_distance().at(0);
-            fout << " B" << get_extruder_displacement()[1] - get_travel_retraction_distance().at(1);
-            fout << " ; Travel retraction distance: (A,B) " << get_travel_retraction_distance().at(0) << "," << get_travel_retraction_distance().at(1) << " mm" << std::endl;
-        }
-        else
-        {
-
-        }
-
+        fout << " A" << get_extruder_displacement()[0] - get_travel_retraction_distance().at(0);
+        fout << " B" << get_extruder_displacement()[1] - get_travel_retraction_distance().at(1);
+        fout << " ; Travel retraction distance: (A,B) " << get_travel_retraction_distance().at(0) << "," << get_travel_retraction_distance().at(1) << " mm" << std::endl;
         fout << "G1 " << " Y" << mLastPoint.get_y()+travelJog;
         fout << " ; Travel jog distance: " << travelJog << " mm" << std::endl;
         Point firstPoint = layer->get_point_list().at(0);
@@ -192,7 +187,7 @@ void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, unsigned in
             {
                 differenceB = 0;
             }
-            if (mMultiMaterial == true)
+            if (mSingleMaterial == true)
             {
                 fout << " A" << get_extruder_displacement()[0] + differenceA*retractionDistance;
                 fout << " B" << get_extruder_displacement()[1] + differenceB*retractionDistance;
@@ -203,7 +198,7 @@ void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, unsigned in
         }
         else
         {
-            if (mMultiMaterial == true)
+            if (mSingleMaterial == true)
             {
                 fout << " A" << get_extruder_displacement()[0];
                 fout << " B" << get_extruder_displacement()[1];
@@ -270,10 +265,10 @@ std::vector<double> Gcode::get_extruder_displacement() const
 
 void Gcode::increment_extruder_displacement(double materialRatio, double extrusionDistance)
 {
-    bool multiMaterial = get_multi_material();
+    bool singleMaterial = is_single_material();
     double extruderStepA = (materialRatio*extrusionDistance);
     double extruderStepB = ((1-materialRatio)*extrusionDistance);
-    if (multiMaterial == false)
+    if (singleMaterial == true)
     {
         extruderStepA = 0;
         extruderStepB = 0;
@@ -332,6 +327,7 @@ void Gcode::write_gcode_settings(std::ofstream& fout)
     fout << "; Gcode Settings:        " << std::endl;
     fout << "; _Travel Jump:          " << get_travel_jump() << " mm (+Z, between layers)" << std::endl;
     fout << "; _Travel Jog:           " << get_travel_jog() << " mm (+-Y, between layers)" << std::endl;
+    fout << "; _Start Print Plunge:   " << get_start_print_plunge_distance() << " mm (-Z)" << std::endl;
     fout << "; _Finish Print Jump:    " << get_finish_print_jump_distance() << " mm (+Z)" << std::endl;
     fout << "; _Finish Print Jog:     " << get_finish_print_jog_distance() << " mm (+X)" << std::endl;
     fout << "; _Travel Speed:         " << get_travel_speed() << " mm/s" << std::endl;
@@ -530,12 +526,12 @@ std::vector<bool> Gcode::get_extruder_choice() const
     return mSingleMaterialExtruderChoice;
 }
 
-void Gcode::set_multi_material(bool const multiMaterial)
+void Gcode::set_single_material(bool const singleMaterial)
 {
-    mMultiMaterial = multiMaterial;
+    mSingleMaterial = singleMaterial;
 }
 
-bool Gcode::get_multi_material() const
+bool Gcode::is_single_material() const
 {
-    return mMultiMaterial;
+    return mSingleMaterial;
 }

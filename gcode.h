@@ -61,8 +61,8 @@ public:
     bool   get_simplify_point_list() const;
     void   set_extruder_choice(std::vector<bool> extruderChoice);
     std::vector<bool> get_extruder_choice() const;
-    void   set_multi_material(bool const multiMaterial);
-    bool   get_multi_material() const;
+    void   set_single_material(bool const singleMaterial);
+    bool   is_single_material() const;
 
 protected:
 
@@ -86,7 +86,7 @@ private:
     std::vector<double> mTravelRetractionDistance{0,0};
     double mMaterialSwitchRetractionDistance{0};
     bool   mSimplifyPointList{false};
-    bool   mMultiMaterial{false};
+    bool   mSingleMaterial{false};
     std::vector<bool> mSingleMaterialExtruderChoice{1,0};
 };
 
