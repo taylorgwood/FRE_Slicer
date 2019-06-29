@@ -102,7 +102,8 @@ void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
     Point firstLocation = shape.get_layer(0)->get_point_list().at(0);
     fout << std::endl;
     fout << "; Reset all axes:" << std::endl;
-    fout << "G92 " << "X" << firstLocation.get_x() << " Y" << firstLocation.get_y() << " Z" << firstLocation.get_z() << " A0 " << "B0 " << std::endl;
+    double startPrintPlungeDistance = get_start_print_plunge_distance();
+    fout << "G92 " << "X" << firstLocation.get_x() << " Y" << firstLocation.get_y() << " Z" << firstLocation.get_z()+startPrintPlungeDistance << " A0 " << "B0 " << std::endl;
     fout << std::endl;
 }
 

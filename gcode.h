@@ -40,12 +40,12 @@ public:
     double get_travel_jump() const;
     void   set_travel_jog(double const travelJog);
     double get_travel_jog() const;
+    void   set_start_print_plunge_distance(double const startPrintPlungeDistance);
+    double get_start_print_plunge_distance() const;
     void   set_finish_print_jump_distance(double const finishPrintJumpDistance);
     double get_finish_print_jump_distance() const;
     void   set_finish_print_jog_distance(double const finishPrintJogDistance);
     double get_finish_print_jog_distance() const;
-    void   set_start_print_plunge_distance(double const startPrintPlungeDistance);
-    double get_start_print_plunge_distance() const;
     void   set_travel_speed(double const travelSpeed);
     double get_travel_speed() const;
     void   set_print_speed(double const printSpeed);
@@ -77,9 +77,9 @@ private:
     Point  mLastPoint{0,0,0};
     double mTravelJump{0};
     double mTravelJog{0};
+    double mStartPrintPlungeDistance{15};
     double mFinishPrintJumpDistance{50};
     double mFinishPrintJogDistance{50};
-    double mStartPrintPlungeDistance{15};
     double mTravelSpeed{12};
     double mPrintSpeed{12};
     double mRetractionSpeed{3};
