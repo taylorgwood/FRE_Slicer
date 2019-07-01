@@ -86,7 +86,7 @@ private:
     std::vector<double> mTravelRetractionDistance{0,0};
     double mMaterialSwitchRetractionDistance{0};
     bool   mSimplifyPointList{false};
-    bool   mSingleMaterial{false};
+    bool   mSingleMaterial{true};
     std::vector<bool> mSingleMaterialExtruderChoice{1,0};
 };
 

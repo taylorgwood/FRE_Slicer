@@ -39,8 +39,8 @@ std::ofstream Gcode::create_empty_file()
 std::ofstream Gcode::get_fout()
 {
     std::string fileName = get_file_name();
-    //    std::string suffix = ".txt";
-    std::string suffix = "";
+    std::string suffix = ".txt";
+    //    std::string suffix = "";
     std::string completeFileName = fileName + suffix;
     std::ofstream fout{completeFileName};
     bool failedToWrite = fout.fail();
@@ -56,8 +56,8 @@ std::string Gcode::make_file_name_unique()
     std::string fileName = get_file_name();
     std::string uniqueFileName = fileName;
     int incrementCount{1};
-    //    std::string suffix = ".txt";
-    std::string suffix = "";
+    std::string suffix = ".txt";
+    //    std::string suffix = "";
     bool fileExists = does_file_exist(uniqueFileName + suffix);
     while(fileExists)
     {
@@ -187,25 +187,13 @@ void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, unsigned in
             {
                 differenceB = 0;
             }
-            if (mSingleMaterial == true)
-            {
-                fout << " A" << get_extruder_displacement()[0] + differenceA*retractionDistance;
-                fout << " B" << get_extruder_displacement()[1] + differenceB*retractionDistance;
-            }
-            else
-            {
-            }
+            fout << " A" << get_extruder_displacement()[0] + differenceA*retractionDistance;
+            fout << " B" << get_extruder_displacement()[1] + differenceB*retractionDistance;
         }
         else
         {
-            if (mSingleMaterial == true)
-            {
-                fout << " A" << get_extruder_displacement()[0];
-                fout << " B" << get_extruder_displacement()[1];
-            }
-            else
-            {
-            }
+            fout << " A" << get_extruder_displacement()[0];
+            fout << " B" << get_extruder_displacement()[1];
         }
         if (mPointCount%20 == 0)
         {
@@ -301,8 +289,8 @@ double Gcode::calculate_length(Point currentPoint)
 void Gcode::delete_file()
 {
     std::string fileName = get_file_name();
-    //    std::string suffix = ".txt";
-    std::string suffix = "";
+    std::string suffix = ".txt";
+    //    std::string suffix = "";
     std::string completeFileName = fileName + suffix;
     if(does_file_exist(completeFileName))
     {

@@ -955,6 +955,7 @@ TEST(A,B_c)
     gcode.set_travel_jog(1);
     gcode.set_retraction_speed(2);
     gcode.set_travel_A_retraction_distance(4);
+    gcode.set_single_material(false);
     gcode.generate_file(shape,"InfillTest45Degrees");
 }
 
@@ -964,6 +965,9 @@ TEST(makeGcode,notReallyATest)
     Shape shape;
     gcode.set_travel_jump(0.5);
     gcode.set_simplify_point_list(true);
+    gcode.set_single_material(true);
+    std::vector<bool> enabledExtruders{true,true};
+    gcode.set_extruder_choice(enabledExtruders);
     gcode.generate_file(shape,"Testing");
 }
 
