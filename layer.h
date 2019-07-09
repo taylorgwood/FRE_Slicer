@@ -22,6 +22,7 @@ public:
     double get_diameter_of_print();
     double get_volume() const;
     double get_area() const;
+    double get_length_of_infill();
     double get_extrusion_width();
     void   set_extrusion_width(double extrusionWidth);
     double get_adjusted_extrusion_width();
@@ -31,13 +32,16 @@ public:
     unsigned int get_number_of_infill_paths();
     std::vector<Path*> get_path_list();
     void   create_paths();
+    void   set_diameter_in_layer();
     double get_length() const;
     void   set_length(double const length);
     double get_width() const;
     void   set_width(double const width);
     double get_infill_width() const;
     double get_infill_length() const;
+    void   create_point_list();
     std::vector<Point> get_point_list();
+    void   set_point_list(std::vector<Point> pointList);
     unsigned int get_number() const;
     void   set_number(unsigned int const number);
     double get_location() const;
@@ -58,7 +62,9 @@ public:
     void   set_corners();
     std::vector <Point> get_corners();
     void   set_infill_size();
-    std::vector <Point> get_simplified_point_list();
+    void   create_simplified_point_list();
+    std::vector<Point> get_simplified_point_list();
+    void   set_simplified_point_list(std::vector<Point> cleanPointList);
     void   refresh();
 
 
@@ -86,6 +92,8 @@ private:
     Point  mPointB;
     Point  mPointC;
     Point  mPointD;
+    std::vector<Point> mPointList;
+    std::vector<Point> mSimplifiedPointList;
 };
 
 #endif // LAYER_H

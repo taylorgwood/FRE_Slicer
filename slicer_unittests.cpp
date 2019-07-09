@@ -971,6 +971,16 @@ TEST(makeGcode,notReallyATest)
     gcode.generate_file(shape,"Testing");
 }
 
+TEST(makeGcode,noExtraMovement)
+{
+    Gcode gcode;
+    Shape shape;
+    shape.set_infill_angle(45);
+    shape.refresh();
+    gcode.set_simplify_point_list(true);
+    gcode.generate_file(shape,"NoExtraMovement");
+}
+
 //TEST(PrintOutPerimeter,PrintOutPerimeterPoints)
 //{
 //    Layer layer;

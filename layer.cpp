@@ -129,26 +129,39 @@ void Layer::set_extrusion_multiplier(const double extrusionMultiplier)
 
 double Layer::get_diameter_of_print()
 {
-    //    double volume = get_volume();
-    double extrusionWidth = get_extrusion_width();
-    //    double area = mLength*mWidth;
-    double height = get_height();
+    double layerVolume = get_volume();
     double extrusionMultiplier = get_extrusion_multiplier();
-    double diameterOfPrint = extrusionMultiplier*sqrt(height*4*extrusionWidth/(pi));
+    double lengthOfInfill = get_length_of_infill();
+    double diameterOfPrint = extrusionMultiplier*sqrt(layerVolume*4/(lengthOfInfill*pi));
     return diameterOfPrint;
 }
 
 double Layer::get_volume() const
 {
-    double infillRatio = mInfillPercentage/100;
-    double area = mLength*mWidth;
-    double volume = area*mHeight*infillRatio*mExtrusionMultiplier;
+    double volume = mLength*mWidth*mHeight;
     return volume;
 }
 
 double Layer::get_area() const
 {
     return mWidth*mLength;
+}
+
+double Layer::get_length_of_infill()
+{
+    double lengthOfInfill{0};
+    double distanceBetweenPoints{0};
+    std::vector<Point> pointList = get_point_list();
+    unsigned int numberOfPoints = static_cast<unsigned int>(pointList.size());
+    for (unsigned int i{1}; i<numberOfPoints; i++)
+    {
+        Point currentPoint = pointList.at(i);
+        Point previousPoint = pointList.at(i-1);
+        Point pointDifference = currentPoint-previousPoint;
+        distanceBetweenPoints = pointDifference.get_magnitude();
+        lengthOfInfill += distanceBetweenPoints;
+    }
+    return lengthOfInfill;
 }
 
 double Layer::get_extrusion_width()
@@ -257,6 +270,35 @@ void Layer::create_paths()
             mPathList->push_back(newPath);
         }
     }
+    create_point_list();
+    create_simplified_point_list();
+//    set_diameter_in_layer();
+}
+
+void Layer::set_diameter_in_layer()
+{
+    double diameter = get_diameter_of_print();
+    std::vector<Point> pointList = get_point_list();
+    unsigned int numberOfPoints = static_cast<unsigned int>(pointList.size());
+    for (unsigned int i{0}; i<numberOfPoints; i++)
+    {
+        pointList.at(i).set_diameter(diameter);
+    }
+    set_point_list(pointList);
+
+    std::vector<Point> simplifiedPointList = get_simplified_point_list();
+    unsigned int numberOfSimplifiedPoints = static_cast<unsigned int>(simplifiedPointList.size());
+    for (unsigned int i{0}; i<numberOfSimplifiedPoints; i++)
+    {
+        simplifiedPointList.at(i).set_diameter(diameter);
+    }
+    set_simplified_point_list(simplifiedPointList);
+
+    unsigned int numberOfPaths = static_cast<unsigned int>(mPathList->size());
+    for (unsigned int j{0}; j<numberOfPaths; j++)
+    {
+        mPathList->at(j)->set_diameter(diameter);
+    }
 }
 
 double Layer::get_length() const
@@ -283,11 +325,12 @@ void Layer::set_width(double const width)
     //    set_corners();
 }
 
-std::vector<Point> Layer::get_point_list()
+void Layer::create_point_list()
 {
     std::vector<Point> pointList;
     unsigned int numberOfPaths = static_cast<unsigned int>(mPathList->size());
     Point* lastPoint = new Point;
+    double diameter = get_diameter_of_print();
     for (unsigned int i{0}; i<numberOfPaths; i++)
     {
         Path* path = get_path_list()[i];
@@ -296,6 +339,7 @@ std::vector<Point> Layer::get_point_list()
         for (unsigned int j{0}; j<numberOfPoints; j++)
         {
             Point* point = points[j];
+            point->set_diameter(diameter);
             bool duplicate{false};
 
             if (abs(lastPoint->get_x() - point->get_x()) < 0.00001)
@@ -312,7 +356,17 @@ std::vector<Point> Layer::get_point_list()
             lastPoint = point;
         }
     }
-    return pointList;
+    set_point_list(pointList);
+}
+
+std::vector<Point> Layer::get_point_list()
+{
+    return mPointList;
+}
+
+void Layer::set_point_list(std::vector<Point> pointList)
+{
+    mPointList = pointList;
 }
 
 unsigned int Layer::get_number() const
@@ -643,7 +697,7 @@ std::vector <Point> Layer::get_perimeter_points()
         //   |_\__\0_\__|     0 = theta > 90
         //   A  1  5  6  B
 
-//        perimeterPointList.push_back(cornerA); // first point is A
+        //        perimeterPointList.push_back(cornerA); // first point is A
         unsigned int pointCount{0};
         unsigned int bottomPoint{0};
         unsigned int rightPoint{0};
@@ -820,11 +874,12 @@ void Layer::set_infill_size()
     mInfillWidth = mWidth-modifiedExtrusionWidth;
 }
 
-std::vector <Point> Layer::get_simplified_point_list()
+void Layer::create_simplified_point_list()
 {
     std::vector<Point> cleanPointList;
     unsigned int numberOfPaths = static_cast<unsigned int>(mPathList->size());
     Point* lastPoint = new Point;
+    double diameter = get_diameter_of_print();
     for (unsigned int i{0}; i<numberOfPaths; i++)
     {
         Path* path = get_path_list()[i];
@@ -833,6 +888,7 @@ std::vector <Point> Layer::get_simplified_point_list()
         for (unsigned int j{0}; j<numberOfPoints; j++)
         {
             Point* point = pointList[j];
+            point->set_diameter(diameter);
             bool duplicate{false};
 
             if (abs(lastPoint->get_x() - point->get_x()) < 0.00001)
@@ -854,7 +910,7 @@ std::vector <Point> Layer::get_simplified_point_list()
                 }
                 else
                 {
-//                    Point* previousPoint = pointList.at(i-1);
+                    //                    Point* previousPoint = pointList.at(i-1);
                     double previousMaterial = lastPoint->get_material();
                     double currentMaterial = point->get_material();
                     if (abs(previousMaterial - currentMaterial) > 0.0001)
@@ -866,7 +922,17 @@ std::vector <Point> Layer::get_simplified_point_list()
             lastPoint = point;
         }
     }
-    return  cleanPointList;
+    set_simplified_point_list(cleanPointList);
+}
+
+std::vector<Point> Layer::get_simplified_point_list()
+{
+    return mSimplifiedPointList;
+}
+
+void Layer::set_simplified_point_list(std::vector<Point> cleanPointList)
+{
+    mSimplifiedPointList = cleanPointList;
 }
 
 void Layer::refresh()
