@@ -131,8 +131,9 @@ double Layer::get_diameter_of_print()
 {
     double layerVolume = get_volume();
     double extrusionMultiplier = get_extrusion_multiplier();
+    double infillRatio = get_infill_percentage()/100;
     double lengthOfInfill = get_length_of_infill();
-    double diameterOfPrint = extrusionMultiplier*sqrt(layerVolume*4/(lengthOfInfill*pi));
+    double diameterOfPrint = extrusionMultiplier*infillRatio*sqrt(layerVolume*4/(lengthOfInfill*pi));
     return diameterOfPrint;
 }
 

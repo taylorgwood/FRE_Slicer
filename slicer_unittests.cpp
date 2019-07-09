@@ -608,7 +608,7 @@ TEST(LayerHeight,whenChangingLayerHeight_getCorrectPathDiameter)
     shape.reset_layer_height(newLayerHeight);
     Layer* firstLayer = shape.get_layer(0);
     double pathDiameter = firstLayer->get_diameter_of_print();
-    double expectedPathDiameter = 0.409306143423;
+    double expectedPathDiameter = 0.40944794358121533;
     EXPECT_NEAR(pathDiameter, expectedPathDiameter,0.00001);
 }
 
@@ -975,7 +975,8 @@ TEST(makeGcode,noExtraMovement)
 {
     Gcode gcode;
     Shape shape;
-    shape.set_infill_angle(45);
+    shape.set_infill_angle(15);
+    shape.set_infill_percentage(50);
     shape.refresh();
     gcode.set_simplify_point_list(true);
     gcode.generate_file(shape,"NoExtraMovement");
