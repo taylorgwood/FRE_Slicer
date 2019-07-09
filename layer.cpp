@@ -129,11 +129,11 @@ void Layer::set_extrusion_multiplier(const double extrusionMultiplier)
 
 double Layer::get_diameter_of_print()
 {
-    double layerVolume = get_volume();
-    double extrusionMultiplier = get_extrusion_multiplier();
     double infillRatio = get_infill_percentage()/100;
+    double layerVolume = get_volume()*infillRatio;
+    double extrusionMultiplier = get_extrusion_multiplier();
     double lengthOfInfill = get_length_of_infill();
-    double diameterOfPrint = extrusionMultiplier*infillRatio*sqrt(layerVolume*4/(lengthOfInfill*pi));
+    double diameterOfPrint = extrusionMultiplier*sqrt(layerVolume*4/(lengthOfInfill*pi));
     return diameterOfPrint;
 }
 
