@@ -242,7 +242,9 @@ double Gcode::get_extrusion_distance(Point currentPoint)
     double printCrossSectionalArea = pi*(diameter*diameter)/4;
     double printLength = calculate_length(currentPoint);
     double printVolume = printCrossSectionalArea*printLength;
-    double extrusionDistance = printVolume/mSyringeCrossSectionalArea;
+    double syringeDiameter = get_syringe_diameter();
+    double syringeCrossSectionalArea = pi*(syringeDiameter*syringeDiameter)/4;
+    double extrusionDistance = printVolume/syringeCrossSectionalArea;
     return extrusionDistance;
 }
 

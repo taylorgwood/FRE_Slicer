@@ -70,7 +70,6 @@ private:
     std::string make_file_name_unique();
     std::string mFileName{"newFile"};
     double mSyringeDiameter{14.9};
-    double mSyringeCrossSectionalArea{174.366246256};
     double const pi{3.14159265359};
     unsigned int mPointCount{0};
     std::vector<double> mExtruderDisplacement{0,0};
