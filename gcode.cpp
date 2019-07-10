@@ -92,6 +92,8 @@ void Gcode::set_file_name(std::string const fileName)
 void Gcode::write_initial_gcode(std::ofstream& fout, Shape& shape)
 {
     fout << std::endl;
+    fout << "; Original file name: " << get_file_name() << std::endl;
+    fout << std::endl;
     fout << "; Last version update: July 9, 2019" << std::endl;
     write_file_creation_information(fout);
     write_gcode_settings(fout);
@@ -117,12 +119,12 @@ std::string Gcode::get_begin_layer_gcode(unsigned int layerNumber, unsigned int 
 }
 
 void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, unsigned  int numberOfLayers)
-{
+{ 
     unsigned int layerNumber = layer->get_number();
     if (layerNumber > 0)
     {
         fout << "G1  F" << get_travel_speed()*60;
-        fout << " ; Travel speed: " << get_travel_speed() << " mm/s" << std::endl;
+        fout << '\t' << '\t' << " ; Travel speed: " << get_travel_speed() << " mm/s" << std::endl;
         double travelJump = get_travel_jump();
         double travelJog = get_travel_jog();
         if (layerNumber%2 != 0)
@@ -131,26 +133,30 @@ void Gcode::write_layer_gcode(std::ofstream&  fout, Layer* layer, unsigned  int 
         }
         double zLocation = layer->get_location();
         fout << "G1 " << " Z" << zLocation + travelJump;
-        fout << " ; Travel jump distance: " << travelJump << " mm" << std::endl;
+        fout << '\t' << '\t' << " ; Travel jump distance: " << travelJump << " mm" << std::endl;
 
         fout << "G1 ";
         fout << " A" << get_extruder_displacement()[0] - get_travel_retraction_distance().at(0);
         fout << " B" << get_extruder_displacement()[1] - get_travel_retraction_distance().at(1);
-        fout << " ; Travel retraction distance: (A,B) " << get_travel_retraction_distance().at(0) << "," << get_travel_retraction_distance().at(1) << " mm" << std::endl;
+        fout << '\t' << " ; Travel retraction distance: (A,B) " << get_travel_retraction_distance().at(0) << "," << get_travel_retraction_distance().at(1) << " mm" << std::endl;
         fout << "G1 " << " Y" << mLastPoint.get_y()+travelJog;
-        fout << " ; Travel jog distance: " << travelJog << " mm" << std::endl;
+        fout << '\t' << '\t' << " ; Travel jog distance: " << travelJog << " mm" << std::endl;
         Point firstPoint = layer->get_point_list().at(0);
         fout << "G1 " << " X" << firstPoint.get_x() << " Y" << firstPoint.get_y()+travelJog << " Z" << firstPoint.get_z() + travelJump << std::endl;
         fout << "G1 " << " X" << firstPoint.get_x() << " Y" << firstPoint.get_y() << " Z" << firstPoint.get_z() + travelJump << std::endl;
     }
+
+    fout << "G1  F" << get_print_speed()*60 << '\t' << '\t' << " ; Print speed: " << get_print_speed() << " mm/s" << std::endl;
+    fout << std::endl;
 
     write_points_in_layer(fout, layer, numberOfLayers);
 }
 
 void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, unsigned int numberOfLayers)
 {
-    fout << "G1  F" << get_print_speed()*60 << " ; Print speed: " << get_print_speed() << " mm/s" << std::endl;
-    fout << std::endl;
+    unsigned int streamSize{6};
+    fout << std::fixed << std::setprecision(streamSize);
+
     std::vector<Point> pointsInLayer = layer->get_point_list();
     if (mSimplifyPointList == true)
     {
@@ -203,23 +209,24 @@ void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, unsigned in
         mPointCount += 1;
         mLastPoint = point;
     }
+    fout << std::defaultfloat;
 }
 
 void Gcode::write_end_gcode(std::ofstream& fout)
 {
     fout << std::endl;
     fout << "G1 " << " F" << get_travel_speed()*60;
-    fout << " ; Travel speed: " << get_travel_speed() << " mm/s" << std::endl;
+    fout << '\t' << '\t' << " ; Travel speed: " << get_travel_speed() << " mm/s" << std::endl;
 
     fout << "G1 ";
     fout << " A" << get_extruder_displacement()[0] - get_travel_retraction_distance().at(0);
-    fout << " B" << get_extruder_displacement()[1] - get_travel_retraction_distance().at(1);
-    fout << " ; Travel retraction distance: (A,B) " << get_travel_retraction_distance().at(0) << "," << get_travel_retraction_distance().at(1) << " mm" << std::endl;
+    fout << '\t' << " B" << get_extruder_displacement()[1] - get_travel_retraction_distance().at(1);
+    fout << '\t' << " ; Travel retraction distance: (A,B) " << get_travel_retraction_distance().at(0) << "," << get_travel_retraction_distance().at(1) << " mm" << std::endl;
 
     fout << "G1 " << " Z" << get_finish_print_jump_distance();
-    fout << " ; Jump distance: " << get_finish_print_jump_distance() << " mm" << std::endl;
+    fout << '\t' << '\t' << " ; Jump distance: " << get_finish_print_jump_distance() << " mm" << std::endl;
     fout << "G1 " << " X" << get_finish_print_jog_distance();
-    fout << " ; Jog distance: " << get_finish_print_jog_distance() << " mm" << std::endl;
+    fout << '\t' << '\t' << " ; Jog distance: " << get_finish_print_jog_distance() << " mm" << std::endl;
 
     fout << ";   End of file" << std::endl;
     fout << std::endl;
@@ -315,6 +322,7 @@ void Gcode::write_file_creation_information(std::ofstream& fout)
 void Gcode::write_gcode_settings(std::ofstream& fout)
 {
     fout << "; Gcode Settings:         " << std::endl;
+    fout << ";   Syringe Diameter:     " << get_syringe_diameter() << " mm " << std::endl;
     fout << ";   Travel Jump:          " << get_travel_jump() << " mm (+Z, between layers)" << std::endl;
     fout << ";   Travel Jog:           " << get_travel_jog() << " mm (+-Y, between layers)" << std::endl;
     fout << ";   Start Print Plunge:   " << get_start_print_plunge_distance() << " mm (-Z)" << std::endl;
@@ -335,13 +343,13 @@ void Gcode::write_print_settings(std::ofstream& fout, Shape& shape)
     {
         isSimplified = "Enabled";
     }
-    fout << "; Simplify Points:       " << isSimplified << std::endl;
+    fout << "; Simplify Points:        " << isSimplified << std::endl;
     fout << std::endl;
 
     double layerHeight = shape.get_layer_height();
     unsigned int numberOfLayers = shape.get_number_of_layers();
-    fout << "; Layer Height:          " << layerHeight << " mm" << std::endl;
-    fout << "; Number Of Layers:      " << numberOfLayers << std::endl;
+    fout << "; Layer Height:           " << layerHeight << " mm" << std::endl;
+    fout << "; Number Of Layers:       " << numberOfLayers << std::endl;
     fout << std::endl;
 
     Layer* bottomLayer = shape.get_layer(0);
@@ -360,7 +368,7 @@ void Gcode::write_print_settings(std::ofstream& fout, Shape& shape)
         materialResolution = materialResolution2;
     }
     fout << "; Bottom Layer Settings: " << std::endl;
-    fout << ";   Extrusion Width:      " << extrusionWidth << " mm" << std::endl;
+    fout << ";   Extrusion Width:      " << extrusionWidth << " mm, *includes infill percentage" << std::endl;
     fout << ";   Extrusion Multiplier: " << extrusionMultiplier << "x" << std::endl;
     fout << ";   Infill Percentage:    " << infillPercentage << "%" << std::endl;
     fout << ";   Infill Angle:         " << infillAngle << " deg" << std::endl; // Don't put a degree sign here - throws an error in Mach3
