@@ -206,6 +206,12 @@ double Path::get_material(Point pointInfo) const
 //            material = 1;
 //        }
 //    }
+
+    if (pointInfo.get_x() > 10)
+    {
+        material = 0;
+    }
+
     return material;
 }
 
