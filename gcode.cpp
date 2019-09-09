@@ -359,20 +359,20 @@ void Gcode::write_print_settings(std::ofstream& fout, Shape& shape)
     double infillPercentage = bottomLayer->get_infill_percentage();
     double infillAngle = bottomLayer->get_infill_angle();
     Path*  secondPath = bottomLayer->get_path(1);
-    double materialResolution1 = secondPath->get_resolution();
+    double resolutionLength1 = secondPath->get_resolution_length();
     Path*  thirdPath = bottomLayer->get_path(2);
-    double materialResolution2 = thirdPath->get_resolution();
-    double materialResolution = materialResolution1;
-    if (materialResolution2 > materialResolution1)
+    double resolutionLength2 = thirdPath->get_resolution_length();
+    double materialResolution = resolutionLength1;
+    if (resolutionLength2 > resolutionLength1)
     {
-        materialResolution = materialResolution2;
+        materialResolution = resolutionLength2;
     }
     fout << "; Bottom Layer Settings: " << std::endl;
     fout << ";   Extrusion Width:      " << extrusionWidth << " mm, *includes infill percentage" << std::endl;
     fout << ";   Extrusion Multiplier: " << extrusionMultiplier << "x" << std::endl;
     fout << ";   Infill Percentage:    " << infillPercentage << "%" << std::endl;
     fout << ";   Infill Angle:         " << infillAngle << " deg" << std::endl; // Don't put a degree sign here - throws an error in Mach3
-    fout << ";   Material Resolution:  " << materialResolution << " mm" << std::endl;
+    fout << ";   Resolution Length:    " << materialResolution << " mm" << std::endl;
     fout << std::endl;
 
     double shapeHeight = shape.get_height();

@@ -10,9 +10,9 @@ public:
     Path(Point start, Point end);
     Path(Point start, Point end, double diameter);
     Path(Point start, Point end, double diameter, unsigned int pathNumber);
-    Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolution);
-    Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolution, double shapeWidth, double shapeLength, double shapeHeight);
-    Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolution, double shapeWidth, double shapeLength, double shapeHeight, unsigned int layerNumber);
+    Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolutionLength);
+    Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolutionLength, double shapeWidth, double shapeLength, double shapeHeight);
+    Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolutionLength, double shapeWidth, double shapeLength, double shapeHeight, unsigned int layerNumber);
     Point  get_start() const;
     void   set_start(Point const startPoint);
     Point  get_end() const;
@@ -20,8 +20,8 @@ public:
     double get_diameter() const;
     void   set_diameter(double const diameter);
     unsigned int get_number_of_points() const;
-    void   set_resolution(double const resolution);
-    double get_resolution() const;
+    void   set_resolution_length(double const resolutionLength);
+    double get_resolution_length() const;
     double get_length() const;
     void   adjust_point_spacing();
     void   create_points();
@@ -42,7 +42,7 @@ private:
     Point  mEnd{0,0,0};
     double mDiameter{0.26};
     std::vector<Point*> *mPointList{nullptr};
-    double mResolution{1.0};
+    double mResolutionLength{1.0};
     unsigned int mPathNumber{0};
     double mShapeWidth{10};
     double mShapeLength{10};

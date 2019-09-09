@@ -9,10 +9,10 @@ public:
     Layer();
     Layer(unsigned int number, double location);
     Layer(unsigned int number, double location, double length, double width);
-    Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution);
-    Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height);
-    Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight);
-    Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight, double infillAngle);
+    Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolutionLength);
+    Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolutionLength, double height);
+    Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolutionLength, double height, double shapeHeight);
+    Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolutionLength, double height, double shapeHeight, double infillAngle);
     double get_height() const;
     void   set_height(const double height);
     double get_infill_percentage() const;
@@ -48,8 +48,8 @@ public:
     void   set_location(double const location);
     Path*  get_path(unsigned int pathNumber);
     void   set_auto_adjust_path(bool adjustPaths);
-    double get_resolution() const;
-    void   set_resolution(double const resolution);
+    double get_resolution_length() const;
+    void   set_resolution_length(double const resolutionLength);
     void   set_shape_height(double shapeHeight);
     double get_perimeter();
     Point  get_intersection(Point lineStart, Point lineEnd, Point rayOrigin, double theta);
@@ -85,7 +85,7 @@ private:
     unsigned int mNumber{0};
     double mLocation{0};
     bool   mAutoAdjustPaths{true};
-    double mResolution{1};
+    double mResolutionLength{1};
     double mShapeHeight;
     double mInfillAngle{0};
     Point  mPointA;

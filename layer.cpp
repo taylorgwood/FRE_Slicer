@@ -32,7 +32,7 @@ Layer::Layer(unsigned int number, double location, double length, double width):
     create_paths();
 }
 
-Layer::Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution):mPathList{new std::vector<Path*>}
+Layer::Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolutionLength):mPathList{new std::vector<Path*>}
 {
     set_number(number);
     set_location(location);
@@ -42,11 +42,11 @@ Layer::Layer(unsigned int number, double location, double length, double width, 
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
     //    set_infill_size();
-    set_resolution(resolution);
+    set_resolution_length(resolutionLength);
     create_paths();
 }
 
-Layer::Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height):mPathList{new std::vector<Path*>}
+Layer::Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolutionLength, double height):mPathList{new std::vector<Path*>}
 {
     set_number(number);
     set_location(location);
@@ -55,14 +55,14 @@ Layer::Layer(unsigned int number, double location, double length, double width, 
     set_infill_percentage(infillPercentage);
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
-    set_resolution(resolution);
+    set_resolution_length(resolutionLength);
     //        set_infill_size();
     //        set_corners();
     set_height(height);
     create_paths();
 }
 
-Layer::Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight):mPathList{new std::vector<Path*>}
+Layer::Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolutionLength, double height, double shapeHeight):mPathList{new std::vector<Path*>}
 {
     set_number(number);
     set_location(location);
@@ -71,7 +71,7 @@ Layer::Layer(unsigned int number, double location, double length, double width, 
     set_infill_percentage(infillPercentage);
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
-    set_resolution(resolution);
+    set_resolution_length(resolutionLength);
     //        set_infill_size();
     //        set_corners();
     set_height(height);
@@ -79,7 +79,7 @@ Layer::Layer(unsigned int number, double location, double length, double width, 
     create_paths();
 }
 
-Layer::Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolution, double height, double shapeHeight, double infillAngle):mPathList{new std::vector<Path*>}
+Layer::Layer(unsigned int number, double location, double length, double width, double extrusionMultiplier, double extrusionWidth, double infillPercentage, double resolutionLength, double height, double shapeHeight, double infillAngle):mPathList{new std::vector<Path*>}
 {
     set_number(number);
     set_location(location);
@@ -89,7 +89,7 @@ Layer::Layer(unsigned int number, double location, double length, double width, 
     set_infill_angle(infillAngle);
     set_extrusion_multiplier(extrusionMultiplier);
     set_extrusion_width(extrusionWidth);
-    set_resolution(resolution);
+    set_resolution_length(resolutionLength);
     //    set_infill_size();
     //    set_corners();
     set_height(height);
@@ -254,7 +254,7 @@ void Layer::create_paths()
         unsigned int pathNumber = i;
         bool duplicate{false};
         double diameter = get_diameter_of_print();
-        double resolution = get_resolution();
+        double resolutionLength = get_resolution_length();
         Point currentPoint = perimeterPointList.at(i);
         Point nextPoint = perimeterPointList.at(i+1);
         double smallNumber{0.0001};
@@ -267,7 +267,7 @@ void Layer::create_paths()
         }
         if (duplicate == false)
         {
-            Path* newPath = new Path(currentPoint,nextPoint,diameter,pathNumber,resolution, mWidth, mLength, mShapeHeight,mNumber);
+            Path* newPath = new Path(currentPoint,nextPoint,diameter,pathNumber,resolutionLength, mWidth, mLength, mShapeHeight,mNumber);
             mPathList->push_back(newPath);
         }
     }
@@ -402,14 +402,14 @@ void Layer::set_auto_adjust_path(bool adjustPaths)
     mAutoAdjustPaths = adjustPaths;
 }
 
-double Layer::get_resolution() const
+double Layer::get_resolution_length() const
 {
-    return mResolution;
+    return mResolutionLength;
 }
 
-void Layer::set_resolution(double const resolution)
+void Layer::set_resolution_length(double const resolutionLength)
 {
-    mResolution = resolution;
+    mResolutionLength = resolutionLength;
 }
 
 void Layer::set_shape_height(double shapeHeight)
@@ -947,7 +947,7 @@ void Layer::refresh()
     set_infill_angle(mInfillAngle);
     set_extrusion_multiplier(mExtrusionMultiplier);
     set_extrusion_width(mExtrusionWidth);
-    set_resolution(mResolution);
+    set_resolution_length(mResolutionLength);
     set_height(mHeight);
     set_shape_height(mShapeHeight);
     create_paths();

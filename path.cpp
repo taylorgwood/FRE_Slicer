@@ -34,36 +34,36 @@ Path::Path(Point start, Point end, double diameter, unsigned int pathNumber):mPo
     create_points();
 }
 
-Path::Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolution):mPointList{new std::vector<Point*>}
+Path::Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolutionLength):mPointList{new std::vector<Point*>}
 {
     set_start(start);
     set_end(end);
     set_diameter(diameter);
     set_path_number(pathNumber);
-    set_resolution(resolution);
+    set_resolution_length(resolutionLength);
     create_points();
 }
 
-Path::Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolution, double shapeWidth, double shapeLength, double shapeHeight):mPointList{new std::vector<Point*>}
+Path::Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolutionLength, double shapeWidth, double shapeLength, double shapeHeight):mPointList{new std::vector<Point*>}
 {
     set_start(start);
     set_end(end);
     set_diameter(diameter);
     set_path_number(pathNumber);
-    set_resolution(resolution);
+    set_resolution_length(resolutionLength);
     set_shape_width(shapeWidth);
     set_shape_length(shapeLength);
     set_shape_height(shapeHeight);
     create_points();
 }
 
-Path::Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolution, double shapeWidth, double shapeLength, double shapeHeight, unsigned int layerNumber):mPointList{new std::vector<Point*>}
+Path::Path(Point start, Point end, double diameter, unsigned int pathNumber, double resolutionLength, double shapeWidth, double shapeLength, double shapeHeight, unsigned int layerNumber):mPointList{new std::vector<Point*>}
 {
     set_start(start);
     set_end(end);
     set_diameter(diameter);
     set_path_number(pathNumber);
-    set_resolution(resolution);
+    set_resolution_length(resolutionLength);
     set_shape_width(shapeWidth);
     set_shape_length(shapeLength);
     set_shape_height(shapeHeight);
@@ -104,20 +104,20 @@ void Path::set_diameter(double const diameter)
 unsigned int Path::get_number_of_points() const
 {
     double length = get_length();
-    double exactNumberOfSegments = length/mResolution;
+    double exactNumberOfSegments = length/mResolutionLength;
     unsigned int flooredNumberOfSegments = static_cast<unsigned int>(floor(exactNumberOfSegments));
     unsigned int numberOfPoints{flooredNumberOfSegments+1};
     return numberOfPoints;
 }
 
-void Path::set_resolution(double const resolution)
+void Path::set_resolution_length(double const resolution)
 {
-    mResolution = resolution;
+    mResolutionLength = resolution;
 }
 
-double Path::get_resolution() const
+double Path::get_resolution_length() const
 {
-    return mResolution;
+    return mResolutionLength;
 }
 
 double Path::get_length() const
@@ -130,15 +130,15 @@ double Path::get_length() const
 void Path::adjust_point_spacing()
 {
     double length = get_length();
-    double exactNumberOfSegments = length/mResolution;
+    double exactNumberOfSegments = length/mResolutionLength;
     int flooredNumberOfSegments = int(floor(exactNumberOfSegments));
     if (flooredNumberOfSegments < 1)
     {
         flooredNumberOfSegments = 1;
     }
 
-    double realResolution = length/flooredNumberOfSegments;
-    set_resolution(realResolution);
+    double realResolutionLength = length/flooredNumberOfSegments;
+    set_resolution_length(realResolutionLength);
 }
 
 void Path::create_points()

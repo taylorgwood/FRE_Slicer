@@ -90,7 +90,7 @@ void Shape::create_layers()
     double extrustionMultiplier = get_extrusion_multiplier();
     double extrusionWidth = get_extrusion_width();
     double infillPercentage = get_infill_percentage();
-    double resolution = get_resolution();
+    double resolution = get_resolution_length();
     double shapeHeight = get_height();
     double infillAngle = get_infill_angle();
     if (mAutoAdjustLayer == true)
@@ -214,14 +214,14 @@ void Shape::set_auto_adjust_layer(bool adjustLayer)
     mAutoAdjustLayer = adjustLayer;
 }
 
-double Shape::get_resolution()
+double Shape::get_resolution_length()
 {
-    return mResolution;
+    return mResolutionLength;
 }
 
-void Shape::set_resolution(double resolution)
+void Shape::set_resolution_length(double resolutionLength)
 {
-    mResolution = resolution;
+    mResolutionLength = resolutionLength;
 }
 
 double Shape::get_extrusion_width()
@@ -297,7 +297,7 @@ void  Shape::refresh()
     set_infill_angle(mInfillAngle);
     set_infill_percentage(mInfillPercentage);
     set_auto_adjust_layer(mAutoAdjustLayer);
-    set_resolution(mResolution);
+    set_resolution_length(mResolutionLength);
     create_layers();
 }
 
