@@ -175,7 +175,7 @@ Point* Path::create_new_point(unsigned int pointNumber, unsigned int numberOfPoi
 
 double Path::get_material(Point pointInfo) const
 {
-    double material{1};
+    double material{0};
     // Note: Change this code to define the material throughout the print.
     //    double xLocation = pointInfo.get_x()-mShapeWidth/2;
     //    double yLocation = pointInfo.get_y()-mShapeLength/2;
@@ -209,7 +209,7 @@ double Path::get_material(Point pointInfo) const
 
     if (pointInfo.get_x() > 10)
     {
-        material = 0;
+        material = {1};
     }
 
     return material;

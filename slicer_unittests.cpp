@@ -53,10 +53,10 @@ TEST(PointConstructor,givenNoValues_getZeroXYZ)
 
 TEST(PointAddition,givenValues_getCorrectPoint)
 {
-    Point firstPoint(1,2,3,1);
-    Point secondPoint(4,5,6,2);
+    Point firstPoint(1,2,3);
+    Point secondPoint(4,5,6);
     Point addedPoint = firstPoint + secondPoint;
-    Point expectedPoint(5,7,9,1.5);
+    Point expectedPoint(5,7,9);
     EXPECT_POINT_EQ(addedPoint,expectedPoint);
 }
 
@@ -341,9 +341,9 @@ TEST(PointLocations,whenConstructingShape_pointLocationsConstructed)
 
 TEST(PointMath,whenAskedForNormalizedPoint_getNormalizedPoint)
 {
-    Point point{1,2,3,0.5};
+    Point point{1,2,3};
     Point normalizedPoint = point.normalize();
-    Point expectedPoint{1/sqrt(14),2/sqrt(14),3/sqrt(14),0.5};
+    Point expectedPoint{1/sqrt(14),2/sqrt(14),3/sqrt(14)};
     EXPECT_POINT_EQ(normalizedPoint,expectedPoint);
 }
 
@@ -905,7 +905,7 @@ TEST(ExtruderChoice,givenSingleMaterialPrint_getNoBExtrusion)
     Shape shape;
     Gcode gcode;
     gcode.set_single_material(true); // this should be default
-    double materialRatio = 0.5;
+    double materialRatio{0.5};
     double extrusionDistance = 1;
     gcode.increment_extruder_displacement(materialRatio,extrusionDistance);
     double extruderB = gcode.get_extruder_displacement().at(1);
@@ -917,7 +917,7 @@ TEST(ExtruderChoice,givenSingleMaterialPrint_getCorrectAExtrusion)
     Shape shape;
     Gcode gcode;
     gcode.set_single_material(true); // this should be default
-    double materialRatio = 0.5;
+    double materialRatio{0.5};
     double extrusionDistance = 1;
     gcode.increment_extruder_displacement(materialRatio,extrusionDistance);
     double extruderA = gcode.get_extruder_displacement().at(0);
@@ -931,7 +931,7 @@ TEST(ExtruderChoice,givenBothExtrudersEnabled_getCorrectExtrusion)
     gcode.set_single_material(true); // this should be default
     std::vector<bool> enabledExtruders{true,true};
     gcode.set_extruder_choice(enabledExtruders);
-    double materialRatio = 0.5;
+    double materialRatio{0.5};
     double extrusionDistance = 1;
     gcode.increment_extruder_displacement(materialRatio,extrusionDistance);
     double extruderA = gcode.get_extruder_displacement().at(0);
@@ -940,46 +940,61 @@ TEST(ExtruderChoice,givenBothExtrudersEnabled_getCorrectExtrusion)
     EXPECT_DOUBLE_EQ(extruderB,extrusionDistance);
 }
 
-TEST(A,B_c)
+
+//TEST(A,B_c)
+//{
+//    Gcode gcode;
+//    Shape shape;
+//    //    shape.set_width(10.75);
+//    //    shape.set_length(14);
+//    //    shape.set_top_width(3);
+//    double infillAngle{45};
+//    shape.set_infill_angle(infillAngle);
+//    shape.refresh();
+//    gcode.set_simplify_point_list(true);
+//    gcode.set_travel_jump(0.5);
+//    gcode.set_travel_jog(1);
+//    gcode.set_retraction_speed(2);
+//    gcode.set_travel_A_retraction_distance(4);
+//    gcode.set_single_material(false);
+//    gcode.generate_file(shape,"InfillTest45Degrees");
+//}
+
+//TEST(makeGcode,notReallyATest)
+//{
+//    Gcode gcode;
+//    Shape shape;
+//    gcode.set_travel_jump(0.5);
+//    gcode.set_simplify_point_list(true);
+//    gcode.set_single_material(true);
+//    std::vector<bool> enabledExtruders{true,true};
+//    gcode.set_extruder_choice(enabledExtruders);
+//    gcode.generate_file(shape,"Testing");
+//}
+
+//TEST(makeGcode,noExtraMovement)
+//{
+//    Gcode gcode;
+//    Shape shape;
+//    shape.set_infill_angle(15);
+//    shape.set_infill_percentage(50);
+//    shape.refresh();
+//    gcode.set_simplify_point_list(true);
+//    gcode.generate_file(shape,"NoExtraMovement");
+//}
+
+TEST(ClaytonCode,createFile)
 {
     Gcode gcode;
     Shape shape;
-    //    shape.set_width(10.75);
-    //    shape.set_length(14);
-    //    shape.set_top_width(3);
-    double infillAngle{45};
-    shape.set_infill_angle(infillAngle);
-    shape.refresh();
     gcode.set_simplify_point_list(true);
-    gcode.set_travel_jump(0.5);
-    gcode.set_travel_jog(1);
-    gcode.set_retraction_speed(2);
-    gcode.set_travel_A_retraction_distance(4);
+    double retractDistance = 1.0;
+    shape.set_width(20);
+    shape.set_top_width(20);
+    shape.refresh();
     gcode.set_single_material(false);
-    gcode.generate_file(shape,"InfillTest45Degrees");
-}
-
-TEST(makeGcode,notReallyATest)
-{
-    Gcode gcode;
-    Shape shape;
-    gcode.set_travel_jump(0.5);
-    gcode.set_simplify_point_list(true);
-    gcode.set_single_material(true);
-    std::vector<bool> enabledExtruders{true,true};
-    gcode.set_extruder_choice(enabledExtruders);
-    gcode.generate_file(shape,"Testing");
-}
-
-TEST(makeGcode,noExtraMovement)
-{
-    Gcode gcode;
-    Shape shape;
-    shape.set_infill_angle(15);
-    shape.set_infill_percentage(50);
-    shape.refresh();
-    gcode.set_simplify_point_list(true);
-    gcode.generate_file(shape,"NoExtraMovement");
+    gcode.set_material_switch_retraction_distance(retractDistance);
+    gcode.generate_file(shape,"Test1140");
 }
 
 //TEST(PrintOutPerimeter,PrintOutPerimeterPoints)

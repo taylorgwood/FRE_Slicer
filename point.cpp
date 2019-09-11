@@ -38,7 +38,7 @@ Point Point::operator+(const Point secondPoint) const
     double summedX = get_x() + secondPoint.get_x();
     double summedY = get_y() + secondPoint.get_y();
     double summedZ = get_z() + secondPoint.get_z();
-    double summedM = (get_material() + secondPoint.get_material())/2;
+    double summedM = (get_material() + secondPoint.get_material());
     Point summedPoint{summedX, summedY, summedZ, summedM};
     return summedPoint;
 }
@@ -48,7 +48,7 @@ Point Point::operator-(const Point secondPoint) const
     double subtractedX = get_x() - secondPoint.get_x();
     double subtractedY = get_y() - secondPoint.get_y();
     double subtractedZ = get_z() - secondPoint.get_z();
-    double subtractedM = (get_material() + secondPoint.get_material())/2;
+    double subtractedM = (get_material() - secondPoint.get_material());
     Point subtractedPoint{subtractedX, subtractedY, subtractedZ, subtractedM};
     return subtractedPoint;
 }
@@ -98,14 +98,14 @@ void Point::set_z(double const z)
     mZ = z;
 }
 
-void Point::set_material(double const material)
+void Point::set_material(double material)
 {
     mMaterial = material;
 }
 
 void Point::print()
 {
-    std::cout << "{" << get_x() << ", " << get_y() << ", " << get_z() << ", " << get_material() << "}" << std::endl;
+    std::cout << "{" << get_x() << ", " << get_y() << ", " << get_z() << get_material()<< "}" << std::endl;
 }
 
 void Point::print_list(std::vector<Point*> pointList)
@@ -126,7 +126,7 @@ Point Point::normalize()
     double y = get_y();
     double z = get_z();
     double magnitude = get_magnitude();
-    Point normalizedPoint(x/magnitude,y/magnitude,z/magnitude,1);
+    Point normalizedPoint(x/magnitude,y/magnitude,z/magnitude);
     return normalizedPoint;
 }
 
@@ -135,7 +135,6 @@ double Point::get_magnitude()
     double x = get_x();
     double y = get_y();
     double z = get_z();
-    double material = get_material();
     double magnitude = sqrt(x*x + y*y + z*z);
     return magnitude;
 }
@@ -249,3 +248,18 @@ bool   Point::get_travel() const
 {
     return mTravel;
 }
+
+//void Point::normalize_material()
+//{
+//    std::vector<double> material = get_material();
+//    unsigned int numberOfExtruders = static_cast<unsigned int>(material.size());
+//    double magnitude{0};
+//    for (unsigned int i{0}; i<numberOfExtruders; i++)
+//    {
+//        magnitude += material.at(i)*material.at(i);
+//    }
+//    for (unsigned int i{0}; i<numberOfExtruders; i++)
+//    {
+//        material.at(i) = material.at(i)/magnitude;
+//    }
+//}

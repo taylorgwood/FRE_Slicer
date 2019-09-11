@@ -171,20 +171,36 @@ void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, unsigned in
         fout << " X" << point.get_x();
         fout << " Y" << point.get_y();
         double materialRatio = point.get_material();
+//        double lastMaterialRatio = mLastPoint.get_material();
         double extrusionDistance = get_extrusion_distance(point);
         if (pointNumber == 0)
         {
             extrusionDistance = 0;
             fout << " Z" << point.get_z();
         }
+
         increment_extruder_displacement(materialRatio,extrusionDistance);
 
-        if ((mLastPoint.get_material() - materialRatio) < 0.0001)
+        fout << " A" << get_extruder_displacement()[0];
+        fout << " B" << get_extruder_displacement()[1];
+
+        if (mPointCount%20 == 0)
         {
-            double lastMaterialRatio = mLastPoint.get_material();
+            fout << "  ; Layer " << std::to_string(layer->get_number()+1) << " of " << std::to_string(numberOfLayers);
+        }
+        fout << std::endl;
+
+        if (get_material_switch_retraction_distance() > 0)
+        {
+        if (i<numberOfPointsInLayer-1)
+        {
+        Point nextPoint = pointsInLayer[i+1];
+        double nextMaterialRatio = nextPoint.get_material();
+        if (abs(nextMaterialRatio - materialRatio) > 0.0001)
+        {
             double retractionDistance = get_material_switch_retraction_distance();
-            double differenceA = lastMaterialRatio - (materialRatio);
-            double differenceB = (-differenceA);
+            double differenceA = nextMaterialRatio - materialRatio;
+            double differenceB = -differenceA;
             if (differenceA > 0)
             {
                 differenceA = 0;
@@ -193,19 +209,18 @@ void Gcode::write_points_in_layer(std::ofstream& fout, Layer* layer, unsigned in
             {
                 differenceB = 0;
             }
-            fout << " A" << get_extruder_displacement()[0] + differenceA*retractionDistance;
-            fout << " B" << get_extruder_displacement()[1] + differenceB*retractionDistance;
+            double retractA = differenceA*retractionDistance;
+            double retractB = differenceB*retractionDistance;
+            fout << "G1 ";
+            fout << " X" << point.get_x();
+            fout << " Y" << point.get_y();
+            fout << " A" << get_extruder_displacement()[0] + retractA;
+            fout << " B" << get_extruder_displacement()[1] + retractB;
+            fout << "  ; Material Switch Retraction "; // << retractA << ", " << retractB << " mm (A,B)";
+            fout << std::endl;
         }
-        else
-        {
-            fout << " A" << get_extruder_displacement()[0];
-            fout << " B" << get_extruder_displacement()[1];
         }
-        if (mPointCount%20 == 0)
-        {
-            fout << "  ; Layer " << std::to_string(layer->get_number()+1) << " of " << std::to_string(numberOfLayers);
         }
-        fout << std::endl;
         mPointCount += 1;
         mLastPoint = point;
     }
@@ -262,9 +277,10 @@ std::vector<double> Gcode::get_extruder_displacement() const
 
 void Gcode::increment_extruder_displacement(double materialRatio, double extrusionDistance)
 {
+    double extruderStepA = materialRatio*extrusionDistance;
+    double extruderStepB = (1-materialRatio)*extrusionDistance;
+
     bool singleMaterial = is_single_material();
-    double extruderStepA = (materialRatio*extrusionDistance);
-    double extruderStepB = ((1-materialRatio)*extrusionDistance);
     if (singleMaterial == true)
     {
         extruderStepA = 0;
@@ -332,6 +348,7 @@ void Gcode::write_gcode_settings(std::ofstream& fout)
     fout << ";   Print Speed:          " << get_print_speed() << " mm/s" << std::endl;
     fout << ";   Retraction Speed:     " << get_retraction_speed() << " mm" << std::endl;
     fout << ";   Travel Retraction:    " << get_travel_retraction_distance().at(0) << "," << get_travel_retraction_distance().at(1) << " mm (A,B)" << std::endl;
+    fout << ";   Material Chng Retract:" << get_material_switch_retraction_distance() << " mm, scaled" << std::endl;
     fout << std::endl;
 }
 

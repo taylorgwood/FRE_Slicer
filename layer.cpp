@@ -253,7 +253,8 @@ void Layer::create_paths()
     {
         unsigned int pathNumber = i;
         bool duplicate{false};
-        double diameter = get_diameter_of_print();
+        double defaultDiameter = 0.0;
+//        double diameter = get_diameter_of_print;
         double resolutionLength = get_resolution_length();
         Point currentPoint = perimeterPointList.at(i);
         Point nextPoint = perimeterPointList.at(i+1);
@@ -267,13 +268,13 @@ void Layer::create_paths()
         }
         if (duplicate == false)
         {
-            Path* newPath = new Path(currentPoint,nextPoint,diameter,pathNumber,resolutionLength, mWidth, mLength, mShapeHeight,mNumber);
+            Path* newPath = new Path(currentPoint,nextPoint,defaultDiameter,pathNumber,resolutionLength, mWidth, mLength, mShapeHeight,mNumber);
             mPathList->push_back(newPath);
         }
     }
     create_point_list();
     create_simplified_point_list();
-//    set_diameter_in_layer();
+    set_diameter_in_layer();
 }
 
 void Layer::set_diameter_in_layer()
@@ -331,7 +332,8 @@ void Layer::create_point_list()
     std::vector<Point> pointList;
     unsigned int numberOfPaths = static_cast<unsigned int>(mPathList->size());
     Point* lastPoint = new Point;
-    double diameter = get_diameter_of_print();
+//    double diameter = get_diameter_of_print();
+    double defaultDiameter = 0.0;
     for (unsigned int i{0}; i<numberOfPaths; i++)
     {
         Path* path = get_path_list()[i];
@@ -340,7 +342,7 @@ void Layer::create_point_list()
         for (unsigned int j{0}; j<numberOfPoints; j++)
         {
             Point* point = points[j];
-            point->set_diameter(diameter);
+            point->set_diameter(defaultDiameter);
             bool duplicate{false};
 
             if (abs(lastPoint->get_x() - point->get_x()) < 0.00001)
@@ -880,7 +882,8 @@ void Layer::create_simplified_point_list()
     std::vector<Point> cleanPointList;
     unsigned int numberOfPaths = static_cast<unsigned int>(mPathList->size());
     Point* lastPoint = new Point;
-    double diameter = get_diameter_of_print();
+//    double diameter = get_diameter_of_print();
+    double defaultDiameter = 0.0;
     for (unsigned int i{0}; i<numberOfPaths; i++)
     {
         Path* path = get_path_list()[i];
@@ -889,7 +892,7 @@ void Layer::create_simplified_point_list()
         for (unsigned int j{0}; j<numberOfPoints; j++)
         {
             Point* point = pointList[j];
-            point->set_diameter(diameter);
+            point->set_diameter(defaultDiameter);
             bool duplicate{false};
 
             if (abs(lastPoint->get_x() - point->get_x()) < 0.00001)
@@ -912,9 +915,10 @@ void Layer::create_simplified_point_list()
                 else
                 {
                     //                    Point* previousPoint = pointList.at(i-1);
-                    double previousMaterial = lastPoint->get_material();
+                    Point* nextPoint = pointList[j+1];
+                    double nextMaterial = nextPoint->get_material();
                     double currentMaterial = point->get_material();
-                    if (abs(previousMaterial - currentMaterial) > 0.0001)
+                    if (abs(nextMaterial - currentMaterial) > 0.0001)
                     {
                         cleanPointList.push_back(*point);
                     }

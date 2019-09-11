@@ -21,7 +21,7 @@ public:
     void   set_x(double const x);
     void   set_y(double const y);
     void   set_z(double const z);
-    void   set_material(double const material);
+    void   set_material(double material);
     void   print();
     void   print_list(std::vector<Point*> pointList);
     Point  normalize();
@@ -36,13 +36,14 @@ public:
     void   set_travel(bool const isTravel);
     bool   get_travel() const;
 
+
 protected:
 
 private:
     double mX{0};
     double mY{0};
     double mZ{0};
-    double mMaterial{0};
+    double mMaterial{1};
     double mDiameter{0.26};
     bool   mTravel{false};
 };
